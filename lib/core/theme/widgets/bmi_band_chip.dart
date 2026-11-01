@@ -46,7 +46,9 @@ class BmiBandChip extends StatelessWidget {
       child: Text(
         bandLabel(band, Translations.of(context)),
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-          color: dark ? Color.lerp(band.color, Colors.white, 0.45) : band.textColor,
+          color: dark
+              ? Color.lerp(band.color, Colors.white, 0.45)
+              : band.textColor,
         ),
       ),
     );

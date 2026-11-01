@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/settings/settings_menu.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -23,13 +24,15 @@ class ResultScreen extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: Column(
           children: [
             AppHeader(
               title: t.appTitle,
               subtitle: t.result.subtitle,
               pillText: t.onDevice.pill,
+              onProfileTap: () => context.go('/profile'),
+              profileTooltip: t.profile.title,
+              actions: const [SettingsMenu()],
             ),
             Expanded(
               child: ListView(
@@ -58,7 +61,10 @@ class ResultScreen extends StatelessWidget {
                               '${result.bmiMax.toStringAsFixed(1)}',
                         ),
                         const SizedBox(height: AppSpacing.md),
-                        BmiRangeGauge(bmi: result.bmi),
+                        BmiRangeGauge(
+                          bmi: result.bmi,
+                          label: t.result.scaleTitle,
+                        ),
                         const SizedBox(height: AppSpacing.md),
                         ConfidenceMeter(
                           level: switch (result.confidence) {

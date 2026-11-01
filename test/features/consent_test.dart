@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nutriscan/core/theme/app_theme.dart';
 import 'package:nutriscan/features/consent/presentation/consent_screen.dart';
@@ -13,21 +14,26 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pumpWidget(
       TranslationProvider(
-        child: MaterialApp(
-          theme: AppTheme.light,
-          locale: const Locale('es'),
-          supportedLocales: AppLocaleUtils.supportedLocales,
-          localizationsDelegates: GlobalMaterialLocalizations.delegates,
-          home: const ConsentScreen(),
+        child: ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.light,
+            locale: const Locale('es'),
+            supportedLocales: AppLocaleUtils.supportedLocales,
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
+            home: const ConsentScreen(),
+          ),
         ),
       ),
     );
   }
 
-  testWidgets('CTA bloqueado hasta aceptar ambos consentimientos', (tester) async {
+  testWidgets('CTA bloqueado hasta aceptar ambos consentimientos', (
+    tester,
+  ) async {
     await pumpConsent(tester);
 
-    FilledButton cta() => tester.widget<FilledButton>(find.byType(FilledButton));
+    FilledButton cta() =>
+        tester.widget<FilledButton>(find.byType(FilledButton));
     expect(cta().onPressed, isNull);
 
     await tester.tap(find.byType(Checkbox).first);

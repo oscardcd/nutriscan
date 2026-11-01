@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/settings/settings_menu.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/widgets/medical_disclaimer.dart';
 import '../../../core/ui/ui.dart';
@@ -28,13 +30,13 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
 
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: Column(
           children: [
             AppHeader(
               title: t.appTitle,
               subtitle: t.consent.subtitle,
               pillText: t.onDevice.pill,
+              actions: const [SettingsMenu()],
             ),
             Expanded(
               child: ListView(

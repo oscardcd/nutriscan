@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/ui/ui.dart';
@@ -21,10 +20,7 @@ class CaptureScreen extends StatelessWidget {
         bottom: false,
         child: Column(
           children: [
-            _TopBar(
-              title: t.capture.title,
-              onClose: () => context.go('/welcome'),
-            ),
+            _TopBar(title: t.capture.title),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(
@@ -69,10 +65,9 @@ class CaptureScreen extends StatelessWidget {
 }
 
 class _TopBar extends StatelessWidget {
-  const _TopBar({required this.title, required this.onClose});
+  const _TopBar({required this.title});
 
   final String title;
-  final VoidCallback onClose;
 
   @override
   Widget build(BuildContext context) {
@@ -86,11 +81,6 @@ class _TopBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          IconButton(
-            onPressed: onClose,
-            icon: const Icon(Icons.arrow_back_ios_new, size: 18),
-            tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-          ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,11 +95,6 @@ class _TopBar extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-          IconButton(
-            onPressed: onClose,
-            icon: const Icon(Icons.close),
-            tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
           ),
         ],
       ),
@@ -219,26 +204,18 @@ class _AlignmentCard extends StatelessWidget {
         children: [
           SectionLabel(t.capture.alignment),
           const SizedBox(height: AppSpacing.sm),
-          _AlignmentRow(
-            icon: Icons.verified_outlined,
-            label: t.capture.posture,
-            value: t.capture.postureOk,
-          ),
+          // Guía estática: hasta que exista la pipeline no se muestra ninguna
+          // lectura (ni ángulos ni distancias) que no se haya medido.
+          _AlignmentRow(icon: Icons.verified_outlined, text: t.capture.posture),
           _AlignmentRow(
             icon: Icons.screen_rotation_outlined,
-            label: t.capture.tilt,
-            value: t.capture.tiltOk,
+            text: t.capture.tilt,
           ),
           _AlignmentRow(
             icon: Icons.filter_center_focus,
-            label: t.capture.sensor,
-            value: t.capture.sensorOk,
+            text: t.capture.sensor,
           ),
-          _AlignmentRow(
-            icon: Icons.straighten,
-            label: t.capture.distance,
-            value: t.capture.distanceValue,
-          ),
+          _AlignmentRow(icon: Icons.straighten, text: t.capture.distance),
         ],
       ),
     );
@@ -246,15 +223,10 @@ class _AlignmentCard extends StatelessWidget {
 }
 
 class _AlignmentRow extends StatelessWidget {
-  const _AlignmentRow({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
+  const _AlignmentRow({required this.icon, required this.text});
 
   final IconData icon;
-  final String label;
-  final String value;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -265,16 +237,7 @@ class _AlignmentRow extends StatelessWidget {
         children: [
           Icon(icon, size: 18, color: theme.colorScheme.primary),
           const SizedBox(width: AppSpacing.sm),
-          Expanded(child: Text(label, style: theme.textTheme.bodyMedium)),
-          Flexible(
-            child: Text(
-              value,
-              textAlign: TextAlign.end,
-              style: theme.textTheme.labelMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
+          Expanded(child: Text(text, style: theme.textTheme.bodyMedium)),
         ],
       ),
     );
@@ -293,10 +256,7 @@ class _CriteriaCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SectionLabel(
-            t.capture.criteria,
-            trailing: StatusPill(text: t.capture.approved),
-          ),
+          SectionLabel(t.capture.criteria),
           const SizedBox(height: AppSpacing.sm),
           ScanCriterion(label: t.capture.fullBody),
           ScanCriterion(label: t.capture.twoMeters),
@@ -378,9 +338,11 @@ class _CaptureBar extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
+              // Inerte hasta que exista pipeline: se anuncia como inactivo,
+              // no como botón que no responde.
               Semantics(
-                button: true,
                 label: t.capture.shutter,
+                enabled: false,
                 child: Container(
                   width: 64,
                   height: 64,

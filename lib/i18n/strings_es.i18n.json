@@ -10,16 +10,11 @@
     "onDevice": "En el dispositivo",
     "localBadge": "Cómputo local",
     "alignment": "Alineación corporal",
-    "posture": "Postura",
-    "postureOk": "Alineada y nivelada",
-    "tilt": "Inclinación",
-    "tiltOk": "0.2° · Óptima",
-    "sensor": "Sensor",
-    "sensorOk": "Listo",
-    "distance": "Distancia detectada",
-    "distanceValue": "2.1 m",
+    "posture": "Cuerpo completo, de frente",
+    "tilt": "Teléfono recto y nivelado",
+    "sensor": "La cámara se activa al iniciar el escaneo",
+    "distance": "A 2 metros del teléfono",
     "criteria": "Criterios de escaneo",
-    "approved": "3 / 4 aprobados",
     "fullBody": "Cuerpo completo",
     "twoMeters": "A 2 metros",
     "plainBackground": "Fondo liso y uniforme",
@@ -103,5 +98,13 @@
     "meaningTitle": "¿Qué significa este resultado?",
     "meaningBody": "Tu silueta se sitúa en una banda de referencia. El IMC y las proyecciones visuales no distinguen masa muscular magra de tejido adiposo: es un punto de partida preventivo para tu seguimiento.",
     "cta": "Volver a medir"
+  },
+  "settings": {
+    "title": "Idioma y tema",
+    "language": "IDIOMA",
+    "theme": "TEMA",
+    "themeSystem": "Sistema",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro"
   }
 }

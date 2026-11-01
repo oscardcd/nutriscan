@@ -30,39 +30,44 @@ class ConsentCheckbox extends StatelessWidget {
         vertical: AppSpacing.xs,
       ),
       onTap: onChanged == null ? null : () => onChanged!(!value),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Checkbox(
-            value: value,
-            onChanged: onChanged == null ? null : (v) => onChanged!(v ?? false),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
+      // MergeSemantics: casilla + texto se leen como un solo control marcable.
+      child: MergeSemantics(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Checkbox(
+              value: value,
+              onChanged: onChanged == null
+                  ? null
+                  : (v) => onChanged!(v ?? false),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
             ),
-          ),
-          const SizedBox(width: AppSpacing.xs),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Text.rich(
-                TextSpan(
-                  style: body,
-                  children: [
-                    TextSpan(text: prefix),
-                    TextSpan(
-                      text: highlight,
-                      style: body.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.primary,
+            const SizedBox(width: AppSpacing.xs),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Text.rich(
+                  TextSpan(
+                    style: body,
+                    children: [
+                      TextSpan(text: prefix),
+                      TextSpan(
+                        text: highlight,
+                        style: body.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.primary,
+                        ),
                       ),
-                    ),
-                    TextSpan(text: suffix),
-                  ],
+                      TextSpan(text: suffix),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
