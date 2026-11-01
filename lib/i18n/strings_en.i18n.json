@@ -25,7 +25,9 @@
     "timer": "3 sec",
     "shutter": "Capture",
     "shutterPending": "Capture unlocks once the vision model is integrated.",
-    "localNote": "Photos are processed and stay exclusively on this phone."
+    "localNote": "Photos are processed and stay exclusively on this phone.",
+    "webUnavailableTitle": "Capture not available in this browser",
+    "webUnavailable": "Image-based screening needs the on-device vision models of the mobile app. Use NutriScan on your phone to take a measurement; it is a screening tool, not a diagnosis."
   },
   "history": {
     "title": "Your progress",

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "if [ ! -d flutter ]; then git clone https://github.com/flutter/flutter.git --depth 1 -b ${FLUTTER_VERSION:-3.44.8} flutter; fi && flutter/bin/flutter config --no-analytics && flutter/bin/flutter pub get",
+  "buildCommand": "flutter/bin/flutter build web --release",
+  "outputDirectory": "build/web",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }]
+    },
+    {
+      "source": "/canvaskit/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }]
+    },
+    {
+      "source": "/(main.dart.js|flutter_bootstrap.js|flutter_service_worker.js|index.html|version.json)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
+    }
+  ]
+}

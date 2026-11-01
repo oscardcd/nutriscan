@@ -9,9 +9,7 @@ import 'package:nutriscan/i18n/strings.g.dart';
 void main() {
   setUpAll(() => LocaleSettings.setLocale(AppLocale.es));
 
-  testWidgets('captura muestra criterios y bloquea el obturador', (
-    tester,
-  ) async {
+  Future<void> pumpCapture(WidgetTester tester, CaptureScreen screen) async {
     await tester.binding.setSurfaceSize(const Size(800, 1600));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -23,11 +21,17 @@ void main() {
             locale: const Locale('es'),
             supportedLocales: AppLocaleUtils.supportedLocales,
             localizationsDelegates: GlobalMaterialLocalizations.delegates,
-            home: const CaptureScreen(),
+            home: screen,
           ),
         ),
       ),
     );
+  }
+
+  testWidgets('captura muestra criterios y bloquea el obturador', (
+    tester,
+  ) async {
+    await pumpCapture(tester, const CaptureScreen(visionAvailable: true));
 
     expect(find.text('Captura biométrica'), findsOneWidget);
     expect(find.text('CRITERIOS DE ESCANEO'), findsOneWidget);
@@ -45,5 +49,18 @@ void main() {
       find.textContaining('modelo de visión esté integrado'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('sin visión (web) muestra estado no disponible, sin obturador', (
+    tester,
+  ) async {
+    await pumpCapture(tester, const CaptureScreen(visionAvailable: false));
+
+    expect(
+      find.text('Captura no disponible en este navegador'),
+      findsOneWidget,
+    );
+    expect(find.text('CRITERIOS DE ESCANEO'), findsNothing);
+    expect(find.byIcon(Icons.camera_alt), findsNothing);
   });
 }

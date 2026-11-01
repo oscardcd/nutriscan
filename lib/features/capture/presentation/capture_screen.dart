@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -8,7 +9,10 @@ import '../../../i18n/strings.g.dart';
 /// ahora: shortcut: sin pipeline de visión conectado, los valores se alimentan
 /// cuando `core/vision` entregue pose + segmentación.
 class CaptureScreen extends StatelessWidget {
-  const CaptureScreen({super.key});
+  const CaptureScreen({super.key, this.visionAvailable = !kIsWeb});
+
+  /// Cámara y modelos de visión (ML Kit, TFLite) solo existen en móvil.
+  final bool visionAvailable;
 
   @override
   Widget build(BuildContext context) {
@@ -21,42 +25,50 @@ class CaptureScreen extends StatelessWidget {
         child: Column(
           children: [
             _TopBar(title: t.capture.title),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.marginMobile,
-                  AppSpacing.md,
-                  AppSpacing.marginMobile,
-                  AppSpacing.md,
+            if (!visionAvailable)
+              Expanded(
+                child: EmptyState(
+                  icon: Icons.no_photography_outlined,
+                  title: t.capture.webUnavailableTitle,
+                  message: t.capture.webUnavailable,
                 ),
-                children: [
-                  const _ScanPreview(),
-                  const SizedBox(height: AppSpacing.md),
-                  _AlignmentCard(t: t, theme: theme),
-                  const SizedBox(height: AppSpacing.md),
-                  _CriteriaCard(t: t),
-                  // Las notas viven en el scroll: en la barra fija dejaban sin
-                  // espacio al contenido con texto grande.
-                  const SizedBox(height: AppSpacing.md),
-                  Text(
-                    t.capture.shutterPending,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                    textAlign: TextAlign.center,
+              )
+            else ...[
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.marginMobile,
+                    AppSpacing.md,
+                    AppSpacing.marginMobile,
+                    AppSpacing.md,
                   ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    t.capture.localNote,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                  children: [
+                    const _ScanPreview(),
+                    const SizedBox(height: AppSpacing.md),
+                    _AlignmentCard(t: t, theme: theme),
+                    const SizedBox(height: AppSpacing.md),
+                    _CriteriaCard(t: t),
+                    const SizedBox(height: AppSpacing.md),
+                    Text(
+                      t.capture.shutterPending,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      t.capture.localNote,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            _CaptureBar(t: t),
+              _CaptureBar(t: t),
+            ],
           ],
         ),
       ),
