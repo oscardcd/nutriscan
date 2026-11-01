@@ -6,7 +6,7 @@
 /// Locales: 2
 /// Strings: 174 (87 per locale)
 ///
-/// Built on 2026-11-01 at 18:45 UTC
+/// Built on 2026-11-01 at 18:57 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -317,9 +317,9 @@ class _StringsResultEs {
 	String get scaleTitle => 'Escala OMS';
 	String get indicesTitle => 'Índices antropométricos';
 	String get whtr => 'Cintura-altura (WHtR)';
-	String get whtrNote => 'Distribución abdominal moderada';
+	String get whtrNote => 'Proporción entre cintura y estatura';
 	String get bri => 'Redondez corporal (BRI)';
-	String get briNote => 'Morfología dentro de parámetros esperados';
+	String get briNote => 'Forma del cuerpo derivada de perímetros';
 	String get rfm => 'Masa grasa relativa (RFM)';
 	String get rfmNote => 'Estimación basada en proporciones corporales';
 	String get meaningTitle => '¿Qué significa este resultado?';
@@ -522,9 +522,9 @@ class _StringsResultEn extends _StringsResultEs {
 	@override String get scaleTitle => 'WHO scale';
 	@override String get indicesTitle => 'Anthropometric indices';
 	@override String get whtr => 'Waist-to-height (WHtR)';
-	@override String get whtrNote => 'Moderate abdominal distribution';
+	@override String get whtrNote => 'Ratio of waist to height';
 	@override String get bri => 'Body roundness (BRI)';
-	@override String get briNote => 'Morphology within expected parameters';
+	@override String get briNote => 'Body shape derived from circumferences';
 	@override String get rfm => 'Relative fat mass (RFM)';
 	@override String get rfmNote => 'Estimate based on body proportions';
 	@override String get meaningTitle => 'What does this result mean?';
@@ -617,9 +617,9 @@ extension on Translations {
 			case 'result.scaleTitle': return 'Escala OMS';
 			case 'result.indicesTitle': return 'Índices antropométricos';
 			case 'result.whtr': return 'Cintura-altura (WHtR)';
-			case 'result.whtrNote': return 'Distribución abdominal moderada';
+			case 'result.whtrNote': return 'Proporción entre cintura y estatura';
 			case 'result.bri': return 'Redondez corporal (BRI)';
-			case 'result.briNote': return 'Morfología dentro de parámetros esperados';
+			case 'result.briNote': return 'Forma del cuerpo derivada de perímetros';
 			case 'result.rfm': return 'Masa grasa relativa (RFM)';
 			case 'result.rfmNote': return 'Estimación basada en proporciones corporales';
 			case 'result.meaningTitle': return '¿Qué significa este resultado?';
@@ -712,9 +712,9 @@ extension on _StringsEn {
 			case 'result.scaleTitle': return 'WHO scale';
 			case 'result.indicesTitle': return 'Anthropometric indices';
 			case 'result.whtr': return 'Waist-to-height (WHtR)';
-			case 'result.whtrNote': return 'Moderate abdominal distribution';
+			case 'result.whtrNote': return 'Ratio of waist to height';
 			case 'result.bri': return 'Body roundness (BRI)';
-			case 'result.briNote': return 'Morphology within expected parameters';
+			case 'result.briNote': return 'Body shape derived from circumferences';
 			case 'result.rfm': return 'Relative fat mass (RFM)';
 			case 'result.rfmNote': return 'Estimate based on body proportions';
 			case 'result.meaningTitle': return 'What does this result mean?';
