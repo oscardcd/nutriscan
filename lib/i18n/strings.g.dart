@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 86 (43 per locale)
+/// Strings: 130 (65 per locale)
 ///
-/// Built on 2026-11-01 at 17:15 UTC
+/// Built on 2026-11-01 at 17:16 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -178,9 +178,31 @@ class _StringsCaptureEs {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	String get headline => 'Conoce tu rango, no un número';
-	String get body => 'Estimación por imagen, procesada en tu dispositivo. Las fotos nunca salen del teléfono.';
-	String get cta => 'Iniciar medición';
+	String get title => 'Captura biométrica';
+	String get onDevice => 'En el dispositivo';
+	String get localBadge => 'Cómputo local';
+	String get alignment => 'Alineación corporal';
+	String get posture => 'Postura';
+	String get postureOk => 'Alineada y nivelada';
+	String get tilt => 'Inclinación';
+	String get tiltOk => '0.2° · Óptima';
+	String get sensor => 'Sensor';
+	String get sensorOk => 'Listo';
+	String get distance => 'Distancia detectada';
+	String get distanceValue => '2.1 m';
+	String get criteria => 'Criterios de escaneo';
+	String get approved => '3 / 4 aprobados';
+	String get fullBody => 'Cuerpo completo';
+	String get twoMeters => 'A 2 metros';
+	String get plainBackground => 'Fondo liso y uniforme';
+	String get looseClothing => 'Evitar ropa holgada';
+	String get sideView => 'Incluir vista lateral';
+	String get sideViewHint => 'Recomendado para mayor precisión corporal';
+	String get gallery => 'Galería';
+	String get timer => '3 seg';
+	String get shutter => 'Capturar';
+	String get shutterPending => 'La captura se habilita cuando el modelo de visión esté integrado.';
+	String get localNote => 'Las fotos se procesan y permanecen exclusivamente en este teléfono.';
 }
 
 // Path: history
@@ -329,9 +351,31 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	@override final _StringsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get headline => 'Know your range, not a number';
-	@override String get body => 'Image-based estimate, processed on your device. Photos never leave your phone.';
-	@override String get cta => 'Start measurement';
+	@override String get title => 'Biometric capture';
+	@override String get onDevice => 'On device';
+	@override String get localBadge => 'Local compute';
+	@override String get alignment => 'Body alignment';
+	@override String get posture => 'Posture';
+	@override String get postureOk => 'Aligned and level';
+	@override String get tilt => 'Tilt';
+	@override String get tiltOk => '0.2° · Optimal';
+	@override String get sensor => 'Sensor';
+	@override String get sensorOk => 'Ready';
+	@override String get distance => 'Detected distance';
+	@override String get distanceValue => '2.1 m';
+	@override String get criteria => 'Scan criteria';
+	@override String get approved => '3 / 4 passed';
+	@override String get fullBody => 'Full body';
+	@override String get twoMeters => 'At 2 meters';
+	@override String get plainBackground => 'Plain, even background';
+	@override String get looseClothing => 'Avoid loose clothing';
+	@override String get sideView => 'Add a side view';
+	@override String get sideViewHint => 'Recommended for better body accuracy';
+	@override String get gallery => 'Gallery';
+	@override String get timer => '3 sec';
+	@override String get shutter => 'Capture';
+	@override String get shutterPending => 'Capture unlocks once the vision model is integrated.';
+	@override String get localNote => 'Photos are processed and stay exclusively on this phone.';
 }
 
 // Path: history
@@ -434,9 +478,31 @@ extension on Translations {
 			case 'nav.measure': return 'Medir';
 			case 'nav.history': return 'Historial';
 			case 'nav.profile': return 'Perfil';
-			case 'capture.headline': return 'Conoce tu rango, no un número';
-			case 'capture.body': return 'Estimación por imagen, procesada en tu dispositivo. Las fotos nunca salen del teléfono.';
-			case 'capture.cta': return 'Iniciar medición';
+			case 'capture.title': return 'Captura biométrica';
+			case 'capture.onDevice': return 'En el dispositivo';
+			case 'capture.localBadge': return 'Cómputo local';
+			case 'capture.alignment': return 'Alineación corporal';
+			case 'capture.posture': return 'Postura';
+			case 'capture.postureOk': return 'Alineada y nivelada';
+			case 'capture.tilt': return 'Inclinación';
+			case 'capture.tiltOk': return '0.2° · Óptima';
+			case 'capture.sensor': return 'Sensor';
+			case 'capture.sensorOk': return 'Listo';
+			case 'capture.distance': return 'Distancia detectada';
+			case 'capture.distanceValue': return '2.1 m';
+			case 'capture.criteria': return 'Criterios de escaneo';
+			case 'capture.approved': return '3 / 4 aprobados';
+			case 'capture.fullBody': return 'Cuerpo completo';
+			case 'capture.twoMeters': return 'A 2 metros';
+			case 'capture.plainBackground': return 'Fondo liso y uniforme';
+			case 'capture.looseClothing': return 'Evitar ropa holgada';
+			case 'capture.sideView': return 'Incluir vista lateral';
+			case 'capture.sideViewHint': return 'Recomendado para mayor precisión corporal';
+			case 'capture.gallery': return 'Galería';
+			case 'capture.timer': return '3 seg';
+			case 'capture.shutter': return 'Capturar';
+			case 'capture.shutterPending': return 'La captura se habilita cuando el modelo de visión esté integrado.';
+			case 'capture.localNote': return 'Las fotos se procesan y permanecen exclusivamente en este teléfono.';
 			case 'history.title': return 'Tu progreso';
 			case 'history.empty': return 'Aún no hay mediciones';
 			case 'profile.title': return 'Perfil';
@@ -485,9 +551,31 @@ extension on _StringsEn {
 			case 'nav.measure': return 'Measure';
 			case 'nav.history': return 'History';
 			case 'nav.profile': return 'Profile';
-			case 'capture.headline': return 'Know your range, not a number';
-			case 'capture.body': return 'Image-based estimate, processed on your device. Photos never leave your phone.';
-			case 'capture.cta': return 'Start measurement';
+			case 'capture.title': return 'Biometric capture';
+			case 'capture.onDevice': return 'On device';
+			case 'capture.localBadge': return 'Local compute';
+			case 'capture.alignment': return 'Body alignment';
+			case 'capture.posture': return 'Posture';
+			case 'capture.postureOk': return 'Aligned and level';
+			case 'capture.tilt': return 'Tilt';
+			case 'capture.tiltOk': return '0.2° · Optimal';
+			case 'capture.sensor': return 'Sensor';
+			case 'capture.sensorOk': return 'Ready';
+			case 'capture.distance': return 'Detected distance';
+			case 'capture.distanceValue': return '2.1 m';
+			case 'capture.criteria': return 'Scan criteria';
+			case 'capture.approved': return '3 / 4 passed';
+			case 'capture.fullBody': return 'Full body';
+			case 'capture.twoMeters': return 'At 2 meters';
+			case 'capture.plainBackground': return 'Plain, even background';
+			case 'capture.looseClothing': return 'Avoid loose clothing';
+			case 'capture.sideView': return 'Add a side view';
+			case 'capture.sideViewHint': return 'Recommended for better body accuracy';
+			case 'capture.gallery': return 'Gallery';
+			case 'capture.timer': return '3 sec';
+			case 'capture.shutter': return 'Capture';
+			case 'capture.shutterPending': return 'Capture unlocks once the vision model is integrated.';
+			case 'capture.localNote': return 'Photos are processed and stay exclusively on this phone.';
 			case 'history.title': return 'Your progress';
 			case 'history.empty': return 'No measurements yet';
 			case 'profile.title': return 'Profile';
