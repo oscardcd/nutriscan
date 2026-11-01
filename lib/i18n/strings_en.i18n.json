@@ -1,0 +1,61 @@
+{
+  "appTitle": "NutriScan",
+  "nav": {
+    "measure": "Measure",
+    "history": "History",
+    "profile": "Profile"
+  },
+  "capture": {
+    "headline": "Know your range, not a number",
+    "body": "Image-based estimate, processed on your device. Photos never leave your phone.",
+    "cta": "Start measurement"
+  },
+  "history": {
+    "title": "Your progress",
+    "empty": "No measurements yet"
+  },
+  "profile": {
+    "title": "Profile",
+    "height": "Height",
+    "required": "Required",
+    "sex": "Sex",
+    "age": "Age",
+    "onDevice": "On-device processing",
+    "onDeviceLocked": "Enabled and locked",
+    "deleteAll": "Delete all data",
+    "unset": "—"
+  },
+  "band": {
+    "underweight": "Underweight",
+    "normal": "Normal",
+    "overweight": "Overweight",
+    "obese": "Obese"
+  },
+  "disclaimer": {
+    "screening": "Screening estimate. Not a diagnosis. Consult a healthcare professional for evaluation."
+  },
+  "onDevice": {
+    "pill": "100% On-Device"
+  },
+  "consent": {
+    "subtitle": "Home",
+    "heroTitle": "Know your range, not a number",
+    "heroBody": "Body composition estimate and BMI band processed 100% locally and privately on your device.",
+    "deviceTitle": "100% on your device",
+    "deviceBody": "Photos are never uploaded or leave your phone. The calculation runs on the local neural chip.",
+    "privacyTitle": "Strict photo privacy",
+    "privacyBody": "No cloud storage and no third-party access. The capture is discarded right after the measurement.",
+    "screeningTitle": "Preventive screening tool",
+    "screeningBody": "Educational guidance on wellness and healthy habits, not a binding clinical diagnosis.",
+    "termsTitle": "Consent Terms",
+    "required": "Required",
+    "termsBody": "To ensure safe and ethical use, confirm the following two premises before continuing:",
+    "screeningPrefix": "I understand this is a ",
+    "screeningHighlight": "preliminary screening tool",
+    "screeningSuffix": " and does not constitute a clinical medical diagnosis.",
+    "processingPrefix": "I authorize ",
+    "processingHighlight": "biometric visual processing",
+    "processingSuffix": " on my device to calculate my BMI bands.",
+    "cta": "Start assessment"
+  }
+}
