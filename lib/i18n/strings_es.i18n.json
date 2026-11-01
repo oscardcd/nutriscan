@@ -79,5 +79,25 @@
     "processingHighlight": "procesamiento visual biométrico",
     "processingSuffix": " en mi dispositivo para calcular mis bandas de IMC.",
     "cta": "Comenzar evaluación"
+  },
+  "result": {
+    "subtitle": "Resultado",
+    "screeningLabel": "Resultado de cribado",
+    "bmiLabel": "Índice de masa corporal estimado",
+    "rangeLabel": "rango de estimación",
+    "confidenceLow": "Confianza baja",
+    "confidenceMedium": "Confianza media",
+    "confidenceHigh": "Confianza alta",
+    "scaleTitle": "Escala OMS",
+    "indicesTitle": "Índices antropométricos",
+    "whtr": "Cintura-altura (WHtR)",
+    "whtrNote": "Distribución abdominal moderada",
+    "bri": "Redondez corporal (BRI)",
+    "briNote": "Morfología dentro de parámetros esperados",
+    "rfm": "Masa grasa relativa (RFM)",
+    "rfmNote": "Estimación basada en proporciones corporales",
+    "meaningTitle": "¿Qué significa este resultado?",
+    "meaningBody": "Tu silueta se sitúa en una banda de referencia. El IMC y las proyecciones visuales no distinguen masa muscular magra de tejido adiposo: es un punto de partida preventivo para tu seguimiento.",
+    "cta": "Volver a medir"
   }
 }
