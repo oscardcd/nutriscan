@@ -31,7 +31,11 @@ void main() {
 
     expect(find.text('Captura biométrica'), findsOneWidget);
     expect(find.text('CRITERIOS DE ESCANEO'), findsOneWidget);
-    expect(find.text('3 / 4 aprobados'), findsOneWidget);
+    expect(find.text('Cuerpo completo, de frente'), findsOneWidget);
+    // Guía estática, sin lecturas inventadas de sensor o distancia.
+    expect(find.textContaining('Óptima'), findsNothing);
+    expect(find.textContaining('2.1 m'), findsNothing);
+    expect(find.textContaining('aprobados'), findsNothing);
     expect(
       find.textContaining('modelo de visión esté integrado'),
       findsOneWidget,
