@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 174 (87 per locale)
+/// Strings: 178 (89 per locale)
 ///
-/// Built on 2026-11-01 at 18:57 UTC
+/// Built on 2026-11-01 at 19:47 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -204,6 +204,8 @@ class _StringsCaptureEs {
 	String get shutter => 'Capturar';
 	String get shutterPending => 'La captura se habilita cuando el modelo de visión esté integrado.';
 	String get localNote => 'Las fotos se procesan y permanecen exclusivamente en este teléfono.';
+	String get webUnavailableTitle => 'Captura no disponible en este navegador';
+	String get webUnavailable => 'El cribado por imagen necesita los modelos de visión on-device de la app móvil. Usa NutriScan en tu teléfono para tomar una medición; es una herramienta de cribado, no un diagnóstico.';
 }
 
 // Path: history
@@ -409,6 +411,8 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	@override String get shutter => 'Capture';
 	@override String get shutterPending => 'Capture unlocks once the vision model is integrated.';
 	@override String get localNote => 'Photos are processed and stay exclusively on this phone.';
+	@override String get webUnavailableTitle => 'Capture not available in this browser';
+	@override String get webUnavailable => 'Image-based screening needs the on-device vision models of the mobile app. Use NutriScan on your phone to take a measurement; it is a screening tool, not a diagnosis.';
 }
 
 // Path: history
@@ -567,6 +571,8 @@ extension on Translations {
 			case 'capture.shutter': return 'Capturar';
 			case 'capture.shutterPending': return 'La captura se habilita cuando el modelo de visión esté integrado.';
 			case 'capture.localNote': return 'Las fotos se procesan y permanecen exclusivamente en este teléfono.';
+			case 'capture.webUnavailableTitle': return 'Captura no disponible en este navegador';
+			case 'capture.webUnavailable': return 'El cribado por imagen necesita los modelos de visión on-device de la app móvil. Usa NutriScan en tu teléfono para tomar una medición; es una herramienta de cribado, no un diagnóstico.';
 			case 'history.title': return 'Tu progreso';
 			case 'history.empty': return 'Aún no hay mediciones';
 			case 'profile.title': return 'Perfil';
@@ -662,6 +668,8 @@ extension on _StringsEn {
 			case 'capture.shutter': return 'Capture';
 			case 'capture.shutterPending': return 'Capture unlocks once the vision model is integrated.';
 			case 'capture.localNote': return 'Photos are processed and stay exclusively on this phone.';
+			case 'capture.webUnavailableTitle': return 'Capture not available in this browser';
+			case 'capture.webUnavailable': return 'Image-based screening needs the on-device vision models of the mobile app. Use NutriScan on your phone to take a measurement; it is a screening tool, not a diagnosis.';
 			case 'history.title': return 'Your progress';
 			case 'history.empty': return 'No measurements yet';
 			case 'profile.title': return 'Profile';

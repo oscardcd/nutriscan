@@ -30,7 +30,9 @@
     "timer": "3 seg",
     "shutter": "Capturar",
     "shutterPending": "La captura se habilita cuando el modelo de visión esté integrado.",
-    "localNote": "Las fotos se procesan y permanecen exclusivamente en este teléfono."
+    "localNote": "Las fotos se procesan y permanecen exclusivamente en este teléfono.",
+    "webUnavailableTitle": "Captura no disponible en este navegador",
+    "webUnavailable": "El cribado por imagen necesita los modelos de visión on-device de la app móvil. Usa NutriScan en tu teléfono para tomar una medición; es una herramienta de cribado, no un diagnóstico."
   },
   "history": {
     "title": "Tu progreso",

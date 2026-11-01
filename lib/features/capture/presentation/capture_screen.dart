@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -9,7 +10,10 @@ import '../../../i18n/strings.g.dart';
 /// ahora: shortcut: sin pipeline de visión conectado, los valores se alimentan
 /// cuando `core/vision` entregue pose + segmentación.
 class CaptureScreen extends StatelessWidget {
-  const CaptureScreen({super.key});
+  const CaptureScreen({super.key, this.visionAvailable = !kIsWeb});
+
+  /// Cámara y modelos de visión (ML Kit, TFLite) solo existen en móvil.
+  final bool visionAvailable;
 
   @override
   Widget build(BuildContext context) {
@@ -21,25 +25,38 @@ class CaptureScreen extends StatelessWidget {
         bottom: false,
         child: Column(
           children: [
-            _TopBar(title: t.capture.title, onClose: () => context.go('/welcome')),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.marginMobile,
-                  AppSpacing.md,
-                  AppSpacing.marginMobile,
-                  AppSpacing.md,
-                ),
-                children: [
-                  const _ScanPreview(),
-                  const SizedBox(height: AppSpacing.md),
-                  _AlignmentCard(t: t, theme: theme),
-                  const SizedBox(height: AppSpacing.md),
-                  _CriteriaCard(t: t),
-                ],
-              ),
+            _TopBar(
+              title: t.capture.title,
+              onClose: () => context.go('/welcome'),
             ),
-            _CaptureBar(t: t),
+            if (!visionAvailable)
+              Expanded(
+                child: EmptyState(
+                  icon: Icons.no_photography_outlined,
+                  title: t.capture.webUnavailableTitle,
+                  message: t.capture.webUnavailable,
+                ),
+              )
+            else ...[
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.marginMobile,
+                    AppSpacing.md,
+                    AppSpacing.marginMobile,
+                    AppSpacing.md,
+                  ),
+                  children: [
+                    const _ScanPreview(),
+                    const SizedBox(height: AppSpacing.md),
+                    _AlignmentCard(t: t, theme: theme),
+                    const SizedBox(height: AppSpacing.md),
+                    _CriteriaCard(t: t),
+                  ],
+                ),
+              ),
+              _CaptureBar(t: t),
+            ],
           ],
         ),
       ),
@@ -125,7 +142,9 @@ class _ScanPreview extends StatelessWidget {
             Positioned.fill(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.lg),
-                child: CustomPaint(painter: _CornersPainter(theme.colorScheme.primary)),
+                child: CustomPaint(
+                  painter: _CornersPainter(theme.colorScheme.primary),
+                ),
               ),
             ),
             Positioned(
@@ -293,13 +312,20 @@ class _CriteriaCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.threesixty, size: 18, color: theme.colorScheme.primary),
+                Icon(
+                  Icons.threesixty,
+                  size: 18,
+                  color: theme.colorScheme.primary,
+                ),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(t.capture.sideView, style: theme.textTheme.labelLarge),
+                      Text(
+                        t.capture.sideView,
+                        style: theme.textTheme.labelLarge,
+                      ),
                       Text(
                         t.capture.sideViewHint,
                         style: theme.textTheme.bodyMedium?.copyWith(
