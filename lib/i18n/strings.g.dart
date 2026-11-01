@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 174 (87 per locale)
+/// Strings: 164 (82 per locale)
 ///
-/// Built on 2026-11-01 at 18:57 UTC
+/// Built on 2026-11-01 at 19:17 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -183,16 +183,11 @@ class _StringsCaptureEs {
 	String get onDevice => 'En el dispositivo';
 	String get localBadge => 'Cómputo local';
 	String get alignment => 'Alineación corporal';
-	String get posture => 'Postura';
-	String get postureOk => 'Alineada y nivelada';
-	String get tilt => 'Inclinación';
-	String get tiltOk => '0.2° · Óptima';
-	String get sensor => 'Sensor';
-	String get sensorOk => 'Listo';
-	String get distance => 'Distancia detectada';
-	String get distanceValue => '2.1 m';
+	String get posture => 'Cuerpo completo, de frente';
+	String get tilt => 'Teléfono recto y nivelado';
+	String get sensor => 'La cámara se activa al iniciar el escaneo';
+	String get distance => 'A 2 metros del teléfono';
 	String get criteria => 'Criterios de escaneo';
-	String get approved => '3 / 4 aprobados';
 	String get fullBody => 'Cuerpo completo';
 	String get twoMeters => 'A 2 metros';
 	String get plainBackground => 'Fondo liso y uniforme';
@@ -388,16 +383,11 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	@override String get onDevice => 'On device';
 	@override String get localBadge => 'Local compute';
 	@override String get alignment => 'Body alignment';
-	@override String get posture => 'Posture';
-	@override String get postureOk => 'Aligned and level';
-	@override String get tilt => 'Tilt';
-	@override String get tiltOk => '0.2° · Optimal';
-	@override String get sensor => 'Sensor';
-	@override String get sensorOk => 'Ready';
-	@override String get distance => 'Detected distance';
-	@override String get distanceValue => '2.1 m';
+	@override String get posture => 'Full body, facing the camera';
+	@override String get tilt => 'Phone upright and level';
+	@override String get sensor => 'Camera starts when the scan begins';
+	@override String get distance => '2 meters away from the phone';
 	@override String get criteria => 'Scan criteria';
-	@override String get approved => '3 / 4 passed';
 	@override String get fullBody => 'Full body';
 	@override String get twoMeters => 'At 2 meters';
 	@override String get plainBackground => 'Plain, even background';
@@ -546,16 +536,11 @@ extension on Translations {
 			case 'capture.onDevice': return 'En el dispositivo';
 			case 'capture.localBadge': return 'Cómputo local';
 			case 'capture.alignment': return 'Alineación corporal';
-			case 'capture.posture': return 'Postura';
-			case 'capture.postureOk': return 'Alineada y nivelada';
-			case 'capture.tilt': return 'Inclinación';
-			case 'capture.tiltOk': return '0.2° · Óptima';
-			case 'capture.sensor': return 'Sensor';
-			case 'capture.sensorOk': return 'Listo';
-			case 'capture.distance': return 'Distancia detectada';
-			case 'capture.distanceValue': return '2.1 m';
+			case 'capture.posture': return 'Cuerpo completo, de frente';
+			case 'capture.tilt': return 'Teléfono recto y nivelado';
+			case 'capture.sensor': return 'La cámara se activa al iniciar el escaneo';
+			case 'capture.distance': return 'A 2 metros del teléfono';
 			case 'capture.criteria': return 'Criterios de escaneo';
-			case 'capture.approved': return '3 / 4 aprobados';
 			case 'capture.fullBody': return 'Cuerpo completo';
 			case 'capture.twoMeters': return 'A 2 metros';
 			case 'capture.plainBackground': return 'Fondo liso y uniforme';
@@ -641,16 +626,11 @@ extension on _StringsEn {
 			case 'capture.onDevice': return 'On device';
 			case 'capture.localBadge': return 'Local compute';
 			case 'capture.alignment': return 'Body alignment';
-			case 'capture.posture': return 'Posture';
-			case 'capture.postureOk': return 'Aligned and level';
-			case 'capture.tilt': return 'Tilt';
-			case 'capture.tiltOk': return '0.2° · Optimal';
-			case 'capture.sensor': return 'Sensor';
-			case 'capture.sensorOk': return 'Ready';
-			case 'capture.distance': return 'Detected distance';
-			case 'capture.distanceValue': return '2.1 m';
+			case 'capture.posture': return 'Full body, facing the camera';
+			case 'capture.tilt': return 'Phone upright and level';
+			case 'capture.sensor': return 'Camera starts when the scan begins';
+			case 'capture.distance': return '2 meters away from the phone';
 			case 'capture.criteria': return 'Scan criteria';
-			case 'capture.approved': return '3 / 4 passed';
 			case 'capture.fullBody': return 'Full body';
 			case 'capture.twoMeters': return 'At 2 meters';
 			case 'capture.plainBackground': return 'Plain, even background';
