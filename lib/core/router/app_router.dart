@@ -5,6 +5,8 @@ import '../../dev/component_gallery_screen.dart';
 import '../../features/capture/presentation/capture_screen.dart';
 import '../../features/consent/presentation/consent_screen.dart';
 import '../../features/history/presentation/history_screen.dart';
+import '../../features/classify/domain/screening_result.dart';
+import '../../features/result/presentation/result_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../i18n/strings.g.dart';
 
@@ -14,6 +16,20 @@ final appRouter = GoRouter(
     // Solo desarrollo: galería del design system.
     GoRoute(path: '/gallery', builder: (_, _) => const ComponentGalleryScreen()),
     GoRoute(path: '/welcome', builder: (_, _) => const ConsentScreen()),
+    // shortcut: valores de ejemplo hasta conectar la pipeline de medición.
+    GoRoute(
+      path: '/result',
+      builder: (_, _) => const ResultScreen(
+        result: ScreeningResult(
+          bmi: 27.4,
+          margin: 1.8,
+          confidence: ScreeningConfidence.high,
+          waistToHeight: 0.53,
+          bodyRoundness: 3.8,
+          relativeFatMass: 26.4,
+        ),
+      ),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => _ShellScaffold(shell: shell),
       branches: [

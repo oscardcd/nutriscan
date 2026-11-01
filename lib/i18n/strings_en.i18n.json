@@ -79,5 +79,25 @@
     "processingHighlight": "biometric visual processing",
     "processingSuffix": " on my device to calculate my BMI bands.",
     "cta": "Start assessment"
+  },
+  "result": {
+    "subtitle": "Result",
+    "screeningLabel": "Screening result",
+    "bmiLabel": "Estimated body mass index",
+    "rangeLabel": "estimate range",
+    "confidenceLow": "Low confidence",
+    "confidenceMedium": "Medium confidence",
+    "confidenceHigh": "High confidence",
+    "scaleTitle": "WHO scale",
+    "indicesTitle": "Anthropometric indices",
+    "whtr": "Waist-to-height (WHtR)",
+    "whtrNote": "Moderate abdominal distribution",
+    "bri": "Body roundness (BRI)",
+    "briNote": "Morphology within expected parameters",
+    "rfm": "Relative fat mass (RFM)",
+    "rfmNote": "Estimate based on body proportions",
+    "meaningTitle": "What does this result mean?",
+    "meaningBody": "Your silhouette falls in a reference band. BMI and visual projections do not distinguish lean muscle from fat tissue: it is a preventive starting point for your tracking.",
+    "cta": "Measure again"
   }
 }

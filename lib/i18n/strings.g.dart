@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 130 (65 per locale)
+/// Strings: 166 (83 per locale)
 ///
-/// Built on 2026-11-01 at 17:16 UTC
+/// Built on 2026-11-01 at 17:17 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -157,6 +157,7 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 	late final _StringsDisclaimerEs disclaimer = _StringsDisclaimerEs._(_root);
 	late final _StringsOnDeviceEs onDevice = _StringsOnDeviceEs._(_root);
 	late final _StringsConsentEs consent = _StringsConsentEs._(_root);
+	late final _StringsResultEs result = _StringsResultEs._(_root);
 }
 
 // Path: nav
@@ -295,6 +296,33 @@ class _StringsConsentEs {
 	String get cta => 'Comenzar evaluación';
 }
 
+// Path: result
+class _StringsResultEs {
+	_StringsResultEs._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get subtitle => 'Resultado';
+	String get screeningLabel => 'Resultado de cribado';
+	String get bmiLabel => 'Índice de masa corporal estimado';
+	String get rangeLabel => 'rango de estimación';
+	String get confidenceLow => 'Confianza baja';
+	String get confidenceMedium => 'Confianza media';
+	String get confidenceHigh => 'Confianza alta';
+	String get scaleTitle => 'Escala OMS';
+	String get indicesTitle => 'Índices antropométricos';
+	String get whtr => 'Cintura-altura (WHtR)';
+	String get whtrNote => 'Distribución abdominal moderada';
+	String get bri => 'Redondez corporal (BRI)';
+	String get briNote => 'Morfología dentro de parámetros esperados';
+	String get rfm => 'Masa grasa relativa (RFM)';
+	String get rfmNote => 'Estimación basada en proporciones corporales';
+	String get meaningTitle => '¿Qué significa este resultado?';
+	String get meaningBody => 'Tu silueta se sitúa en una banda de referencia. El IMC y las proyecciones visuales no distinguen masa muscular magra de tejido adiposo: es un punto de partida preventivo para tu seguimiento.';
+	String get cta => 'Volver a medir';
+}
+
 // Path: <root>
 class _StringsEn extends Translations {
 	/// You can call this constructor and build your own translation instance of this locale.
@@ -330,6 +358,7 @@ class _StringsEn extends Translations {
 	@override late final _StringsDisclaimerEn disclaimer = _StringsDisclaimerEn._(_root);
 	@override late final _StringsOnDeviceEn onDevice = _StringsOnDeviceEn._(_root);
 	@override late final _StringsConsentEn consent = _StringsConsentEn._(_root);
+	@override late final _StringsResultEn result = _StringsResultEn._(_root);
 }
 
 // Path: nav
@@ -468,6 +497,33 @@ class _StringsConsentEn extends _StringsConsentEs {
 	@override String get cta => 'Start assessment';
 }
 
+// Path: result
+class _StringsResultEn extends _StringsResultEs {
+	_StringsResultEn._(_StringsEn root) : this._root = root, super._(root);
+
+	@override final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get subtitle => 'Result';
+	@override String get screeningLabel => 'Screening result';
+	@override String get bmiLabel => 'Estimated body mass index';
+	@override String get rangeLabel => 'estimate range';
+	@override String get confidenceLow => 'Low confidence';
+	@override String get confidenceMedium => 'Medium confidence';
+	@override String get confidenceHigh => 'High confidence';
+	@override String get scaleTitle => 'WHO scale';
+	@override String get indicesTitle => 'Anthropometric indices';
+	@override String get whtr => 'Waist-to-height (WHtR)';
+	@override String get whtrNote => 'Moderate abdominal distribution';
+	@override String get bri => 'Body roundness (BRI)';
+	@override String get briNote => 'Morphology within expected parameters';
+	@override String get rfm => 'Relative fat mass (RFM)';
+	@override String get rfmNote => 'Estimate based on body proportions';
+	@override String get meaningTitle => 'What does this result mean?';
+	@override String get meaningBody => 'Your silhouette falls in a reference band. BMI and visual projections do not distinguish lean muscle from fat tissue: it is a preventive starting point for your tracking.';
+	@override String get cta => 'Measure again';
+}
+
 /// Flat map(s) containing all translations.
 /// Only for edge cases! For simple maps, use the map function of this library.
 
@@ -539,6 +595,24 @@ extension on Translations {
 			case 'consent.processingHighlight': return 'procesamiento visual biométrico';
 			case 'consent.processingSuffix': return ' en mi dispositivo para calcular mis bandas de IMC.';
 			case 'consent.cta': return 'Comenzar evaluación';
+			case 'result.subtitle': return 'Resultado';
+			case 'result.screeningLabel': return 'Resultado de cribado';
+			case 'result.bmiLabel': return 'Índice de masa corporal estimado';
+			case 'result.rangeLabel': return 'rango de estimación';
+			case 'result.confidenceLow': return 'Confianza baja';
+			case 'result.confidenceMedium': return 'Confianza media';
+			case 'result.confidenceHigh': return 'Confianza alta';
+			case 'result.scaleTitle': return 'Escala OMS';
+			case 'result.indicesTitle': return 'Índices antropométricos';
+			case 'result.whtr': return 'Cintura-altura (WHtR)';
+			case 'result.whtrNote': return 'Distribución abdominal moderada';
+			case 'result.bri': return 'Redondez corporal (BRI)';
+			case 'result.briNote': return 'Morfología dentro de parámetros esperados';
+			case 'result.rfm': return 'Masa grasa relativa (RFM)';
+			case 'result.rfmNote': return 'Estimación basada en proporciones corporales';
+			case 'result.meaningTitle': return '¿Qué significa este resultado?';
+			case 'result.meaningBody': return 'Tu silueta se sitúa en una banda de referencia. El IMC y las proyecciones visuales no distinguen masa muscular magra de tejido adiposo: es un punto de partida preventivo para tu seguimiento.';
+			case 'result.cta': return 'Volver a medir';
 			default: return null;
 		}
 	}
@@ -612,6 +686,24 @@ extension on _StringsEn {
 			case 'consent.processingHighlight': return 'biometric visual processing';
 			case 'consent.processingSuffix': return ' on my device to calculate my BMI bands.';
 			case 'consent.cta': return 'Start assessment';
+			case 'result.subtitle': return 'Result';
+			case 'result.screeningLabel': return 'Screening result';
+			case 'result.bmiLabel': return 'Estimated body mass index';
+			case 'result.rangeLabel': return 'estimate range';
+			case 'result.confidenceLow': return 'Low confidence';
+			case 'result.confidenceMedium': return 'Medium confidence';
+			case 'result.confidenceHigh': return 'High confidence';
+			case 'result.scaleTitle': return 'WHO scale';
+			case 'result.indicesTitle': return 'Anthropometric indices';
+			case 'result.whtr': return 'Waist-to-height (WHtR)';
+			case 'result.whtrNote': return 'Moderate abdominal distribution';
+			case 'result.bri': return 'Body roundness (BRI)';
+			case 'result.briNote': return 'Morphology within expected parameters';
+			case 'result.rfm': return 'Relative fat mass (RFM)';
+			case 'result.rfmNote': return 'Estimate based on body proportions';
+			case 'result.meaningTitle': return 'What does this result mean?';
+			case 'result.meaningBody': return 'Your silhouette falls in a reference band. BMI and visual projections do not distinguish lean muscle from fat tissue: it is a preventive starting point for your tracking.';
+			case 'result.cta': return 'Measure again';
 			default: return null;
 		}
 	}
