@@ -28,6 +28,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>NutriScan usa la cámara para capturar tu cuerpo completo y estimar tu banda de IMC en el dispositivo.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>NutriScan usa el micrófono solo si grabas un video de referencia; el audio no se procesa ni sale del dispositivo.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>NutriScan permite elegir una foto existente para estimarla en el dispositivo.</string>
 	<key>UIApplicationSceneManifest</key>
