@@ -21,14 +21,18 @@ class ScanCriterion extends StatelessWidget {
         Icon(
           icon,
           size: 18,
-          color: ok ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
+          color: ok
+              ? theme.colorScheme.primary
+              : theme.colorScheme.onSurfaceVariant,
         ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             label,
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: ok ? theme.colorScheme.onSurface : theme.colorScheme.onSurfaceVariant,
+              color: ok
+                  ? theme.colorScheme.onSurface
+                  : theme.colorScheme.onSurfaceVariant,
             ),
           ),
         ),

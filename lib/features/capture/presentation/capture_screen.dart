@@ -320,9 +320,11 @@ class _CaptureBar extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
+              // Inerte hasta que exista pipeline: se anuncia como inactivo,
+              // no como botón que no responde.
               Semantics(
-                button: true,
                 label: t.capture.shutter,
+                enabled: false,
                 child: Container(
                   width: 64,
                   height: 64,

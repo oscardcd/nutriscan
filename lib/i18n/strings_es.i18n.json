@@ -98,5 +98,13 @@
     "meaningTitle": "¿Qué significa este resultado?",
     "meaningBody": "Tu silueta se sitúa en una banda de referencia. El IMC y las proyecciones visuales no distinguen masa muscular magra de tejido adiposo: es un punto de partida preventivo para tu seguimiento.",
     "cta": "Volver a medir"
+  },
+  "settings": {
+    "title": "Idioma y tema",
+    "language": "IDIOMA",
+    "theme": "TEMA",
+    "themeSystem": "Sistema",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro"
   }
 }

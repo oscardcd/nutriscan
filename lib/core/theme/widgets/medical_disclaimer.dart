@@ -13,11 +13,15 @@ class MedicalDisclaimer extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: dark ? AppColors.darkSurfaceContainerLow : AppColors.disclaimerSurface,
+        color: dark
+            ? AppColors.darkSurfaceContainerLow
+            : AppColors.disclaimerSurface,
         borderRadius: BorderRadius.circular(12),
         border: Border(
           left: BorderSide(
-            color: dark ? AppColors.darkTextSecondary : AppColors.disclaimerBorder,
+            color: dark
+                ? AppColors.darkTextSecondary
+                : AppColors.disclaimerBorder,
             width: 2,
           ),
         ),

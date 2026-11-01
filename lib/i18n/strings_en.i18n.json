@@ -98,5 +98,13 @@
     "meaningTitle": "What does this result mean?",
     "meaningBody": "Your silhouette falls in a reference band. BMI and visual projections do not distinguish lean muscle from fat tissue: it is a preventive starting point for your tracking.",
     "cta": "Measure again"
+  },
+  "settings": {
+    "title": "Language and theme",
+    "language": "LANGUAGE",
+    "theme": "THEME",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark"
   }
 }
