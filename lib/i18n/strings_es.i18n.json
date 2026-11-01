@@ -45,7 +45,11 @@
     "onDevice": "Procesamiento on-device",
     "onDeviceLocked": "Activado y bloqueado",
     "deleteAll": "Borrar todos los datos",
-    "unset": "—"
+    "unset": "—",
+    "deleteConfirmTitle": "¿Borrar todos los datos?",
+    "deleteConfirmBody": "Se eliminarán las mediciones guardadas y tu consentimiento de este dispositivo. No se puede deshacer.",
+    "cancel": "Cancelar",
+    "delete": "Borrar todo"
   },
   "band": {
     "underweight": "Bajo peso",

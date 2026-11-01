@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/widgets/medical_disclaimer.dart';
 import '../../../core/ui/ui.dart';
 import '../../../i18n/strings.g.dart';
+import '../data/consent_gate.dart';
 
 /// Bienvenida + consentimiento explícito. Única puerta de entrada a la medición.
-class ConsentScreen extends StatefulWidget {
+class ConsentScreen extends ConsumerStatefulWidget {
   const ConsentScreen({super.key});
 
   @override
-  State<ConsentScreen> createState() => _ConsentScreenState();
+  ConsumerState<ConsentScreen> createState() => _ConsentScreenState();
 }
 
-class _ConsentScreenState extends State<ConsentScreen> {
+class _ConsentScreenState extends ConsumerState<ConsentScreen> {
   bool _acceptScreening = false;
   bool _acceptProcessing = false;
 
@@ -113,7 +114,10 @@ class _ConsentScreenState extends State<ConsentScreen> {
               child: SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: _canContinue ? () => context.go('/capture') : null,
+                  onPressed: _canContinue
+                      // El guard del router redirige a /capture al notificar.
+                      ? () => ref.read(consentGateProvider).grant()
+                      : null,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 166 (83 per locale)
+/// Strings: 174 (87 per locale)
 ///
-/// Built on 2026-11-01 at 17:17 UTC
+/// Built on 2026-11-01 at 18:45 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -233,6 +233,10 @@ class _StringsProfileEs {
 	String get onDeviceLocked => 'Activado y bloqueado';
 	String get deleteAll => 'Borrar todos los datos';
 	String get unset => '—';
+	String get deleteConfirmTitle => '¿Borrar todos los datos?';
+	String get deleteConfirmBody => 'Se eliminarán las mediciones guardadas y tu consentimiento de este dispositivo. No se puede deshacer.';
+	String get cancel => 'Cancelar';
+	String get delete => 'Borrar todo';
 }
 
 // Path: band
@@ -434,6 +438,10 @@ class _StringsProfileEn extends _StringsProfileEs {
 	@override String get onDeviceLocked => 'Enabled and locked';
 	@override String get deleteAll => 'Delete all data';
 	@override String get unset => '—';
+	@override String get deleteConfirmTitle => 'Delete all data?';
+	@override String get deleteConfirmBody => 'Saved measurements and your consent will be erased from this device. This cannot be undone.';
+	@override String get cancel => 'Cancel';
+	@override String get delete => 'Delete all';
 }
 
 // Path: band
@@ -570,6 +578,10 @@ extension on Translations {
 			case 'profile.onDeviceLocked': return 'Activado y bloqueado';
 			case 'profile.deleteAll': return 'Borrar todos los datos';
 			case 'profile.unset': return '—';
+			case 'profile.deleteConfirmTitle': return '¿Borrar todos los datos?';
+			case 'profile.deleteConfirmBody': return 'Se eliminarán las mediciones guardadas y tu consentimiento de este dispositivo. No se puede deshacer.';
+			case 'profile.cancel': return 'Cancelar';
+			case 'profile.delete': return 'Borrar todo';
 			case 'band.underweight': return 'Bajo peso';
 			case 'band.normal': return 'Normal';
 			case 'band.overweight': return 'Sobrepeso';
@@ -661,6 +673,10 @@ extension on _StringsEn {
 			case 'profile.onDeviceLocked': return 'Enabled and locked';
 			case 'profile.deleteAll': return 'Delete all data';
 			case 'profile.unset': return '—';
+			case 'profile.deleteConfirmTitle': return 'Delete all data?';
+			case 'profile.deleteConfirmBody': return 'Saved measurements and your consent will be erased from this device. This cannot be undone.';
+			case 'profile.cancel': return 'Cancel';
+			case 'profile.delete': return 'Delete all';
 			case 'band.underweight': return 'Underweight';
 			case 'band.normal': return 'Normal';
 			case 'band.overweight': return 'Overweight';
