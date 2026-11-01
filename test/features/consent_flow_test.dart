@@ -53,7 +53,9 @@ void main() {
     return gate;
   }
 
-  testWidgets('sin consentimiento el flujo arranca en /welcome', (tester) async {
+  testWidgets('sin consentimiento el flujo arranca en /welcome', (
+    tester,
+  ) async {
     await pumpApp(tester, granted: false);
 
     expect(find.text('Comenzar evaluación'), findsOneWidget);
