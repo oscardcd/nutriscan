@@ -3,15 +3,17 @@ import 'package:go_router/go_router.dart';
 
 import '../../dev/component_gallery_screen.dart';
 import '../../features/capture/presentation/capture_screen.dart';
+import '../../features/consent/presentation/consent_screen.dart';
 import '../../features/history/presentation/history_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../i18n/strings.g.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/capture',
+  initialLocation: '/welcome',
   routes: [
     // Solo desarrollo: galería del design system.
     GoRoute(path: '/gallery', builder: (_, _) => const ComponentGalleryScreen()),
+    GoRoute(path: '/welcome', builder: (_, _) => const ConsentScreen()),
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => _ShellScaffold(shell: shell),
       branches: [

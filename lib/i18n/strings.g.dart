@@ -3,10 +3,10 @@
 /// Original: lib/i18n
 /// To regenerate, run: `dart run slang`
 ///
-/// Locales: 1
-/// Strings: 23
+/// Locales: 2
+/// Strings: 86 (43 per locale)
 ///
-/// Built on 2026-11-01 at 16:59 UTC
+/// Built on 2026-11-01 at 17:15 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -25,7 +25,8 @@ const AppLocale _baseLocale = AppLocale.es;
 /// - Locale locale = AppLocale.es.flutterLocale // get flutter locale from enum
 /// - if (LocaleSettings.currentLocale == AppLocale.es) // locale check
 enum AppLocale with BaseAppLocale<AppLocale, Translations> {
-	es(languageCode: 'es', build: Translations.build);
+	es(languageCode: 'es', build: Translations.build),
+	en(languageCode: 'en', build: _StringsEn.build);
 
 	const AppLocale({required this.languageCode, this.scriptCode, this.countryCode, required this.build}); // ignore: unused_element
 
@@ -154,6 +155,8 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 	late final _StringsProfileEs profile = _StringsProfileEs._(_root);
 	late final _StringsBandEs band = _StringsBandEs._(_root);
 	late final _StringsDisclaimerEs disclaimer = _StringsDisclaimerEs._(_root);
+	late final _StringsOnDeviceEs onDevice = _StringsOnDeviceEs._(_root);
+	late final _StringsConsentEs consent = _StringsConsentEs._(_root);
 }
 
 // Path: nav
@@ -163,9 +166,9 @@ class _StringsNavEs {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	String get measure => 'Measure';
-	String get history => 'History';
-	String get profile => 'Profile';
+	String get measure => 'Medir';
+	String get history => 'Historial';
+	String get profile => 'Perfil';
 }
 
 // Path: capture
@@ -175,9 +178,9 @@ class _StringsCaptureEs {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	String get headline => 'Know your range, not a number';
-	String get body => 'Image-based estimate, processed on your device. Photos never leave your phone.';
-	String get cta => 'Start measurement';
+	String get headline => 'Conoce tu rango, no un número';
+	String get body => 'Estimación por imagen, procesada en tu dispositivo. Las fotos nunca salen del teléfono.';
+	String get cta => 'Iniciar medición';
 }
 
 // Path: history
@@ -187,8 +190,8 @@ class _StringsHistoryEs {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	String get title => 'Your progress';
-	String get empty => 'No measurements yet';
+	String get title => 'Tu progreso';
+	String get empty => 'Aún no hay mediciones';
 }
 
 // Path: profile
@@ -198,14 +201,14 @@ class _StringsProfileEs {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	String get title => 'Profile';
-	String get height => 'Height';
-	String get required => 'Required';
-	String get sex => 'Sex';
-	String get age => 'Age';
-	String get onDevice => 'On-device processing';
-	String get onDeviceLocked => 'Enabled and locked';
-	String get deleteAll => 'Delete all data';
+	String get title => 'Perfil';
+	String get height => 'Estatura';
+	String get required => 'Requerida';
+	String get sex => 'Sexo';
+	String get age => 'Edad';
+	String get onDevice => 'Procesamiento on-device';
+	String get onDeviceLocked => 'Activado y bloqueado';
+	String get deleteAll => 'Borrar todos los datos';
 	String get unset => '—';
 }
 
@@ -216,10 +219,10 @@ class _StringsBandEs {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	String get underweight => 'Underweight';
+	String get underweight => 'Bajo peso';
 	String get normal => 'Normal';
-	String get overweight => 'Overweight';
-	String get obese => 'Obese';
+	String get overweight => 'Sobrepeso';
+	String get obese => 'Obesidad';
 }
 
 // Path: disclaimer
@@ -229,13 +232,253 @@ class _StringsDisclaimerEs {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	String get screening => 'Screening estimate. Not a diagnosis. Consult a healthcare professional for evaluation.';
+	String get screening => 'Estimación de tamizaje. No es un diagnóstico. Consulte a un profesional de la salud para una evaluación.';
+}
+
+// Path: onDevice
+class _StringsOnDeviceEs {
+	_StringsOnDeviceEs._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get pill => '100% On-Device';
+}
+
+// Path: consent
+class _StringsConsentEs {
+	_StringsConsentEs._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get subtitle => 'Inicio';
+	String get heroTitle => 'Conoce tu rango, no un número';
+	String get heroBody => 'Estimación de composición corporal y banda de IMC procesada 100% de manera local y privada en tu dispositivo.';
+	String get deviceTitle => '100% en tu dispositivo';
+	String get deviceBody => 'Las fotos nunca se suben ni salen de tu teléfono. El cálculo se ejecuta en el chip neural local.';
+	String get privacyTitle => 'Privacidad fotográfica estricta';
+	String get privacyBody => 'Sin almacenamiento en la nube ni acceso a terceros. La captura se descarta inmediatamente tras la medición.';
+	String get screeningTitle => 'Herramienta de cribado preventivo';
+	String get screeningBody => 'Orientación formativa de bienestar y hábitos saludables, no un diagnóstico clínico vinculante.';
+	String get termsTitle => 'Términos de Consentimiento';
+	String get required => 'Requerido';
+	String get termsBody => 'Para garantizar un uso seguro y ético, confirma las siguientes dos premisas antes de continuar:';
+	String get screeningPrefix => 'Entiendo que es una ';
+	String get screeningHighlight => 'herramienta de cribado preliminar';
+	String get screeningSuffix => ' y no constituye un diagnóstico médico clínico.';
+	String get processingPrefix => 'Autorizo el ';
+	String get processingHighlight => 'procesamiento visual biométrico';
+	String get processingSuffix => ' en mi dispositivo para calcular mis bandas de IMC.';
+	String get cta => 'Comenzar evaluación';
+}
+
+// Path: <root>
+class _StringsEn extends Translations {
+	/// You can call this constructor and build your own translation instance of this locale.
+	/// Constructing via the enum [AppLocale.build] is preferred.
+	_StringsEn.build({Map<String, Node>? overrides, PluralResolver? cardinalResolver, PluralResolver? ordinalResolver})
+		: assert(overrides == null, 'Set "translation_overrides: true" in order to enable this feature.'),
+		  $meta = TranslationMetadata(
+		    locale: AppLocale.en,
+		    overrides: overrides ?? {},
+		    cardinalResolver: cardinalResolver,
+		    ordinalResolver: ordinalResolver,
+		  ),
+		  super.build(cardinalResolver: cardinalResolver, ordinalResolver: ordinalResolver) {
+		super.$meta.setFlatMapFunction($meta.getTranslation); // copy base translations to super.$meta
+		$meta.setFlatMapFunction(_flatMapFunction);
+	}
+
+	/// Metadata for the translations of <en>.
+	@override final TranslationMetadata<AppLocale, Translations> $meta;
+
+	/// Access flat map
+	@override dynamic operator[](String key) => $meta.getTranslation(key) ?? super.$meta.getTranslation(key);
+
+	@override late final _StringsEn _root = this; // ignore: unused_field
+
+	// Translations
+	@override String get appTitle => 'NutriScan';
+	@override late final _StringsNavEn nav = _StringsNavEn._(_root);
+	@override late final _StringsCaptureEn capture = _StringsCaptureEn._(_root);
+	@override late final _StringsHistoryEn history = _StringsHistoryEn._(_root);
+	@override late final _StringsProfileEn profile = _StringsProfileEn._(_root);
+	@override late final _StringsBandEn band = _StringsBandEn._(_root);
+	@override late final _StringsDisclaimerEn disclaimer = _StringsDisclaimerEn._(_root);
+	@override late final _StringsOnDeviceEn onDevice = _StringsOnDeviceEn._(_root);
+	@override late final _StringsConsentEn consent = _StringsConsentEn._(_root);
+}
+
+// Path: nav
+class _StringsNavEn extends _StringsNavEs {
+	_StringsNavEn._(_StringsEn root) : this._root = root, super._(root);
+
+	@override final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get measure => 'Measure';
+	@override String get history => 'History';
+	@override String get profile => 'Profile';
+}
+
+// Path: capture
+class _StringsCaptureEn extends _StringsCaptureEs {
+	_StringsCaptureEn._(_StringsEn root) : this._root = root, super._(root);
+
+	@override final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get headline => 'Know your range, not a number';
+	@override String get body => 'Image-based estimate, processed on your device. Photos never leave your phone.';
+	@override String get cta => 'Start measurement';
+}
+
+// Path: history
+class _StringsHistoryEn extends _StringsHistoryEs {
+	_StringsHistoryEn._(_StringsEn root) : this._root = root, super._(root);
+
+	@override final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Your progress';
+	@override String get empty => 'No measurements yet';
+}
+
+// Path: profile
+class _StringsProfileEn extends _StringsProfileEs {
+	_StringsProfileEn._(_StringsEn root) : this._root = root, super._(root);
+
+	@override final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Profile';
+	@override String get height => 'Height';
+	@override String get required => 'Required';
+	@override String get sex => 'Sex';
+	@override String get age => 'Age';
+	@override String get onDevice => 'On-device processing';
+	@override String get onDeviceLocked => 'Enabled and locked';
+	@override String get deleteAll => 'Delete all data';
+	@override String get unset => '—';
+}
+
+// Path: band
+class _StringsBandEn extends _StringsBandEs {
+	_StringsBandEn._(_StringsEn root) : this._root = root, super._(root);
+
+	@override final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get underweight => 'Underweight';
+	@override String get normal => 'Normal';
+	@override String get overweight => 'Overweight';
+	@override String get obese => 'Obese';
+}
+
+// Path: disclaimer
+class _StringsDisclaimerEn extends _StringsDisclaimerEs {
+	_StringsDisclaimerEn._(_StringsEn root) : this._root = root, super._(root);
+
+	@override final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get screening => 'Screening estimate. Not a diagnosis. Consult a healthcare professional for evaluation.';
+}
+
+// Path: onDevice
+class _StringsOnDeviceEn extends _StringsOnDeviceEs {
+	_StringsOnDeviceEn._(_StringsEn root) : this._root = root, super._(root);
+
+	@override final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get pill => '100% On-Device';
+}
+
+// Path: consent
+class _StringsConsentEn extends _StringsConsentEs {
+	_StringsConsentEn._(_StringsEn root) : this._root = root, super._(root);
+
+	@override final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get subtitle => 'Home';
+	@override String get heroTitle => 'Know your range, not a number';
+	@override String get heroBody => 'Body composition estimate and BMI band processed 100% locally and privately on your device.';
+	@override String get deviceTitle => '100% on your device';
+	@override String get deviceBody => 'Photos are never uploaded or leave your phone. The calculation runs on the local neural chip.';
+	@override String get privacyTitle => 'Strict photo privacy';
+	@override String get privacyBody => 'No cloud storage and no third-party access. The capture is discarded right after the measurement.';
+	@override String get screeningTitle => 'Preventive screening tool';
+	@override String get screeningBody => 'Educational guidance on wellness and healthy habits, not a binding clinical diagnosis.';
+	@override String get termsTitle => 'Consent Terms';
+	@override String get required => 'Required';
+	@override String get termsBody => 'To ensure safe and ethical use, confirm the following two premises before continuing:';
+	@override String get screeningPrefix => 'I understand this is a ';
+	@override String get screeningHighlight => 'preliminary screening tool';
+	@override String get screeningSuffix => ' and does not constitute a clinical medical diagnosis.';
+	@override String get processingPrefix => 'I authorize ';
+	@override String get processingHighlight => 'biometric visual processing';
+	@override String get processingSuffix => ' on my device to calculate my BMI bands.';
+	@override String get cta => 'Start assessment';
 }
 
 /// Flat map(s) containing all translations.
 /// Only for edge cases! For simple maps, use the map function of this library.
 
 extension on Translations {
+	dynamic _flatMapFunction(String path) {
+		switch (path) {
+			case 'appTitle': return 'NutriScan';
+			case 'nav.measure': return 'Medir';
+			case 'nav.history': return 'Historial';
+			case 'nav.profile': return 'Perfil';
+			case 'capture.headline': return 'Conoce tu rango, no un número';
+			case 'capture.body': return 'Estimación por imagen, procesada en tu dispositivo. Las fotos nunca salen del teléfono.';
+			case 'capture.cta': return 'Iniciar medición';
+			case 'history.title': return 'Tu progreso';
+			case 'history.empty': return 'Aún no hay mediciones';
+			case 'profile.title': return 'Perfil';
+			case 'profile.height': return 'Estatura';
+			case 'profile.required': return 'Requerida';
+			case 'profile.sex': return 'Sexo';
+			case 'profile.age': return 'Edad';
+			case 'profile.onDevice': return 'Procesamiento on-device';
+			case 'profile.onDeviceLocked': return 'Activado y bloqueado';
+			case 'profile.deleteAll': return 'Borrar todos los datos';
+			case 'profile.unset': return '—';
+			case 'band.underweight': return 'Bajo peso';
+			case 'band.normal': return 'Normal';
+			case 'band.overweight': return 'Sobrepeso';
+			case 'band.obese': return 'Obesidad';
+			case 'disclaimer.screening': return 'Estimación de tamizaje. No es un diagnóstico. Consulte a un profesional de la salud para una evaluación.';
+			case 'onDevice.pill': return '100% On-Device';
+			case 'consent.subtitle': return 'Inicio';
+			case 'consent.heroTitle': return 'Conoce tu rango, no un número';
+			case 'consent.heroBody': return 'Estimación de composición corporal y banda de IMC procesada 100% de manera local y privada en tu dispositivo.';
+			case 'consent.deviceTitle': return '100% en tu dispositivo';
+			case 'consent.deviceBody': return 'Las fotos nunca se suben ni salen de tu teléfono. El cálculo se ejecuta en el chip neural local.';
+			case 'consent.privacyTitle': return 'Privacidad fotográfica estricta';
+			case 'consent.privacyBody': return 'Sin almacenamiento en la nube ni acceso a terceros. La captura se descarta inmediatamente tras la medición.';
+			case 'consent.screeningTitle': return 'Herramienta de cribado preventivo';
+			case 'consent.screeningBody': return 'Orientación formativa de bienestar y hábitos saludables, no un diagnóstico clínico vinculante.';
+			case 'consent.termsTitle': return 'Términos de Consentimiento';
+			case 'consent.required': return 'Requerido';
+			case 'consent.termsBody': return 'Para garantizar un uso seguro y ético, confirma las siguientes dos premisas antes de continuar:';
+			case 'consent.screeningPrefix': return 'Entiendo que es una ';
+			case 'consent.screeningHighlight': return 'herramienta de cribado preliminar';
+			case 'consent.screeningSuffix': return ' y no constituye un diagnóstico médico clínico.';
+			case 'consent.processingPrefix': return 'Autorizo el ';
+			case 'consent.processingHighlight': return 'procesamiento visual biométrico';
+			case 'consent.processingSuffix': return ' en mi dispositivo para calcular mis bandas de IMC.';
+			case 'consent.cta': return 'Comenzar evaluación';
+			default: return null;
+		}
+	}
+}
+
+extension on _StringsEn {
 	dynamic _flatMapFunction(String path) {
 		switch (path) {
 			case 'appTitle': return 'NutriScan';
@@ -261,6 +504,26 @@ extension on Translations {
 			case 'band.overweight': return 'Overweight';
 			case 'band.obese': return 'Obese';
 			case 'disclaimer.screening': return 'Screening estimate. Not a diagnosis. Consult a healthcare professional for evaluation.';
+			case 'onDevice.pill': return '100% On-Device';
+			case 'consent.subtitle': return 'Home';
+			case 'consent.heroTitle': return 'Know your range, not a number';
+			case 'consent.heroBody': return 'Body composition estimate and BMI band processed 100% locally and privately on your device.';
+			case 'consent.deviceTitle': return '100% on your device';
+			case 'consent.deviceBody': return 'Photos are never uploaded or leave your phone. The calculation runs on the local neural chip.';
+			case 'consent.privacyTitle': return 'Strict photo privacy';
+			case 'consent.privacyBody': return 'No cloud storage and no third-party access. The capture is discarded right after the measurement.';
+			case 'consent.screeningTitle': return 'Preventive screening tool';
+			case 'consent.screeningBody': return 'Educational guidance on wellness and healthy habits, not a binding clinical diagnosis.';
+			case 'consent.termsTitle': return 'Consent Terms';
+			case 'consent.required': return 'Required';
+			case 'consent.termsBody': return 'To ensure safe and ethical use, confirm the following two premises before continuing:';
+			case 'consent.screeningPrefix': return 'I understand this is a ';
+			case 'consent.screeningHighlight': return 'preliminary screening tool';
+			case 'consent.screeningSuffix': return ' and does not constitute a clinical medical diagnosis.';
+			case 'consent.processingPrefix': return 'I authorize ';
+			case 'consent.processingHighlight': return 'biometric visual processing';
+			case 'consent.processingSuffix': return ' on my device to calculate my BMI bands.';
+			case 'consent.cta': return 'Start assessment';
 			default: return null;
 		}
 	}
