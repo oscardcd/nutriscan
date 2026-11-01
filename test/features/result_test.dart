@@ -25,26 +25,41 @@ void main() {
     expect(result.bmiMax, closeTo(29.2, 0.001));
   });
 
-  testWidgets('resultado muestra IMC, índices y disclaimer', (tester) async {
+  Future<void> pumpResult(WidgetTester tester, AppLocale locale) async {
     await tester.binding.setSurfaceSize(const Size(800, 2000));
     addTearDown(() => tester.binding.setSurfaceSize(null));
+    LocaleSettings.setLocale(locale);
+    addTearDown(() => LocaleSettings.setLocale(AppLocale.es));
 
     await tester.pumpWidget(
       TranslationProvider(
         child: MaterialApp(
           theme: AppTheme.light,
-          locale: const Locale('es'),
+          locale: locale.flutterLocale,
           supportedLocales: AppLocaleUtils.supportedLocales,
           localizationsDelegates: GlobalMaterialLocalizations.delegates,
           home: const ResultScreen(result: result),
         ),
       ),
     );
+  }
 
-    expect(find.text('27.4'), findsOneWidget);
+  testWidgets('resultado muestra IMC, índices y disclaimer', (tester) async {
+    await pumpResult(tester, AppLocale.es);
+
+    expect(find.text('27,4'), findsOneWidget);
+    expect(find.text('±1,8 · rango de estimación 25,6 – 29,2'), findsOneWidget);
+    expect(find.text('0,53'), findsOneWidget);
     expect(find.text('Sobrepeso'), findsNWidgets(2));
     expect(find.text('Cintura-altura (WHtR)'), findsOneWidget);
     expect(find.text('Confianza alta'), findsOneWidget);
     expect(find.textContaining('No es un diagnóstico'), findsOneWidget);
+  });
+
+  testWidgets('en inglés los decimales usan punto', (tester) async {
+    await pumpResult(tester, AppLocale.en);
+
+    expect(find.text('27.4'), findsOneWidget);
+    expect(find.text('±1.8 · estimate range 25.6 – 29.2'), findsOneWidget);
   });
 }

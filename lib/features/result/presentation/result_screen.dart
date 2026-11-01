@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/widgets/bmi_band_chip.dart';
@@ -20,6 +21,12 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final t = Translations.of(context);
+    // Separador decimal según idioma: "27,4" en es, "27.4" en en.
+    String n(double v, [int digits = 1]) =>
+        (NumberFormat.decimalPattern(t.$meta.locale.languageCode)
+              ..minimumFractionDigits = digits
+              ..maximumFractionDigits = digits)
+            .format(v);
 
     return Scaffold(
       body: SafeArea(
@@ -48,14 +55,14 @@ class ResultScreen extends StatelessWidget {
                       children: [
                         MetricTile(
                           label: t.result.bmiLabel,
-                          value: result.bmi.toStringAsFixed(1),
+                          value: n(result.bmi),
                           unit: 'kg/m²',
                           trailing: BmiBandChip(band: result.band),
-                          caption:
-                              '±${result.margin.toStringAsFixed(1)} · '
-                              '${t.result.rangeLabel} '
-                              '${result.bmiMin.toStringAsFixed(1)} – '
-                              '${result.bmiMax.toStringAsFixed(1)}',
+                          caption: t.result.rangeCaption(
+                            margin: n(result.margin),
+                            min: n(result.bmiMin),
+                            max: n(result.bmiMax),
+                          ),
                         ),
                         const SizedBox(height: AppSpacing.md),
                         BmiRangeGauge(bmi: result.bmi),
@@ -63,12 +70,14 @@ class ResultScreen extends StatelessWidget {
                         ConfidenceMeter(
                           level: switch (result.confidence) {
                             ScreeningConfidence.low => ConfidenceLevel.low,
-                            ScreeningConfidence.medium => ConfidenceLevel.medium,
+                            ScreeningConfidence.medium =>
+                              ConfidenceLevel.medium,
                             ScreeningConfidence.high => ConfidenceLevel.high,
                           },
                           label: switch (result.confidence) {
                             ScreeningConfidence.low => t.result.confidenceLow,
-                            ScreeningConfidence.medium => t.result.confidenceMedium,
+                            ScreeningConfidence.medium =>
+                              t.result.confidenceMedium,
                             ScreeningConfidence.high => t.result.confidenceHigh,
                           },
                         ),
@@ -100,19 +109,19 @@ class ResultScreen extends StatelessWidget {
                         IndexTile(
                           icon: Icons.swap_vert_circle_outlined,
                           label: t.result.whtr,
-                          value: result.waistToHeight.toStringAsFixed(2),
+                          value: n(result.waistToHeight, 2),
                           description: t.result.whtrNote,
                         ),
                         IndexTile(
                           icon: Icons.motion_photos_on_outlined,
                           label: t.result.bri,
-                          value: result.bodyRoundness.toStringAsFixed(1),
+                          value: n(result.bodyRoundness),
                           description: t.result.briNote,
                         ),
                         IndexTile(
                           icon: Icons.pie_chart_outline,
                           label: t.result.rfm,
-                          value: '${result.relativeFatMass.toStringAsFixed(1)}%',
+                          value: '${n(result.relativeFatMass)}%',
                           description: t.result.rfmNote,
                         ),
                       ],
@@ -186,7 +195,11 @@ const _scaleRows = <(BmiBand, String)>[
 ];
 
 class _ScaleRow extends StatelessWidget {
-  const _ScaleRow({required this.band, required this.range, required this.label});
+  const _ScaleRow({
+    required this.band,
+    required this.range,
+    required this.label,
+  });
 
   final BmiBand band;
   final String range;
@@ -202,7 +215,10 @@ class _ScaleRow extends StatelessWidget {
           Container(
             width: 10,
             height: 10,
-            decoration: BoxDecoration(color: band.color, shape: BoxShape.circle),
+            decoration: BoxDecoration(
+              color: band.color,
+              shape: BoxShape.circle,
+            ),
           ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(child: Text(label, style: theme.textTheme.bodyMedium)),

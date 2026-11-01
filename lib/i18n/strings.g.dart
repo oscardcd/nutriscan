@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 174 (87 per locale)
+/// Strings: 171 (85 per locale)
 ///
-/// Built on 2026-11-01 at 18:57 UTC
+/// Built on 2026-11-01 at 19:29 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -226,13 +226,12 @@ class _StringsProfileEs {
 	// Translations
 	String get title => 'Perfil';
 	String get height => 'Estatura';
-	String get required => 'Requerida';
 	String get sex => 'Sexo';
 	String get age => 'Edad';
 	String get onDevice => 'Procesamiento on-device';
 	String get onDeviceLocked => 'Activado y bloqueado';
 	String get deleteAll => 'Borrar todos los datos';
-	String get unset => '—';
+	String get comingSoon => 'Próximamente';
 	String get deleteConfirmTitle => '¿Borrar todos los datos?';
 	String get deleteConfirmBody => 'Se eliminarán las mediciones guardadas y tu consentimiento de este dispositivo. No se puede deshacer.';
 	String get cancel => 'Cancelar';
@@ -283,9 +282,9 @@ class _StringsConsentEs {
 	String get heroTitle => 'Conoce tu rango, no un número';
 	String get heroBody => 'Estimación de composición corporal y banda de IMC procesada 100% de manera local y privada en tu dispositivo.';
 	String get deviceTitle => '100% en tu dispositivo';
-	String get deviceBody => 'Las fotos nunca se suben ni salen de tu teléfono. El cálculo se ejecuta en el chip neural local.';
+	String get deviceBody => 'Las fotos nunca se suben ni salen de tu teléfono. El cálculo se ejecuta en tu dispositivo.';
 	String get privacyTitle => 'Privacidad fotográfica estricta';
-	String get privacyBody => 'Sin almacenamiento en la nube ni acceso a terceros. La captura se descarta inmediatamente tras la medición.';
+	String get privacyBody => 'Sin almacenamiento en la nube ni acceso a terceros.';
 	String get screeningTitle => 'Herramienta de cribado preventivo';
 	String get screeningBody => 'Orientación formativa de bienestar y hábitos saludables, no un diagnóstico clínico vinculante.';
 	String get termsTitle => 'Términos de Consentimiento';
@@ -310,7 +309,7 @@ class _StringsResultEs {
 	String get subtitle => 'Resultado';
 	String get screeningLabel => 'Resultado de cribado';
 	String get bmiLabel => 'Índice de masa corporal estimado';
-	String get rangeLabel => 'rango de estimación';
+	String rangeCaption({required Object margin, required Object min, required Object max}) => '±${margin} · rango de estimación ${min} – ${max}';
 	String get confidenceLow => 'Confianza baja';
 	String get confidenceMedium => 'Confianza media';
 	String get confidenceHigh => 'Confianza alta';
@@ -431,13 +430,12 @@ class _StringsProfileEn extends _StringsProfileEs {
 	// Translations
 	@override String get title => 'Profile';
 	@override String get height => 'Height';
-	@override String get required => 'Required';
 	@override String get sex => 'Sex';
 	@override String get age => 'Age';
 	@override String get onDevice => 'On-device processing';
 	@override String get onDeviceLocked => 'Enabled and locked';
 	@override String get deleteAll => 'Delete all data';
-	@override String get unset => '—';
+	@override String get comingSoon => 'Coming soon';
 	@override String get deleteConfirmTitle => 'Delete all data?';
 	@override String get deleteConfirmBody => 'Saved measurements and your consent will be erased from this device. This cannot be undone.';
 	@override String get cancel => 'Cancel';
@@ -488,13 +486,12 @@ class _StringsConsentEn extends _StringsConsentEs {
 	@override String get heroTitle => 'Know your range, not a number';
 	@override String get heroBody => 'Body composition estimate and BMI band processed 100% locally and privately on your device.';
 	@override String get deviceTitle => '100% on your device';
-	@override String get deviceBody => 'Photos are never uploaded or leave your phone. The calculation runs on the local neural chip.';
+	@override String get deviceBody => 'Photos are never uploaded or leave your phone. The calculation runs on your device.';
 	@override String get privacyTitle => 'Strict photo privacy';
-	@override String get privacyBody => 'No cloud storage and no third-party access. The capture is discarded right after the measurement.';
+	@override String get privacyBody => 'No cloud storage and no third-party access.';
 	@override String get screeningTitle => 'Preventive screening tool';
 	@override String get screeningBody => 'Educational guidance on wellness and healthy habits, not a binding clinical diagnosis.';
 	@override String get termsTitle => 'Consent Terms';
-	@override String get required => 'Required';
 	@override String get termsBody => 'To ensure safe and ethical use, confirm the following two premises before continuing:';
 	@override String get screeningPrefix => 'I understand this is a ';
 	@override String get screeningHighlight => 'preliminary screening tool';
@@ -515,7 +512,7 @@ class _StringsResultEn extends _StringsResultEs {
 	@override String get subtitle => 'Result';
 	@override String get screeningLabel => 'Screening result';
 	@override String get bmiLabel => 'Estimated body mass index';
-	@override String get rangeLabel => 'estimate range';
+	@override String rangeCaption({required Object margin, required Object min, required Object max}) => '±${margin} · estimate range ${min} – ${max}';
 	@override String get confidenceLow => 'Low confidence';
 	@override String get confidenceMedium => 'Medium confidence';
 	@override String get confidenceHigh => 'High confidence';
@@ -571,13 +568,12 @@ extension on Translations {
 			case 'history.empty': return 'Aún no hay mediciones';
 			case 'profile.title': return 'Perfil';
 			case 'profile.height': return 'Estatura';
-			case 'profile.required': return 'Requerida';
 			case 'profile.sex': return 'Sexo';
 			case 'profile.age': return 'Edad';
 			case 'profile.onDevice': return 'Procesamiento on-device';
 			case 'profile.onDeviceLocked': return 'Activado y bloqueado';
 			case 'profile.deleteAll': return 'Borrar todos los datos';
-			case 'profile.unset': return '—';
+			case 'profile.comingSoon': return 'Próximamente';
 			case 'profile.deleteConfirmTitle': return '¿Borrar todos los datos?';
 			case 'profile.deleteConfirmBody': return 'Se eliminarán las mediciones guardadas y tu consentimiento de este dispositivo. No se puede deshacer.';
 			case 'profile.cancel': return 'Cancelar';
@@ -592,9 +588,9 @@ extension on Translations {
 			case 'consent.heroTitle': return 'Conoce tu rango, no un número';
 			case 'consent.heroBody': return 'Estimación de composición corporal y banda de IMC procesada 100% de manera local y privada en tu dispositivo.';
 			case 'consent.deviceTitle': return '100% en tu dispositivo';
-			case 'consent.deviceBody': return 'Las fotos nunca se suben ni salen de tu teléfono. El cálculo se ejecuta en el chip neural local.';
+			case 'consent.deviceBody': return 'Las fotos nunca se suben ni salen de tu teléfono. El cálculo se ejecuta en tu dispositivo.';
 			case 'consent.privacyTitle': return 'Privacidad fotográfica estricta';
-			case 'consent.privacyBody': return 'Sin almacenamiento en la nube ni acceso a terceros. La captura se descarta inmediatamente tras la medición.';
+			case 'consent.privacyBody': return 'Sin almacenamiento en la nube ni acceso a terceros.';
 			case 'consent.screeningTitle': return 'Herramienta de cribado preventivo';
 			case 'consent.screeningBody': return 'Orientación formativa de bienestar y hábitos saludables, no un diagnóstico clínico vinculante.';
 			case 'consent.termsTitle': return 'Términos de Consentimiento';
@@ -610,7 +606,7 @@ extension on Translations {
 			case 'result.subtitle': return 'Resultado';
 			case 'result.screeningLabel': return 'Resultado de cribado';
 			case 'result.bmiLabel': return 'Índice de masa corporal estimado';
-			case 'result.rangeLabel': return 'rango de estimación';
+			case 'result.rangeCaption': return ({required Object margin, required Object min, required Object max}) => '±${margin} · rango de estimación ${min} – ${max}';
 			case 'result.confidenceLow': return 'Confianza baja';
 			case 'result.confidenceMedium': return 'Confianza media';
 			case 'result.confidenceHigh': return 'Confianza alta';
@@ -666,13 +662,12 @@ extension on _StringsEn {
 			case 'history.empty': return 'No measurements yet';
 			case 'profile.title': return 'Profile';
 			case 'profile.height': return 'Height';
-			case 'profile.required': return 'Required';
 			case 'profile.sex': return 'Sex';
 			case 'profile.age': return 'Age';
 			case 'profile.onDevice': return 'On-device processing';
 			case 'profile.onDeviceLocked': return 'Enabled and locked';
 			case 'profile.deleteAll': return 'Delete all data';
-			case 'profile.unset': return '—';
+			case 'profile.comingSoon': return 'Coming soon';
 			case 'profile.deleteConfirmTitle': return 'Delete all data?';
 			case 'profile.deleteConfirmBody': return 'Saved measurements and your consent will be erased from this device. This cannot be undone.';
 			case 'profile.cancel': return 'Cancel';
@@ -687,13 +682,12 @@ extension on _StringsEn {
 			case 'consent.heroTitle': return 'Know your range, not a number';
 			case 'consent.heroBody': return 'Body composition estimate and BMI band processed 100% locally and privately on your device.';
 			case 'consent.deviceTitle': return '100% on your device';
-			case 'consent.deviceBody': return 'Photos are never uploaded or leave your phone. The calculation runs on the local neural chip.';
+			case 'consent.deviceBody': return 'Photos are never uploaded or leave your phone. The calculation runs on your device.';
 			case 'consent.privacyTitle': return 'Strict photo privacy';
-			case 'consent.privacyBody': return 'No cloud storage and no third-party access. The capture is discarded right after the measurement.';
+			case 'consent.privacyBody': return 'No cloud storage and no third-party access.';
 			case 'consent.screeningTitle': return 'Preventive screening tool';
 			case 'consent.screeningBody': return 'Educational guidance on wellness and healthy habits, not a binding clinical diagnosis.';
 			case 'consent.termsTitle': return 'Consent Terms';
-			case 'consent.required': return 'Required';
 			case 'consent.termsBody': return 'To ensure safe and ethical use, confirm the following two premises before continuing:';
 			case 'consent.screeningPrefix': return 'I understand this is a ';
 			case 'consent.screeningHighlight': return 'preliminary screening tool';
@@ -705,7 +699,7 @@ extension on _StringsEn {
 			case 'result.subtitle': return 'Result';
 			case 'result.screeningLabel': return 'Screening result';
 			case 'result.bmiLabel': return 'Estimated body mass index';
-			case 'result.rangeLabel': return 'estimate range';
+			case 'result.rangeCaption': return ({required Object margin, required Object min, required Object max}) => '±${margin} · estimate range ${min} – ${max}';
 			case 'result.confidenceLow': return 'Low confidence';
 			case 'result.confidenceMedium': return 'Medium confidence';
 			case 'result.confidenceHigh': return 'High confidence';

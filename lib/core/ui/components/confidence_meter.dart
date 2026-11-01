@@ -20,11 +20,7 @@ extension ConfidenceLevelColor on ConfidenceLevel {
 
 /// Medidor de 3 segmentos con etiqueta textual (DESIGN.md: confianza explícita).
 class ConfidenceMeter extends StatelessWidget {
-  const ConfidenceMeter({
-    super.key,
-    required this.level,
-    required this.label,
-  });
+  const ConfidenceMeter({super.key, required this.level, required this.label});
 
   final ConfidenceLevel level;
   final String label;
@@ -32,10 +28,11 @@ class ConfidenceMeter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final dark = theme.brightness == Brightness.dark;
     return Row(
       children: [
-        Semantics(
-          label: label,
+        // El Text de al lado ya anuncia el nivel; los segmentos son decorativos.
+        ExcludeSemantics(
           child: Row(
             children: [
               for (var i = 0; i < 3; i++) ...[
@@ -57,9 +54,14 @@ class ConfidenceMeter extends StatelessWidget {
         const SizedBox(width: AppSpacing.sm),
         Text(
           label,
-          style: theme.textTheme.labelMedium?.copyWith(color: level.color == AppColors.bandNormal
-              ? AppColors.bandNormalText
-              : theme.colorScheme.onSurfaceVariant),
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: level != ConfidenceLevel.high
+                ? theme.colorScheme.onSurfaceVariant
+                // Mismo criterio que BmiBandChip para contraste en oscuro.
+                : dark
+                ? Color.lerp(level.color, Colors.white, 0.45)
+                : AppColors.bandNormalText,
+          ),
         ),
       ],
     );
