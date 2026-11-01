@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../dev/component_gallery_screen.dart';
 import '../../features/capture/presentation/capture_screen.dart';
 import '../../features/history/presentation/history_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
@@ -9,6 +10,8 @@ import '../../i18n/strings.g.dart';
 final appRouter = GoRouter(
   initialLocation: '/capture',
   routes: [
+    // Solo desarrollo: galería del design system.
+    GoRoute(path: '/gallery', builder: (_, _) => const ComponentGalleryScreen()),
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => _ShellScaffold(shell: shell),
       branches: [
