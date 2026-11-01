@@ -63,12 +63,14 @@ class ResultScreen extends StatelessWidget {
                         ConfidenceMeter(
                           level: switch (result.confidence) {
                             ScreeningConfidence.low => ConfidenceLevel.low,
-                            ScreeningConfidence.medium => ConfidenceLevel.medium,
+                            ScreeningConfidence.medium =>
+                              ConfidenceLevel.medium,
                             ScreeningConfidence.high => ConfidenceLevel.high,
                           },
                           label: switch (result.confidence) {
                             ScreeningConfidence.low => t.result.confidenceLow,
-                            ScreeningConfidence.medium => t.result.confidenceMedium,
+                            ScreeningConfidence.medium =>
+                              t.result.confidenceMedium,
                             ScreeningConfidence.high => t.result.confidenceHigh,
                           },
                         ),
@@ -112,7 +114,8 @@ class ResultScreen extends StatelessWidget {
                         IndexTile(
                           icon: Icons.pie_chart_outline,
                           label: t.result.rfm,
-                          value: '${result.relativeFatMass.toStringAsFixed(1)}%',
+                          value:
+                              '${result.relativeFatMass.toStringAsFixed(1)}%',
                           description: t.result.rfmNote,
                         ),
                       ],
@@ -186,7 +189,11 @@ const _scaleRows = <(BmiBand, String)>[
 ];
 
 class _ScaleRow extends StatelessWidget {
-  const _ScaleRow({required this.band, required this.range, required this.label});
+  const _ScaleRow({
+    required this.band,
+    required this.range,
+    required this.label,
+  });
 
   final BmiBand band;
   final String range;
@@ -202,15 +209,21 @@ class _ScaleRow extends StatelessWidget {
           Container(
             width: 10,
             height: 10,
-            decoration: BoxDecoration(color: band.color, shape: BoxShape.circle),
+            decoration: BoxDecoration(
+              color: band.color,
+              shape: BoxShape.circle,
+            ),
           ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(child: Text(label, style: theme.textTheme.bodyMedium)),
-          Text(
-            range,
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontFeatures: const [FontFeature.tabularFigures()],
+          Flexible(
+            child: Text(
+              range,
+              textAlign: TextAlign.end,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
             ),
           ),
         ],

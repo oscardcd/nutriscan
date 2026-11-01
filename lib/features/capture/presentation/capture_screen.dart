@@ -21,7 +21,10 @@ class CaptureScreen extends StatelessWidget {
         bottom: false,
         child: Column(
           children: [
-            _TopBar(title: t.capture.title, onClose: () => context.go('/welcome')),
+            _TopBar(
+              title: t.capture.title,
+              onClose: () => context.go('/welcome'),
+            ),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(
@@ -36,6 +39,24 @@ class CaptureScreen extends StatelessWidget {
                   _AlignmentCard(t: t, theme: theme),
                   const SizedBox(height: AppSpacing.md),
                   _CriteriaCard(t: t),
+                  // Las notas viven en el scroll: en la barra fija dejaban sin
+                  // espacio al contenido con texto grande.
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
+                    t.capture.shutterPending,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    t.capture.localNote,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
               ),
             ),
@@ -125,7 +146,9 @@ class _ScanPreview extends StatelessWidget {
             Positioned.fill(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.lg),
-                child: CustomPaint(painter: _CornersPainter(theme.colorScheme.primary)),
+                child: CustomPaint(
+                  painter: _CornersPainter(theme.colorScheme.primary),
+                ),
               ),
             ),
             Positioned(
@@ -243,10 +266,13 @@ class _AlignmentRow extends StatelessWidget {
           Icon(icon, size: 18, color: theme.colorScheme.primary),
           const SizedBox(width: AppSpacing.sm),
           Expanded(child: Text(label, style: theme.textTheme.bodyMedium)),
-          Text(
-            value,
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
         ],
@@ -293,13 +319,20 @@ class _CriteriaCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.threesixty, size: 18, color: theme.colorScheme.primary),
+                Icon(
+                  Icons.threesixty,
+                  size: 18,
+                  color: theme.colorScheme.primary,
+                ),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(t.capture.sideView, style: theme.textTheme.labelLarge),
+                      Text(
+                        t.capture.sideView,
+                        style: theme.textTheme.labelLarge,
+                      ),
                       Text(
                         t.capture.sideViewHint,
                         style: theme.textTheme.bodyMedium?.copyWith(
@@ -370,22 +403,6 @@ class _CaptureBar extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            t.capture.shutterPending,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            t.capture.localNote,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            textAlign: TextAlign.center,
           ),
         ],
       ),

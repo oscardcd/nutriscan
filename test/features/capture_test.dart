@@ -8,7 +8,9 @@ import 'package:nutriscan/i18n/strings.g.dart';
 void main() {
   setUpAll(() => LocaleSettings.setLocale(AppLocale.es));
 
-  testWidgets('captura muestra criterios y bloquea el obturador', (tester) async {
+  testWidgets('captura muestra criterios y bloquea el obturador', (
+    tester,
+  ) async {
     await tester.binding.setSurfaceSize(const Size(800, 1600));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -27,6 +29,11 @@ void main() {
     expect(find.text('Captura biométrica'), findsOneWidget);
     expect(find.text('CRITERIOS DE ESCANEO'), findsOneWidget);
     expect(find.text('3 / 4 aprobados'), findsOneWidget);
+    // La nota del obturador vive al final del scroll, no en la barra fija.
+    await tester.scrollUntilVisible(
+      find.textContaining('modelo de visión esté integrado'),
+      300,
+    );
     expect(
       find.textContaining('modelo de visión esté integrado'),
       findsOneWidget,

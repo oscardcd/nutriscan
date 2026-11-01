@@ -45,7 +45,10 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
                   AppSpacing.md,
                 ),
                 children: [
-                  Text(t.consent.heroTitle, style: theme.textTheme.headlineLarge),
+                  Text(
+                    t.consent.heroTitle,
+                    style: theme.textTheme.headlineLarge,
+                  ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
                     t.consent.heroBody,
@@ -120,8 +123,16 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
                       : null,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(t.consent.cta),
+                      Flexible(
+                        child: Text(
+                          t.consent.cta,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                       const SizedBox(width: AppSpacing.xs),
                       const Icon(Icons.arrow_forward, size: 18),
                     ],
@@ -137,7 +148,11 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
 }
 
 class _InfoCard extends StatelessWidget {
-  const _InfoCard({required this.icon, required this.title, required this.body});
+  const _InfoCard({
+    required this.icon,
+    required this.title,
+    required this.body,
+  });
 
   final IconData icon;
   final String title;

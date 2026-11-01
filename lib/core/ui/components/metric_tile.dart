@@ -33,19 +33,25 @@ class MetricTile extends StatelessWidget {
       children: [
         SectionLabel(label, trailing: trailing),
         const SizedBox(height: AppSpacing.sm),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            Text(value, style: valueStyle),
-            const SizedBox(width: AppSpacing.xs),
-            Text(
-              unit,
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+        // Con texto grande, número y unidad se reducen juntos sin perder baseline.
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: AlignmentDirectional.centerStart,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(value, style: valueStyle),
+              const SizedBox(width: AppSpacing.xs),
+              Text(
+                unit,
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         if (caption != null) ...[
           const SizedBox(height: AppSpacing.xs),
