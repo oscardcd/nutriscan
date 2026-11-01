@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/widgets/medical_disclaimer.dart';
+import '../../../i18n/strings.g.dart';
 
 class CaptureScreen extends StatelessWidget {
   const CaptureScreen({super.key});
@@ -9,8 +10,9 @@ class CaptureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = Translations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('NutriScan')),
+      appBar: AppBar(title: Text(t.appTitle)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -28,14 +30,13 @@ class CaptureScreen extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.lg),
               Text(
-                'Conoce tu rango, no un número',
+                t.capture.headline,
                 style: theme.textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                'Estimación por imagen, procesada en tu dispositivo. '
-                'Las fotos nunca salen del teléfono.',
+                t.capture.body,
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -44,7 +45,7 @@ class CaptureScreen extends StatelessWidget {
               const Spacer(),
               FilledButton(
                 onPressed: null,
-                child: const Text('Iniciar medición'),
+                child: Text(t.capture.cta),
               ),
               const SizedBox(height: AppSpacing.md),
               const MedicalDisclaimer(),

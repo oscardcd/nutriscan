@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../features/classify/domain/bmi_band.dart';
+import '../../../i18n/strings.g.dart';
 import '../app_colors.dart';
 
 /// Colores por banda de diagnóstico (DESIGN.md §Diagnostic & Metric Classification).
@@ -20,6 +21,13 @@ extension BmiBandColor on BmiBand {
   };
 }
 
+String bandLabel(BmiBand band, Translations t) => switch (band) {
+  BmiBand.underweight => t.band.underweight,
+  BmiBand.normal => t.band.normal,
+  BmiBand.overweight => t.band.overweight,
+  BmiBand.obese => t.band.obese,
+};
+
 /// Chip pill de banda: fondo del color al 12–14% de opacidad.
 class BmiBandChip extends StatelessWidget {
   const BmiBandChip({super.key, required this.band});
@@ -36,7 +44,7 @@ class BmiBandChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(9999),
       ),
       child: Text(
-        band.labelEs,
+        bandLabel(band, Translations.of(context)),
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
           color: dark ? Color.lerp(band.color, Colors.white, 0.45) : band.textColor,
         ),

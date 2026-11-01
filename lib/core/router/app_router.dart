@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/capture/presentation/capture_screen.dart';
 import '../../features/history/presentation/history_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
+import '../../i18n/strings.g.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/capture',
@@ -13,26 +14,17 @@ final appRouter = GoRouter(
       branches: [
         StatefulShellBranch(
           routes: [
-            GoRoute(
-              path: '/capture',
-              builder: (_, _) => const CaptureScreen(),
-            ),
+            GoRoute(path: '/capture', builder: (_, _) => const CaptureScreen()),
           ],
         ),
         StatefulShellBranch(
           routes: [
-            GoRoute(
-              path: '/history',
-              builder: (_, _) => const HistoryScreen(),
-            ),
+            GoRoute(path: '/history', builder: (_, _) => const HistoryScreen()),
           ],
         ),
         StatefulShellBranch(
           routes: [
-            GoRoute(
-              path: '/profile',
-              builder: (_, _) => const ProfileScreen(),
-            ),
+            GoRoute(path: '/profile', builder: (_, _) => const ProfileScreen()),
           ],
         ),
       ],
@@ -47,6 +39,7 @@ class _ShellScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context);
     return Scaffold(
       body: shell,
       bottomNavigationBar: NavigationBar(
@@ -55,21 +48,21 @@ class _ShellScaffold extends StatelessWidget {
           index,
           initialLocation: index == shell.currentIndex,
         ),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.camera_alt_outlined),
-            selectedIcon: Icon(Icons.camera_alt),
-            label: 'Medir',
+            icon: const Icon(Icons.camera_alt_outlined),
+            selectedIcon: const Icon(Icons.camera_alt),
+            label: t.nav.measure,
           ),
           NavigationDestination(
-            icon: Icon(Icons.show_chart_outlined),
-            selectedIcon: Icon(Icons.show_chart),
-            label: 'Historial',
+            icon: const Icon(Icons.show_chart_outlined),
+            selectedIcon: const Icon(Icons.show_chart),
+            label: t.nav.history,
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Perfil',
+            icon: const Icon(Icons.person_outline),
+            selectedIcon: const Icon(Icons.person),
+            label: t.nav.profile,
           ),
         ],
       ),

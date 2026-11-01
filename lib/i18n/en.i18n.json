@@ -1,0 +1,37 @@
+{
+  "appTitle": "NutriScan",
+  "nav": {
+    "measure": "Measure",
+    "history": "History",
+    "profile": "Profile"
+  },
+  "capture": {
+    "headline": "Know your range, not a number",
+    "body": "Image-based estimate, processed on your device. Photos never leave your phone.",
+    "cta": "Start measurement"
+  },
+  "history": {
+    "title": "Your progress",
+    "empty": "No measurements yet"
+  },
+  "profile": {
+    "title": "Profile",
+    "height": "Height",
+    "required": "Required",
+    "sex": "Sex",
+    "age": "Age",
+    "onDevice": "On-device processing",
+    "onDeviceLocked": "Enabled and locked",
+    "deleteAll": "Delete all data",
+    "unset": "—"
+  },
+  "band": {
+    "underweight": "Underweight",
+    "normal": "Normal",
+    "overweight": "Overweight",
+    "obese": "Obese"
+  },
+  "disclaimer": {
+    "screening": "Screening estimate. Not a diagnosis. Consult a healthcare professional for evaluation."
+  }
+}
