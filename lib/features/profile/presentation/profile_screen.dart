@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/settings/settings_menu.dart';
+
 import '../../../core/providers.dart';
 import '../../../i18n/strings.g.dart';
 import '../../consent/data/consent_gate.dart';
@@ -12,7 +14,10 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Translations.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(t.profile.title)),
+      appBar: AppBar(
+        title: Text(t.profile.title),
+        actions: const [SettingsMenu()],
+      ),
       body: ListView(
         children: [
           // Aún sin captura: se muestran deshabilitados en vez de fingir
@@ -20,17 +25,17 @@ class ProfileScreen extends ConsumerWidget {
           ListTile(
             enabled: false,
             title: Text(t.profile.height),
-            subtitle: Text(t.profile.required),
+            subtitle: Text(t.profile.comingSoon),
           ),
           ListTile(
             enabled: false,
             title: Text(t.profile.sex),
-            subtitle: Text(t.profile.unset),
+            subtitle: Text(t.profile.comingSoon),
           ),
           ListTile(
             enabled: false,
             title: Text(t.profile.age),
-            subtitle: Text(t.profile.unset),
+            subtitle: Text(t.profile.comingSoon),
           ),
           ListTile(
             title: Text(t.profile.onDevice),

@@ -4,7 +4,7 @@ import '../../../features/classify/domain/bmi_band.dart';
 import '../../../i18n/strings.g.dart';
 import '../app_colors.dart';
 
-/// Colores por banda de diagnóstico (DESIGN.md §Diagnostic & Metric Classification).
+/// Colores por banda de cribado (DESIGN.md §Diagnostic & Metric Classification).
 extension BmiBandColor on BmiBand {
   Color get color => switch (this) {
     BmiBand.underweight => AppColors.bandUnderweight,
@@ -46,7 +46,9 @@ class BmiBandChip extends StatelessWidget {
       child: Text(
         bandLabel(band, Translations.of(context)),
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-          color: dark ? Color.lerp(band.color, Colors.white, 0.45) : band.textColor,
+          color: dark
+              ? Color.lerp(band.color, Colors.white, 0.45)
+              : band.textColor,
         ),
       ),
     );

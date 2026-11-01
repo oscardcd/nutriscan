@@ -11,16 +11,24 @@ class AppHeader extends StatelessWidget {
     required this.subtitle,
     this.pillText,
     this.onProfileTap,
+    this.profileTooltip,
+    this.actions = const [],
   });
 
   final String title;
   final String subtitle;
   final String? pillText;
   final VoidCallback? onProfileTap;
+  final List<Widget> actions;
+
+  /// Etiqueta del avatar. Obligatoria cuando [onProfileTap] existe.
+  final String? profileTooltip;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Con texto muy grande la pill empuja el título fuera de pantalla.
+    final compact = MediaQuery.textScalerOf(context).scale(1) > 1.3;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.marginMobile,
@@ -32,7 +40,11 @@ class AppHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.health_and_safety, color: theme.colorScheme.primary, size: 30),
+          Icon(
+            Icons.health_and_safety,
+            color: theme.colorScheme.primary,
+            size: 30,
+          ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(
@@ -41,12 +53,16 @@ class AppHeader extends StatelessWidget {
               children: [
                 Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.headlineSmall?.copyWith(
                     color: theme.colorScheme.primary,
                   ),
                 ),
                 Text(
                   subtitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -54,23 +70,26 @@ class AppHeader extends StatelessWidget {
               ],
             ),
           ),
-          if (pillText != null) ...[
+          if (pillText != null && !compact) ...[
             StatusPill(text: pillText!, icon: Icons.lock_outline),
             const SizedBox(width: AppSpacing.sm),
           ],
-          InkResponse(
-            onTap: onProfileTap,
-            radius: 24,
-            child: CircleAvatar(
-              radius: 16,
-              backgroundColor: theme.colorScheme.surfaceContainerHigh,
-              child: Icon(
-                Icons.person_outline,
-                size: 18,
-                color: theme.colorScheme.onSurfaceVariant,
+          ...actions,
+          // Sin acción no se muestra: un avatar muerto es ruido y un target falso.
+          if (onProfileTap != null)
+            IconButton(
+              onPressed: onProfileTap,
+              tooltip: profileTooltip,
+              icon: CircleAvatar(
+                radius: 16,
+                backgroundColor: theme.colorScheme.surfaceContainerHigh,
+                child: Icon(
+                  Icons.person_outline,
+                  size: 18,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

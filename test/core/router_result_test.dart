@@ -77,7 +77,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('27.4'), findsOneWidget);
+    expect(find.text('27,4'), findsOneWidget);
     expect(find.text('RESULTADO DE CRIBADO'), findsOneWidget);
   });
 }
