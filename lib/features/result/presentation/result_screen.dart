@@ -222,11 +222,14 @@ class _ScaleRow extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(child: Text(label, style: theme.textTheme.bodyMedium)),
-          Text(
-            range,
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontFeatures: const [FontFeature.tabularFigures()],
+          Flexible(
+            child: Text(
+              range,
+              textAlign: TextAlign.end,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
             ),
           ),
         ],

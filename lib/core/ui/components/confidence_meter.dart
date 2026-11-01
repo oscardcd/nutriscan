@@ -51,12 +51,14 @@ class ConfidenceMeter extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
-        Text(
-          label,
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: level.color == AppColors.bandNormal
-                ? AppColors.bandNormalText
-                : theme.colorScheme.onSurfaceVariant,
+        Flexible(
+          child: Text(
+            label,
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: level.color == AppColors.bandNormal
+                  ? AppColors.bandNormalText
+                  : theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         ),
       ],

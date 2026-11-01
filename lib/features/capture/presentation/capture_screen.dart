@@ -35,6 +35,24 @@ class CaptureScreen extends StatelessWidget {
                   _AlignmentCard(t: t, theme: theme),
                   const SizedBox(height: AppSpacing.md),
                   _CriteriaCard(t: t),
+                  // Las notas viven en el scroll: en la barra fija dejaban sin
+                  // espacio al contenido con texto grande.
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
+                    t.capture.shutterPending,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    t.capture.localNote,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
               ),
             ),
@@ -347,22 +365,6 @@ class _CaptureBar extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            t.capture.shutterPending,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            t.capture.localNote,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            textAlign: TextAlign.center,
           ),
         ],
       ),

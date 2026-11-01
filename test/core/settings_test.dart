@@ -37,11 +37,17 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  Future<void> openSettings(WidgetTester tester) async {
+    await tester.tap(find.text('Historial'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.tune));
+    await tester.pumpAndSettle();
+  }
+
   testWidgets('el menú cambia el tema de la app', (tester) async {
     await pumpApp(tester);
 
-    await tester.tap(find.byIcon(Icons.tune));
-    await tester.pumpAndSettle();
+    await openSettings(tester);
     expect(find.text('Oscuro'), findsOneWidget);
 
     await tester.tap(find.text('Oscuro'));
@@ -57,11 +63,12 @@ void main() {
     await pumpApp(tester);
     expect(find.text('Captura biométrica'), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.tune));
-    await tester.pumpAndSettle();
+    await openSettings(tester);
     await tester.tap(find.text('English'));
     await tester.pumpAndSettle();
 
+    await tester.tap(find.text('Measure'));
+    await tester.pumpAndSettle();
     expect(find.text('Biometric capture'), findsOneWidget);
   });
 }

@@ -125,8 +125,16 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
                       : null,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(t.consent.cta),
+                      Flexible(
+                        child: Text(
+                          t.consent.cta,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                       const SizedBox(width: AppSpacing.xs),
                       const Icon(Icons.arrow_forward, size: 18),
                     ],

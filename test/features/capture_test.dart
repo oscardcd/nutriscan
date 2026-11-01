@@ -36,6 +36,11 @@ void main() {
     expect(find.textContaining('Óptima'), findsNothing);
     expect(find.textContaining('2.1 m'), findsNothing);
     expect(find.textContaining('aprobados'), findsNothing);
+    // La nota está en el scroll para dejar espacio en pantallas pequeñas.
+    await tester.scrollUntilVisible(
+      find.textContaining('modelo de visión esté integrado'),
+      300,
+    );
     expect(
       find.textContaining('modelo de visión esté integrado'),
       findsOneWidget,
