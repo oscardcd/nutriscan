@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/settings/settings_menu.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/widgets/bmi_band_chip.dart';
@@ -21,6 +22,12 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final t = Translations.of(context);
+    // Separador decimal según idioma: "27,4" en es, "27.4" en en.
+    String n(double v, [int digits = 1]) =>
+        (NumberFormat.decimalPattern(t.$meta.locale.languageCode)
+              ..minimumFractionDigits = digits
+              ..maximumFractionDigits = digits)
+            .format(v);
 
     return Scaffold(
       body: SafeArea(
@@ -51,14 +58,14 @@ class ResultScreen extends StatelessWidget {
                       children: [
                         MetricTile(
                           label: t.result.bmiLabel,
-                          value: result.bmi.toStringAsFixed(1),
+                          value: n(result.bmi),
                           unit: 'kg/m²',
                           trailing: BmiBandChip(band: result.band),
-                          caption:
-                              '±${result.margin.toStringAsFixed(1)} · '
-                              '${t.result.rangeLabel} '
-                              '${result.bmiMin.toStringAsFixed(1)} – '
-                              '${result.bmiMax.toStringAsFixed(1)}',
+                          caption: t.result.rangeCaption(
+                            margin: n(result.margin),
+                            min: n(result.bmiMin),
+                            max: n(result.bmiMax),
+                          ),
                         ),
                         const SizedBox(height: AppSpacing.md),
                         BmiRangeGauge(
@@ -108,20 +115,19 @@ class ResultScreen extends StatelessWidget {
                         IndexTile(
                           icon: Icons.swap_vert_circle_outlined,
                           label: t.result.whtr,
-                          value: result.waistToHeight.toStringAsFixed(2),
+                          value: n(result.waistToHeight, 2),
                           description: t.result.whtrNote,
                         ),
                         IndexTile(
                           icon: Icons.motion_photos_on_outlined,
                           label: t.result.bri,
-                          value: result.bodyRoundness.toStringAsFixed(1),
+                          value: n(result.bodyRoundness),
                           description: t.result.briNote,
                         ),
                         IndexTile(
                           icon: Icons.pie_chart_outline,
                           label: t.result.rfm,
-                          value:
-                              '${result.relativeFatMass.toStringAsFixed(1)}%',
+                          value: '${n(result.relativeFatMass)}%',
                           description: t.result.rfmNote,
                         ),
                       ],

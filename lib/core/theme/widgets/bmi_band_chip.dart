@@ -4,7 +4,7 @@ import '../../../features/classify/domain/bmi_band.dart';
 import '../../../i18n/strings.g.dart';
 import '../app_colors.dart';
 
-/// Colores por banda de diagnóstico (DESIGN.md §Diagnostic & Metric Classification).
+/// Colores por banda de cribado (DESIGN.md §Diagnostic & Metric Classification).
 extension BmiBandColor on BmiBand {
   Color get color => switch (this) {
     BmiBand.underweight => AppColors.bandUnderweight,

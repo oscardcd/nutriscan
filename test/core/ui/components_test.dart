@@ -80,4 +80,18 @@ void main() {
     );
     expect(find.text('Sin mediciones'), findsOneWidget);
   });
+
+  testWidgets('ConfidenceMeter anuncia su nivel una sola vez', (tester) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(
+      _host(
+        const ConfidenceMeter(
+          level: ConfidenceLevel.high,
+          label: 'Confianza alta',
+        ),
+      ),
+    );
+    expect(find.bySemanticsLabel('Confianza alta'), findsOneWidget);
+    handle.dispose();
+  });
 }

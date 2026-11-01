@@ -25,17 +25,17 @@ class ProfileScreen extends ConsumerWidget {
           ListTile(
             enabled: false,
             title: Text(t.profile.height),
-            subtitle: Text(t.profile.required),
+            subtitle: Text(t.profile.comingSoon),
           ),
           ListTile(
             enabled: false,
             title: Text(t.profile.sex),
-            subtitle: Text(t.profile.unset),
+            subtitle: Text(t.profile.comingSoon),
           ),
           ListTile(
             enabled: false,
             title: Text(t.profile.age),
-            subtitle: Text(t.profile.unset),
+            subtitle: Text(t.profile.comingSoon),
           ),
           ListTile(
             title: Text(t.profile.onDevice),

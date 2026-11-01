@@ -28,10 +28,11 @@ class ConfidenceMeter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final dark = theme.brightness == Brightness.dark;
     return Row(
       children: [
-        Semantics(
-          label: label,
+        // El Text de al lado ya anuncia el nivel; los segmentos son decorativos.
+        ExcludeSemantics(
           child: Row(
             children: [
               for (var i = 0; i < 3; i++) ...[
@@ -55,9 +56,12 @@ class ConfidenceMeter extends StatelessWidget {
           child: Text(
             label,
             style: theme.textTheme.labelMedium?.copyWith(
-              color: level.color == AppColors.bandNormal
-                  ? AppColors.bandNormalText
-                  : theme.colorScheme.onSurfaceVariant,
+              color: level != ConfidenceLevel.high
+                  ? theme.colorScheme.onSurfaceVariant
+                  // Mismo criterio que BmiBandChip para contraste en oscuro.
+                  : dark
+                  ? Color.lerp(level.color, Colors.white, 0.45)
+                  : AppColors.bandNormalText,
             ),
           ),
         ),

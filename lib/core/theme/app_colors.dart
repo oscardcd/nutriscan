@@ -31,7 +31,7 @@ abstract final class AppColors {
   static const inverseSurface = Color(0xFF27313C);
   static const inverseOnSurface = Color(0xFFE8F2FF);
 
-  // Diagnostic bands
+  // Screening bands
   static const bandUnderweight = Color(0xFF3B82F6);
   static const bandUnderweightText = Color(0xFF1D4ED8);
   static const bandNormal = Color(0xFF10B981);
