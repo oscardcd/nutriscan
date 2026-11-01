@@ -28,7 +28,6 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
 
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: Column(
           children: [
             AppHeader(
