@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
 
-import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'i18n/strings.g.dart';
 
 class NutriScanApp extends StatelessWidget {
-  const NutriScanApp({super.key});
+  const NutriScanApp({super.key, required this.router});
+
+  final GoRouter router;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,7 @@ class NutriScanApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      routerConfig: appRouter,
+      routerConfig: router,
       locale: TranslationProvider.of(context).flutterLocale,
       supportedLocales: AppLocaleUtils.supportedLocales,
       localizationsDelegates: const [

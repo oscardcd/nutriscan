@@ -45,7 +45,11 @@
     "onDevice": "On-device processing",
     "onDeviceLocked": "Enabled and locked",
     "deleteAll": "Delete all data",
-    "unset": "—"
+    "unset": "—",
+    "deleteConfirmTitle": "Delete all data?",
+    "deleteConfirmBody": "Saved measurements and your consent will be erased from this device. This cannot be undone.",
+    "cancel": "Cancel",
+    "delete": "Delete all"
   },
   "band": {
     "underweight": "Underweight",
