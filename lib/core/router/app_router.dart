@@ -30,19 +30,14 @@ GoRouter buildRouter(ConsentGate gate) => GoRouter(
         builder: (_, _) => const ComponentGalleryScreen(),
       ),
     GoRoute(path: '/welcome', builder: (_, _) => const ConsentScreen()),
-    // shortcut: valores de ejemplo hasta conectar la pipeline de medición.
+    // Solo se abre con un resultado real en `extra`: nunca se inventa una
+    // medición. Sin pipeline conectada, la ruta cae en /capture.
     GoRoute(
       path: '/result',
-      builder: (_, _) => const ResultScreen(
-        result: ScreeningResult(
-          bmi: 27.4,
-          margin: 1.8,
-          confidence: ScreeningConfidence.high,
-          waistToHeight: 0.53,
-          bodyRoundness: 3.8,
-          relativeFatMass: 26.4,
-        ),
-      ),
+      redirect: (_, state) =>
+          state.extra is ScreeningResult ? null : '/capture',
+      builder: (_, state) =>
+          ResultScreen(result: state.extra! as ScreeningResult),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => _ShellScaffold(shell: shell),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/widgets/bmi_band_chip.dart';
@@ -6,6 +7,7 @@ import '../../core/theme/widgets/bmi_range_gauge.dart';
 import '../../core/theme/widgets/medical_disclaimer.dart';
 import '../../core/ui/ui.dart';
 import '../../features/classify/domain/bmi_band.dart';
+import '../../features/classify/domain/screening_result.dart';
 
 /// Galería de componentes del design system. Sin datos reales.
 class ComponentGalleryScreen extends StatefulWidget {
@@ -116,7 +118,21 @@ class _ComponentGalleryScreenState extends State<ComponentGalleryScreen> {
             child: const Text('Comenzar evaluación'),
           ),
           const SizedBox(height: AppSpacing.sm),
-          OutlinedButton(onPressed: () {}, child: const Text('Ver historial')),
+          OutlinedButton(
+            onPressed: () => context.push(
+              '/result',
+              // Datos de ejemplo solo en la galería de desarrollo.
+              extra: const ScreeningResult(
+                bmi: 27.4,
+                margin: 1.8,
+                confidence: ScreeningConfidence.high,
+                waistToHeight: 0.53,
+                bodyRoundness: 3.8,
+                relativeFatMass: 26.4,
+              ),
+            ),
+            child: const Text('Ver historial'),
+          ),
           const SizedBox(height: AppSpacing.md),
           const MedicalDisclaimer(),
           const SizedBox(height: AppSpacing.md),
