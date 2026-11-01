@@ -32,10 +32,22 @@ class BmiRangeGauge extends StatelessWidget {
                   height: 8,
                   child: Row(
                     children: const [
-                      Expanded(flex: 35, child: ColoredBox(color: AppColors.bandUnderweight)),
-                      Expanded(flex: 65, child: ColoredBox(color: AppColors.bandNormal)),
-                      Expanded(flex: 50, child: ColoredBox(color: AppColors.bandOverweight)),
-                      Expanded(flex: 100, child: ColoredBox(color: AppColors.bandObese)),
+                      Expanded(
+                        flex: 35,
+                        child: ColoredBox(color: AppColors.bandUnderweight),
+                      ),
+                      Expanded(
+                        flex: 65,
+                        child: ColoredBox(color: AppColors.bandNormal),
+                      ),
+                      Expanded(
+                        flex: 50,
+                        child: ColoredBox(color: AppColors.bandOverweight),
+                      ),
+                      Expanded(
+                        flex: 100,
+                        child: ColoredBox(color: AppColors.bandObese),
+                      ),
                     ],
                   ),
                 ),

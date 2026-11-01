@@ -11,7 +11,9 @@ import 'package:nutriscan/i18n/strings.g.dart';
 Widget _host(Widget child) => TranslationProvider(
   child: MaterialApp(
     theme: AppTheme.light,
-    home: Scaffold(body: Padding(padding: const EdgeInsets.all(16), child: child)),
+    home: Scaffold(
+      body: Padding(padding: const EdgeInsets.all(16), child: child),
+    ),
   ),
 );
 

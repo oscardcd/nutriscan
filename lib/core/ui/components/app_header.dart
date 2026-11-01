@@ -11,12 +11,14 @@ class AppHeader extends StatelessWidget {
     required this.subtitle,
     this.pillText,
     this.onProfileTap,
+    this.actions = const [],
   });
 
   final String title;
   final String subtitle;
   final String? pillText;
   final VoidCallback? onProfileTap;
+  final List<Widget> actions;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,11 @@ class AppHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.health_and_safety, color: theme.colorScheme.primary, size: 30),
+          Icon(
+            Icons.health_and_safety,
+            color: theme.colorScheme.primary,
+            size: 30,
+          ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(
@@ -58,6 +64,7 @@ class AppHeader extends StatelessWidget {
             StatusPill(text: pillText!, icon: Icons.lock_outline),
             const SizedBox(width: AppSpacing.sm),
           ],
+          ...actions,
           InkResponse(
             onTap: onProfileTap,
             radius: 24,

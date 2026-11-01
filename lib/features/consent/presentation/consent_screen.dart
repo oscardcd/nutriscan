@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/settings/settings_menu.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/widgets/medical_disclaimer.dart';
 import '../../../core/ui/ui.dart';
@@ -35,6 +37,7 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
               title: t.appTitle,
               subtitle: t.consent.subtitle,
               pillText: t.onDevice.pill,
+              actions: const [SettingsMenu()],
             ),
             Expanded(
               child: ListView(
@@ -45,7 +48,10 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
                   AppSpacing.md,
                 ),
                 children: [
-                  Text(t.consent.heroTitle, style: theme.textTheme.headlineLarge),
+                  Text(
+                    t.consent.heroTitle,
+                    style: theme.textTheme.headlineLarge,
+                  ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
                     t.consent.heroBody,
@@ -137,7 +143,11 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
 }
 
 class _InfoCard extends StatelessWidget {
-  const _InfoCard({required this.icon, required this.title, required this.body});
+  const _InfoCard({
+    required this.icon,
+    required this.title,
+    required this.body,
+  });
 
   final IconData icon;
   final String title;

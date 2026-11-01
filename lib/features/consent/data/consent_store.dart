@@ -15,8 +15,10 @@ class ConsentStore {
     return raw == null ? null : DateTime.tryParse(raw);
   }
 
-  Future<void> grant({DateTime? at}) =>
-      _storage.write(key: _key, value: (at ?? DateTime.now()).toIso8601String());
+  Future<void> grant({DateTime? at}) => _storage.write(
+    key: _key,
+    value: (at ?? DateTime.now()).toIso8601String(),
+  );
 
   Future<void> clear() => _storage.delete(key: _key);
 }
