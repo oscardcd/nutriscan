@@ -1,4 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Cámara: captura guiada del cuerpo. Nada se sube. -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- Micrófono: solo si se graba un video de referencia. El audio no se procesa. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!-- Internet: solo para descargas de modelos y reporte de fallos; las fotos nunca salen. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="nutriscan"
         android:name="${applicationName}"
