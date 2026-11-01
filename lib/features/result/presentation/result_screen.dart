@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/settings/settings_menu.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -30,13 +31,15 @@ class ResultScreen extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: Column(
           children: [
             AppHeader(
               title: t.appTitle,
               subtitle: t.result.subtitle,
               pillText: t.onDevice.pill,
+              onProfileTap: () => context.go('/profile'),
+              profileTooltip: t.profile.title,
+              actions: const [SettingsMenu()],
             ),
             Expanded(
               child: ListView(
@@ -65,7 +68,10 @@ class ResultScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: AppSpacing.md),
-                        BmiRangeGauge(bmi: result.bmi),
+                        BmiRangeGauge(
+                          bmi: result.bmi,
+                          label: t.result.scaleTitle,
+                        ),
                         const SizedBox(height: AppSpacing.md),
                         ConfidenceMeter(
                           level: switch (result.confidence) {
@@ -222,11 +228,14 @@ class _ScaleRow extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(child: Text(label, style: theme.textTheme.bodyMedium)),
-          Text(
-            range,
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontFeatures: const [FontFeature.tabularFigures()],
+          Flexible(
+            child: Text(
+              range,
+              textAlign: TextAlign.end,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
             ),
           ),
         ],

@@ -10,16 +10,11 @@
     "onDevice": "On device",
     "localBadge": "Local compute",
     "alignment": "Body alignment",
-    "posture": "Posture",
-    "postureOk": "Aligned and level",
-    "tilt": "Tilt",
-    "tiltOk": "0.2° · Optimal",
-    "sensor": "Sensor",
-    "sensorOk": "Ready",
-    "distance": "Detected distance",
-    "distanceValue": "2.1 m",
+    "posture": "Full body, facing the camera",
+    "tilt": "Phone upright and level",
+    "sensor": "Camera starts when the scan begins",
+    "distance": "2 meters away from the phone",
     "criteria": "Scan criteria",
-    "approved": "3 / 4 passed",
     "fullBody": "Full body",
     "twoMeters": "At 2 meters",
     "plainBackground": "Plain, even background",
@@ -101,5 +96,13 @@
     "meaningTitle": "What does this result mean?",
     "meaningBody": "Your silhouette falls in a reference band. BMI and visual projections do not distinguish lean muscle from fat tissue: it is a preventive starting point for your tracking.",
     "cta": "Measure again"
+  },
+  "settings": {
+    "title": "Language and theme",
+    "language": "LANGUAGE",
+    "theme": "THEME",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark"
   }
 }

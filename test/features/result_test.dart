@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nutriscan/core/theme/app_theme.dart';
 import 'package:nutriscan/features/classify/domain/bmi_band.dart';
@@ -33,12 +34,14 @@ void main() {
 
     await tester.pumpWidget(
       TranslationProvider(
-        child: MaterialApp(
-          theme: AppTheme.light,
-          locale: locale.flutterLocale,
-          supportedLocales: AppLocaleUtils.supportedLocales,
-          localizationsDelegates: GlobalMaterialLocalizations.delegates,
-          home: const ResultScreen(result: result),
+        child: ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.light,
+            locale: locale.flutterLocale,
+            supportedLocales: AppLocaleUtils.supportedLocales,
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
+            home: const ResultScreen(result: result),
+          ),
         ),
       ),
     );

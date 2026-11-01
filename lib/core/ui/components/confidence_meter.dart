@@ -52,15 +52,17 @@ class ConfidenceMeter extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
-        Text(
-          label,
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: level != ConfidenceLevel.high
-                ? theme.colorScheme.onSurfaceVariant
-                // Mismo criterio que BmiBandChip para contraste en oscuro.
-                : dark
-                ? Color.lerp(level.color, Colors.white, 0.45)
-                : AppColors.bandNormalText,
+        Flexible(
+          child: Text(
+            label,
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: level != ConfidenceLevel.high
+                  ? theme.colorScheme.onSurfaceVariant
+                  // Mismo criterio que BmiBandChip para contraste en oscuro.
+                  : dark
+                  ? Color.lerp(level.color, Colors.white, 0.45)
+                  : AppColors.bandNormalText,
+            ),
           ),
         ),
       ],

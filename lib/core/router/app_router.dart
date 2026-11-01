@@ -25,7 +25,10 @@ GoRouter buildRouter(ConsentGate gate) => GoRouter(
   routes: [
     // Solo desarrollo: galería del design system.
     if (kDebugMode)
-      GoRoute(path: '/gallery', builder: (_, _) => const ComponentGalleryScreen()),
+      GoRoute(
+        path: '/gallery',
+        builder: (_, _) => const ComponentGalleryScreen(),
+      ),
     GoRoute(path: '/welcome', builder: (_, _) => const ConsentScreen()),
     // Solo se abre con un resultado real en `extra`: nunca se inventa una
     // medición. Sin pipeline conectada, la ruta cae en /capture.
@@ -71,10 +74,8 @@ class _ShellScaffold extends StatelessWidget {
       body: shell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: shell.currentIndex,
-        onDestinationSelected: (index) => shell.goBranch(
-          index,
-          initialLocation: index == shell.currentIndex,
-        ),
+        onDestinationSelected: (index) =>
+            shell.goBranch(index, initialLocation: index == shell.currentIndex),
         destinations: [
           NavigationDestination(
             icon: const Icon(Icons.camera_alt_outlined),
