@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// Tipografía Inter de DESIGN.md §Typography. `letterSpacing` va en px (em × size).
+/// La fuente va empaquetada en assets/fonts (ver pubspec.yaml), sin red.
 abstract final class AppTypography {
+  static const family = 'Inter';
   static const _tabular = [FontFeature.tabularFigures()];
 
   static TextTheme textTheme(TextTheme base) {
-    final inter = GoogleFonts.interTextTheme(base);
+    final inter = base.apply(fontFamily: family);
     return inter.copyWith(
       // Metric display: solo para IMC, % grasa, masa muscular.
       displayLarge: inter.displayLarge?.copyWith(
