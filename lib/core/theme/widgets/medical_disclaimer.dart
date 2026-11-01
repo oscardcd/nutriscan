@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../../i18n/strings.g.dart';
 import '../app_colors.dart';
 
 /// Aviso de tamizaje (DESIGN.md §Medical Disclaimers). Nunca diagnóstico.
 class MedicalDisclaimer extends StatelessWidget {
-  const MedicalDisclaimer({
-    super.key,
-    this.text =
-        'Estimación de tamizaje. No es un diagnóstico. '
-        'Consulte a un profesional de la salud para una evaluación.',
-  });
-
-  final String text;
+  const MedicalDisclaimer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +23,7 @@ class MedicalDisclaimer extends StatelessWidget {
         ),
       ),
       child: Text(
-        text,
+        Translations.of(context).disclaimer.screening,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
           color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
