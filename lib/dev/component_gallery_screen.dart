@@ -41,7 +41,7 @@ class _ComponentGalleryScreenState extends State<ComponentGalleryScreen> {
               caption: '±1.8',
               trailing: BmiBandChip(band: classifyBmi(27.4)),
             ),
-            ),
+          ),
           const SizedBox(height: AppSpacing.md),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
@@ -54,7 +54,10 @@ class _ComponentGalleryScreenState extends State<ComponentGalleryScreen> {
               children: [
                 const SectionLabel('Confianza'),
                 const SizedBox(height: AppSpacing.sm),
-                ConfidenceMeter(level: ConfidenceLevel.high, label: 'Confianza alta'),
+                ConfidenceMeter(
+                  level: ConfidenceLevel.high,
+                  label: 'Confianza alta',
+                ),
                 const SizedBox(height: AppSpacing.md),
                 const SectionLabel('Índices'),
                 IndexTile(
@@ -91,7 +94,10 @@ class _ComponentGalleryScreenState extends State<ComponentGalleryScreen> {
                   spacing: AppSpacing.sm,
                   runSpacing: AppSpacing.sm,
                   children: [
-                    HintChip(label: 'Galería', icon: Icons.photo_library_outlined),
+                    HintChip(
+                      label: 'Galería',
+                      icon: Icons.photo_library_outlined,
+                    ),
                     HintChip(label: '3 seg', icon: Icons.timer_outlined),
                   ],
                 ),
@@ -107,7 +113,10 @@ class _ComponentGalleryScreenState extends State<ComponentGalleryScreen> {
             onChanged: (v) => setState(() => consent = v),
           ),
           const SizedBox(height: AppSpacing.md),
-          FilledButton(onPressed: () {}, child: const Text('Comenzar evaluación')),
+          FilledButton(
+            onPressed: () {},
+            child: const Text('Comenzar evaluación'),
+          ),
           const SizedBox(height: AppSpacing.sm),
           OutlinedButton(
             onPressed: () => context.push(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/settings/settings_menu.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -31,6 +32,7 @@ class ResultScreen extends StatelessWidget {
               pillText: t.onDevice.pill,
               onProfileTap: () => context.go('/profile'),
               profileTooltip: t.profile.title,
+              actions: const [SettingsMenu()],
             ),
             Expanded(
               child: ListView(

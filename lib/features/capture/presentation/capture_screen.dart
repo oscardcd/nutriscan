@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/settings/settings_menu.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -21,7 +22,10 @@ class CaptureScreen extends StatelessWidget {
         bottom: false,
         child: Column(
           children: [
-            _TopBar(title: t.capture.title, onClose: () => context.go('/welcome')),
+            _TopBar(
+              title: t.capture.title,
+              onClose: () => context.go('/welcome'),
+            ),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(
@@ -85,6 +89,7 @@ class _TopBar extends StatelessWidget {
               ],
             ),
           ),
+          const SettingsMenu(),
           IconButton(
             onPressed: onClose,
             icon: const Icon(Icons.close),
@@ -125,7 +130,9 @@ class _ScanPreview extends StatelessWidget {
             Positioned.fill(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.lg),
-                child: CustomPaint(painter: _CornersPainter(theme.colorScheme.primary)),
+                child: CustomPaint(
+                  painter: _CornersPainter(theme.colorScheme.primary),
+                ),
               ),
             ),
             Positioned(
@@ -293,13 +300,20 @@ class _CriteriaCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.threesixty, size: 18, color: theme.colorScheme.primary),
+                Icon(
+                  Icons.threesixty,
+                  size: 18,
+                  color: theme.colorScheme.primary,
+                ),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(t.capture.sideView, style: theme.textTheme.labelLarge),
+                      Text(
+                        t.capture.sideView,
+                        style: theme.textTheme.labelLarge,
+                      ),
                       Text(
                         t.capture.sideViewHint,
                         style: theme.textTheme.bodyMedium?.copyWith(

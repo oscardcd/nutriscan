@@ -12,12 +12,14 @@ class AppHeader extends StatelessWidget {
     this.pillText,
     this.onProfileTap,
     this.profileTooltip,
+    this.actions = const [],
   });
 
   final String title;
   final String subtitle;
   final String? pillText;
   final VoidCallback? onProfileTap;
+  final List<Widget> actions;
 
   /// Etiqueta del avatar. Obligatoria cuando [onProfileTap] existe.
   final String? profileTooltip;
@@ -36,7 +38,11 @@ class AppHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.health_and_safety, color: theme.colorScheme.primary, size: 30),
+          Icon(
+            Icons.health_and_safety,
+            color: theme.colorScheme.primary,
+            size: 30,
+          ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(
@@ -62,6 +68,7 @@ class AppHeader extends StatelessWidget {
             StatusPill(text: pillText!, icon: Icons.lock_outline),
             const SizedBox(width: AppSpacing.sm),
           ],
+          ...actions,
           // Sin acción no se muestra: un avatar muerto es ruido y un target falso.
           if (onProfileTap != null)
             IconButton(
