@@ -60,6 +60,10 @@ flutter analyze
 flutter test
 ```
 
+## Web
+
+`flutter build web --release` genera un sitio estático (sin cámara ni visión en navegador). Despliegue y limitaciones: [docs/deploy-vercel.md](docs/deploy-vercel.md).
+
 ## Privacidad
 
 Las fotos corporales son dato sensible: no se suben, no se almacenan crudas y el usuario puede borrar todo desde Perfil.
