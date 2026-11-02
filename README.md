@@ -19,8 +19,8 @@ se pierde al recargar la página. La app móvil usa almacenamiento local.
 ## Tecnologías
 
 - Flutter y Dart; Riverpod para estado y `go_router` para navegación.
-- `camera`, ML Kit y TFLite están previstos para la captura y el procesamiento
-  móvil; la integración de visión aún está pendiente.
+- `camera` y `flutter_pose_detection` están previstos para la captura y el
+  procesamiento móvil; TFLite y segmentación todavía no están integrados.
 - Slang para traducciones en español e inglés.
 - Vercel para compilar y publicar la versión web estática.
 
@@ -28,6 +28,8 @@ se pierde al recargar la página. La app móvil usa almacenamiento local.
 
 - Flutter SDK **3.44.8** (la versión usada para despliegue web).
 - Dart incluido con Flutter.
+- Android API 31+ para el plugin de pose; el deployment target del proyecto es
+  iOS 15.5+.
 - Para despliegue manual, una cuenta de Vercel y Vercel CLI son opcionales.
 
 ## Desarrollo local
