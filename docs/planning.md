@@ -60,7 +60,7 @@ IMC = peso/altura², bandas OMS: **<18.5 bajo peso · 18.5–24.9 normal ·
 
 - **Patrón:** feature-first + MVVM (consistente con Paguí). Estado: Riverpod.
 - **Todo on-device** (privacidad: foto corporal = dato biométrico/sensible). No subir
-  imágenes crudas. TFLite + ML Kit en isolates.
+  imágenes crudas. TFLite y plugins de visión en isolates.
 - **Backend (mínimo):** Firebase Auth + Firestore (solo métricas/historial, no fotos),
   o ni eso si es 100% local.
 - **Capas:** presentation → domain (casos de uso: capturar, medir, clasificar) → data
@@ -69,7 +69,8 @@ IMC = peso/altura², bandas OMS: **<18.5 bajo peso · 18.5–24.9 normal ·
 ## 7. Stack / paquetes
 
 - `camera` — captura guiada, overlay de encuadre.
-- `google_mlkit_pose_detection` / `google_mlkit_selfie_segmentation` — pose + silueta.
+- `flutter_pose_detection` — landmarks de pose con MediaPipe.
+- Segmentación de silueta — tecnología por seleccionar e integrar.
 - `tflite_flutter` — modelo de IMC/categoría.
 - `image` — procesamiento.
 - `flutter_riverpod`, `freezed`, `go_router`, `permission_handler`.
