@@ -1,18 +1,216 @@
+import 'dart:async';
+
+import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/ui/ui.dart';
 import '../../../i18n/strings.g.dart';
+import '../data/capture_camera.dart';
 
 /// Captura guiada. La guía (encuadre, inclinación, distancia) es estática por
 /// ahora: shortcut: sin pipeline de visión conectado, los valores se alimentan
 /// cuando `core/vision` entregue pose + segmentación.
-class CaptureScreen extends StatelessWidget {
-  const CaptureScreen({super.key, this.visionAvailable = !kIsWeb});
+class CaptureScreen extends StatefulWidget {
+  const CaptureScreen({super.key, this.visionAvailable = !kIsWeb, this.camera});
 
   /// Cámara y modelos de visión (ML Kit, TFLite) solo existen en móvil.
   final bool visionAvailable;
+  final CaptureCamera? camera;
+
+  @override
+  State<CaptureScreen> createState() => _CaptureScreenState();
+}
+
+class _CaptureScreenState extends State<CaptureScreen>
+    with WidgetsBindingObserver {
+  late final CaptureCamera _camera = widget.camera ?? DeviceCaptureCamera();
+  bool _isInitializing = false;
+  bool _isCameraReady = false;
+  bool _isCapturing = false;
+  bool _isAppResumed = true;
+  bool _hasStartedCamera = false;
+  int _operationId = 0;
+  CaptureCameraFailure? _failure;
+  Uint8List? _capturedImage;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final resumed = state == AppLifecycleState.resumed;
+    _isAppResumed = resumed;
+
+    if (!resumed) {
+      _operationId++;
+      _isInitializing = false;
+      _isCapturing = false;
+      _isCameraReady = false;
+      if (mounted && widget.visionAvailable && _capturedImage == null) {
+        setState(() {});
+      }
+      unawaited(_disposeCamera());
+    } else if (widget.visionAvailable &&
+        _hasStartedCamera &&
+        _capturedImage == null) {
+      unawaited(_initializeCamera());
+    }
+  }
+
+  Future<void> _initializeCamera() async {
+    if (!mounted || !_isAppResumed || _isInitializing || _isCapturing) return;
+    final operationId = ++_operationId;
+
+    setState(() {
+      _hasStartedCamera = true;
+      _isInitializing = true;
+      _isCameraReady = false;
+      _failure = null;
+    });
+
+    try {
+      await _camera.initialize();
+      if (operationId != _operationId) return;
+      if (!mounted || !_isAppResumed) {
+        await _disposeCamera();
+        return;
+      }
+      setState(() => _isCameraReady = true);
+    } on CaptureCameraException catch (error) {
+      if (operationId == _operationId && mounted && _isAppResumed) {
+        setState(() => _failure = error.failure);
+      }
+    } on CameraException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+      if (operationId == _operationId && mounted && _isAppResumed) {
+        setState(() => _failure = CaptureCameraFailure.unavailable);
+      }
+    } on PlatformException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+      if (operationId == _operationId && mounted && _isAppResumed) {
+        setState(() => _failure = CaptureCameraFailure.unavailable);
+      }
+    } finally {
+      if (operationId == _operationId && mounted) {
+        setState(() => _isInitializing = false);
+      }
+    }
+  }
+
+  Future<void> _captureImage() async {
+    if (!_isCameraReady || _isCapturing) return;
+    final operationId = ++_operationId;
+    setState(() {
+      _isCapturing = true;
+      _failure = null;
+    });
+
+    try {
+      final image = await _camera.takePicture();
+      if (operationId != _operationId || !_isAppResumed) {
+        image.fillRange(0, image.length, 0);
+        return;
+      }
+      await _disposeCamera();
+      if (!mounted) return;
+      setState(() {
+        _capturedImage = image;
+        _isCameraReady = false;
+      });
+    } on CaptureCameraException catch (error) {
+      if (operationId == _operationId && mounted) {
+        setState(() => _failure = error.failure);
+      }
+    } on CameraException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+      if (operationId == _operationId && mounted) {
+        setState(() => _failure = CaptureCameraFailure.captureFailed);
+      }
+    } on PlatformException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+      if (operationId == _operationId && mounted) {
+        setState(() => _failure = CaptureCameraFailure.captureFailed);
+      }
+    } finally {
+      if (operationId == _operationId && mounted) {
+        setState(() => _isCapturing = false);
+      }
+    }
+  }
+
+  Future<void> _retakeImage() async {
+    final image = _capturedImage;
+    if (image != null) image.fillRange(0, image.length, 0);
+    setState(() => _capturedImage = null);
+    await _initializeCamera();
+  }
+
+  Future<void> _openCameraSettings() async {
+    try {
+      final opened = await _camera.openSettings();
+      if (opened && _isAppResumed) await _initializeCamera();
+      if (!opened && mounted) {
+        setState(() => _failure = CaptureCameraFailure.unavailable);
+      }
+    } on PlatformException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+      if (mounted) setState(() => _failure = CaptureCameraFailure.unavailable);
+    } on MissingPluginException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+      if (mounted) setState(() => _failure = CaptureCameraFailure.unavailable);
+    }
+  }
+
+  Future<void> _disposeCamera() async {
+    try {
+      await _camera.dispose();
+    } on CameraException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+    } on PlatformException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+    } on MissingPluginException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+    }
+  }
+
+  void _reportCameraError(Object error, StackTrace stackTrace) {
+    FlutterError.reportError(
+      FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'NutriScan camera capture',
+        context: ErrorDescription('while initializing or capturing an image'),
+      ),
+    );
+  }
+
+  String _failureMessage(Translations t, CaptureCameraFailure failure) =>
+      switch (failure) {
+        CaptureCameraFailure.permissionDenied => t.capture.cameraPermission,
+        CaptureCameraFailure.permissionPermanentlyDenied =>
+          t.capture.cameraPermissionSettings,
+        CaptureCameraFailure.permissionRestricted =>
+          t.capture.cameraPermissionRestricted,
+        CaptureCameraFailure.noCamera => t.capture.cameraUnavailable,
+        CaptureCameraFailure.unavailable ||
+        CaptureCameraFailure.captureFailed ||
+        CaptureCameraFailure.interrupted => t.capture.cameraError,
+      };
+
+  @override
+  void dispose() {
+    _operationId++;
+    WidgetsBinding.instance.removeObserver(this);
+    _capturedImage?.fillRange(0, _capturedImage!.length, 0);
+    unawaited(_disposeCamera());
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +223,7 @@ class CaptureScreen extends StatelessWidget {
         child: Column(
           children: [
             _TopBar(title: t.capture.title),
-            if (!visionAvailable)
+            if (!widget.visionAvailable)
               Expanded(
                 child: EmptyState(
                   icon: Icons.no_photography_outlined,
@@ -43,19 +241,64 @@ class CaptureScreen extends StatelessWidget {
                     AppSpacing.md,
                   ),
                   children: [
-                    const _ScanPreview(),
+                    _ScanPreview(
+                      child: _capturedImage != null
+                          ? Image.memory(
+                              _capturedImage!,
+                              fit: BoxFit.cover,
+                              gaplessPlayback: true,
+                            )
+                          : _isCameraReady
+                          ? _camera.buildPreview()
+                          : _CameraPlaceholder(
+                              isLoading: _isInitializing,
+                              message: _failure == null
+                                  ? _isInitializing
+                                        ? t.capture.cameraPreparing
+                                        : t.capture.cameraStartHint
+                                  : '',
+                              startLabel: t.capture.cameraStart,
+                              onStart: _failure == null && !_isInitializing
+                                  ? _initializeCamera
+                                  : null,
+                            ),
+                    ),
+                    if (_failure != null) ...[
+                      const SizedBox(height: AppSpacing.sm),
+                      _CameraError(
+                        message: _failureMessage(t, _failure!),
+                        actionLabel:
+                            _failure ==
+                                    CaptureCameraFailure
+                                        .permissionPermanentlyDenied ||
+                                _failure ==
+                                    CaptureCameraFailure.permissionRestricted
+                            ? t.capture.cameraOpenSettings
+                            : t.capture.cameraRetry,
+                        onPressed:
+                            _failure ==
+                                    CaptureCameraFailure
+                                        .permissionPermanentlyDenied ||
+                                _failure ==
+                                    CaptureCameraFailure.permissionRestricted
+                            ? _openCameraSettings
+                            : _initializeCamera,
+                      ),
+                    ],
+                    if (_capturedImage != null) ...[
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        t.capture.cameraCaptured,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: AppSpacing.md),
                     _AlignmentCard(t: t, theme: theme),
                     const SizedBox(height: AppSpacing.md),
                     _CriteriaCard(t: t),
-                    const SizedBox(height: AppSpacing.md),
-                    Text(
-                      t.capture.shutterPending,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
                       t.capture.localNote,
@@ -67,10 +310,98 @@ class CaptureScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              _CaptureBar(t: t),
+              _CaptureBar(
+                t: t,
+                canCapture: _isCameraReady && !_isCapturing,
+                isCapturing: _isCapturing,
+                hasCapturedImage: _capturedImage != null,
+                onCapture: _captureImage,
+                onRetake: _retakeImage,
+              ),
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _CameraPlaceholder extends StatelessWidget {
+  const _CameraPlaceholder({
+    required this.isLoading,
+    required this.message,
+    required this.startLabel,
+    this.onStart,
+  });
+
+  final bool isLoading;
+  final String message;
+  final String startLabel;
+  final VoidCallback? onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (isLoading)
+              const CircularProgressIndicator()
+            else
+              Icon(
+                Icons.photo_camera_outlined,
+                size: 44,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            if (message.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.sm),
+              Text(message, textAlign: TextAlign.center),
+            ],
+            if (onStart != null) ...[
+              const SizedBox(height: AppSpacing.sm),
+              FilledButton.icon(
+                onPressed: onStart,
+                icon: const Icon(Icons.camera_alt_outlined),
+                label: Text(startLabel),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CameraError extends StatelessWidget {
+  const _CameraError({
+    required this.message,
+    required this.actionLabel,
+    required this.onPressed,
+  });
+
+  final String message;
+  final String actionLabel;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            message,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.error,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          OutlinedButton(onPressed: onPressed, child: Text(actionLabel)),
+        ],
       ),
     );
   }
@@ -114,9 +445,10 @@ class _TopBar extends StatelessWidget {
   }
 }
 
-/// Marco de escaneo con esquinas y silueta. Sin preview de cámara por ahora.
 class _ScanPreview extends StatelessWidget {
-  const _ScanPreview();
+  const _ScanPreview({required this.child});
+
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -132,19 +464,18 @@ class _ScanPreview extends StatelessWidget {
         child: Stack(
           children: [
             Positioned.fill(
-              child: Center(
-                child: Icon(
-                  Icons.accessibility_new,
-                  size: 132,
-                  color: theme.colorScheme.primary.withValues(alpha: 0.55),
-                ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppRadius.container),
+                child: child,
               ),
             ),
             Positioned.fill(
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                child: CustomPaint(
-                  painter: _CornersPainter(theme.colorScheme.primary),
+              child: IgnorePointer(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  child: CustomPaint(
+                    painter: _CornersPainter(theme.colorScheme.primary),
+                  ),
                 ),
               ),
             ),
@@ -324,9 +655,21 @@ class _CriteriaCard extends StatelessWidget {
 }
 
 class _CaptureBar extends StatelessWidget {
-  const _CaptureBar({required this.t});
+  const _CaptureBar({
+    required this.t,
+    required this.canCapture,
+    required this.isCapturing,
+    required this.hasCapturedImage,
+    required this.onCapture,
+    required this.onRetake,
+  });
 
   final Translations t;
+  final bool canCapture;
+  final bool isCapturing;
+  final bool hasCapturedImage;
+  final VoidCallback onCapture;
+  final VoidCallback onRetake;
 
   @override
   Widget build(BuildContext context) {
@@ -338,47 +681,69 @@ class _CaptureBar extends StatelessWidget {
         AppSpacing.marginMobile,
         AppSpacing.md,
       ),
-      child: Column(
-        children: [
-          Row(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final compact = constraints.maxWidth < 360;
+          final captureButton = IconButton.filled(
+            onPressed: isCapturing
+                ? null
+                : hasCapturedImage
+                ? onRetake
+                : canCapture
+                ? onCapture
+                : null,
+            tooltip: hasCapturedImage
+                ? t.capture.cameraRetake
+                : t.capture.shutter,
+            style: IconButton.styleFrom(
+              fixedSize: const Size(64, 64),
+              backgroundColor: theme.colorScheme.primary,
+            ),
+            icon: isCapturing
+                ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Icon(hasCapturedImage ? Icons.refresh : Icons.camera_alt),
+          );
+          final galleryButton = compact
+              ? IconButton(
+                  onPressed: null,
+                  tooltip: t.capture.gallery,
+                  icon: const Icon(Icons.photo_library_outlined),
+                )
+              : Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: null,
+                    icon: const Icon(Icons.photo_library_outlined, size: 18),
+                    label: Text(t.capture.gallery),
+                  ),
+                );
+          final timerButton = compact
+              ? IconButton(
+                  onPressed: null,
+                  tooltip: t.capture.timer,
+                  icon: const Icon(Icons.timer_outlined),
+                )
+              : Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: null,
+                    icon: const Icon(Icons.timer_outlined, size: 18),
+                    label: Text(t.capture.timer),
+                  ),
+                );
+
+          return Row(
             children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: null,
-                  icon: const Icon(Icons.photo_library_outlined, size: 18),
-                  label: Text(t.capture.gallery),
-                ),
-              ),
+              galleryButton,
               const SizedBox(width: AppSpacing.sm),
-              // Inerte hasta que exista pipeline: se anuncia como inactivo,
-              // no como botón que no responde.
-              Semantics(
-                label: t.capture.shutter,
-                enabled: false,
-                child: Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: theme.colorScheme.outlineVariant,
-                  ),
-                  child: Icon(
-                    Icons.camera_alt,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
+              captureButton,
               const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: null,
-                  icon: const Icon(Icons.timer_outlined, size: 18),
-                  label: Text(t.capture.timer),
-                ),
-              ),
+              timerButton,
             ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }
