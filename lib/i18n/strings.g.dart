@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 177 (88 per locale)
+/// Strings: 199 (99 per locale)
 ///
-/// Built on 2026-11-01 at 20:57 UTC
+/// Built on 2026-11-01 at 21:36 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -186,7 +186,7 @@ class _StringsCaptureEs {
 	String get alignment => 'Alineación corporal';
 	String get posture => 'Cuerpo completo, de frente';
 	String get tilt => 'Teléfono recto y nivelado';
-	String get sensor => 'La cámara se activa al iniciar el escaneo';
+	String get sensor => 'Enciende la cámara antes de tomar la foto';
 	String get distance => 'A 2 metros del teléfono';
 	String get criteria => 'Criterios de escaneo';
 	String get fullBody => 'Cuerpo completo';
@@ -198,8 +198,19 @@ class _StringsCaptureEs {
 	String get gallery => 'Galería';
 	String get timer => '3 seg';
 	String get shutter => 'Capturar';
-	String get shutterPending => 'La captura se habilita cuando el modelo de visión esté integrado.';
-	String get localNote => 'Las fotos se procesan y permanecen exclusivamente en este teléfono.';
+	String get cameraStart => 'Activar cámara';
+	String get cameraStartHint => 'Toca para activar la cámara.';
+	String get cameraPreparing => 'Preparando la cámara…';
+	String get cameraPermission => 'Se necesita permiso para usar la cámara.';
+	String get cameraPermissionSettings => 'El permiso está desactivado. Actívalo en los ajustes de la app.';
+	String get cameraPermissionRestricted => 'El acceso a la cámara está restringido en este dispositivo.';
+	String get cameraUnavailable => 'No se encontró una cámara disponible en este dispositivo.';
+	String get cameraError => 'No se pudo iniciar o usar la cámara. Inténtalo de nuevo.';
+	String get cameraRetry => 'Reintentar';
+	String get cameraOpenSettings => 'Abrir ajustes';
+	String get cameraCaptured => 'Foto guardada temporalmente en memoria. El análisis visual aún no está disponible.';
+	String get cameraRetake => 'Tomar otra foto';
+	String get localNote => 'Las fotos permanecen en este teléfono y no se envían a ningún servidor.';
 	String get webUnavailableTitle => 'Captura no disponible en este navegador';
 	String get webUnavailable => 'El cribado por imagen necesita los modelos de visión on-device de la app móvil. Usa NutriScan en tu teléfono para tomar una medición; es una herramienta de cribado, no un diagnóstico.';
 }
@@ -403,7 +414,7 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	@override String get alignment => 'Body alignment';
 	@override String get posture => 'Full body, facing the camera';
 	@override String get tilt => 'Phone upright and level';
-	@override String get sensor => 'Camera starts when the scan begins';
+	@override String get sensor => 'Turn on the camera before taking a photo';
 	@override String get distance => '2 meters away from the phone';
 	@override String get criteria => 'Scan criteria';
 	@override String get fullBody => 'Full body';
@@ -415,8 +426,19 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	@override String get gallery => 'Gallery';
 	@override String get timer => '3 sec';
 	@override String get shutter => 'Capture';
-	@override String get shutterPending => 'Capture unlocks once the vision model is integrated.';
-	@override String get localNote => 'Photos are processed and stay exclusively on this phone.';
+	@override String get cameraStart => 'Turn on camera';
+	@override String get cameraStartHint => 'Tap to turn on the camera.';
+	@override String get cameraPreparing => 'Preparing camera…';
+	@override String get cameraPermission => 'Camera access is required.';
+	@override String get cameraPermissionSettings => 'Camera access is turned off. Enable it in the app settings.';
+	@override String get cameraPermissionRestricted => 'Camera access is restricted on this device.';
+	@override String get cameraUnavailable => 'No camera is available on this device.';
+	@override String get cameraError => 'The camera could not be started or used. Try again.';
+	@override String get cameraRetry => 'Try again';
+	@override String get cameraOpenSettings => 'Open settings';
+	@override String get cameraCaptured => 'Photo temporarily held in memory. Image analysis is not available yet.';
+	@override String get cameraRetake => 'Take another photo';
+	@override String get localNote => 'Photos stay on this phone and are not sent to any server.';
 	@override String get webUnavailableTitle => 'Capture not available in this browser';
 	@override String get webUnavailable => 'Image-based screening needs the on-device vision models of the mobile app. Use NutriScan on your phone to take a measurement; it is a screening tool, not a diagnosis.';
 }
@@ -571,7 +593,7 @@ extension on Translations {
 			case 'capture.alignment': return 'Alineación corporal';
 			case 'capture.posture': return 'Cuerpo completo, de frente';
 			case 'capture.tilt': return 'Teléfono recto y nivelado';
-			case 'capture.sensor': return 'La cámara se activa al iniciar el escaneo';
+			case 'capture.sensor': return 'Enciende la cámara antes de tomar la foto';
 			case 'capture.distance': return 'A 2 metros del teléfono';
 			case 'capture.criteria': return 'Criterios de escaneo';
 			case 'capture.fullBody': return 'Cuerpo completo';
@@ -583,8 +605,19 @@ extension on Translations {
 			case 'capture.gallery': return 'Galería';
 			case 'capture.timer': return '3 seg';
 			case 'capture.shutter': return 'Capturar';
-			case 'capture.shutterPending': return 'La captura se habilita cuando el modelo de visión esté integrado.';
-			case 'capture.localNote': return 'Las fotos se procesan y permanecen exclusivamente en este teléfono.';
+			case 'capture.cameraStart': return 'Activar cámara';
+			case 'capture.cameraStartHint': return 'Toca para activar la cámara.';
+			case 'capture.cameraPreparing': return 'Preparando la cámara…';
+			case 'capture.cameraPermission': return 'Se necesita permiso para usar la cámara.';
+			case 'capture.cameraPermissionSettings': return 'El permiso está desactivado. Actívalo en los ajustes de la app.';
+			case 'capture.cameraPermissionRestricted': return 'El acceso a la cámara está restringido en este dispositivo.';
+			case 'capture.cameraUnavailable': return 'No se encontró una cámara disponible en este dispositivo.';
+			case 'capture.cameraError': return 'No se pudo iniciar o usar la cámara. Inténtalo de nuevo.';
+			case 'capture.cameraRetry': return 'Reintentar';
+			case 'capture.cameraOpenSettings': return 'Abrir ajustes';
+			case 'capture.cameraCaptured': return 'Foto guardada temporalmente en memoria. El análisis visual aún no está disponible.';
+			case 'capture.cameraRetake': return 'Tomar otra foto';
+			case 'capture.localNote': return 'Las fotos permanecen en este teléfono y no se envían a ningún servidor.';
 			case 'capture.webUnavailableTitle': return 'Captura no disponible en este navegador';
 			case 'capture.webUnavailable': return 'El cribado por imagen necesita los modelos de visión on-device de la app móvil. Usa NutriScan en tu teléfono para tomar una medición; es una herramienta de cribado, no un diagnóstico.';
 			case 'history.title': return 'Tu progreso';
@@ -668,7 +701,7 @@ extension on _StringsEn {
 			case 'capture.alignment': return 'Body alignment';
 			case 'capture.posture': return 'Full body, facing the camera';
 			case 'capture.tilt': return 'Phone upright and level';
-			case 'capture.sensor': return 'Camera starts when the scan begins';
+			case 'capture.sensor': return 'Turn on the camera before taking a photo';
 			case 'capture.distance': return '2 meters away from the phone';
 			case 'capture.criteria': return 'Scan criteria';
 			case 'capture.fullBody': return 'Full body';
@@ -680,8 +713,19 @@ extension on _StringsEn {
 			case 'capture.gallery': return 'Gallery';
 			case 'capture.timer': return '3 sec';
 			case 'capture.shutter': return 'Capture';
-			case 'capture.shutterPending': return 'Capture unlocks once the vision model is integrated.';
-			case 'capture.localNote': return 'Photos are processed and stay exclusively on this phone.';
+			case 'capture.cameraStart': return 'Turn on camera';
+			case 'capture.cameraStartHint': return 'Tap to turn on the camera.';
+			case 'capture.cameraPreparing': return 'Preparing camera…';
+			case 'capture.cameraPermission': return 'Camera access is required.';
+			case 'capture.cameraPermissionSettings': return 'Camera access is turned off. Enable it in the app settings.';
+			case 'capture.cameraPermissionRestricted': return 'Camera access is restricted on this device.';
+			case 'capture.cameraUnavailable': return 'No camera is available on this device.';
+			case 'capture.cameraError': return 'The camera could not be started or used. Try again.';
+			case 'capture.cameraRetry': return 'Try again';
+			case 'capture.cameraOpenSettings': return 'Open settings';
+			case 'capture.cameraCaptured': return 'Photo temporarily held in memory. Image analysis is not available yet.';
+			case 'capture.cameraRetake': return 'Take another photo';
+			case 'capture.localNote': return 'Photos stay on this phone and are not sent to any server.';
 			case 'capture.webUnavailableTitle': return 'Capture not available in this browser';
 			case 'capture.webUnavailable': return 'Image-based screening needs the on-device vision models of the mobile app. Use NutriScan on your phone to take a measurement; it is a screening tool, not a diagnosis.';
 			case 'history.title': return 'Your progress';
