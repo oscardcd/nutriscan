@@ -69,7 +69,7 @@ void main() {
         .getSemantics(find.byType(Checkbox).first)
         .getSemanticsData();
 
-    expect(data.label, contains('cribado preliminar'));
+    expect(data.label, contains('prototipo educativo experimental'));
     expect(data.hasAction(SemanticsAction.tap), isTrue);
   });
 
