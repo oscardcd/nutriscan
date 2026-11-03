@@ -17,6 +17,7 @@ class _FakeCaptureCamera implements CaptureCamera {
   int openSettingsCount = 0;
   bool openSettingsResult = true;
   CaptureCameraException? initializationFailure;
+  CaptureCameraException? captureFailure;
 
   @override
   Future<void> initialize() async {
@@ -35,6 +36,11 @@ class _FakeCaptureCamera implements CaptureCamera {
   @override
   Future<Uint8List> takePicture() async {
     captureCount++;
+    final failure = captureFailure;
+    if (failure != null) {
+      captureFailure = null;
+      throw failure;
+    }
     return base64Decode(
       'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p8sAAAAASUVORK5CYII=',
     );
@@ -127,6 +133,37 @@ void main() {
 
     expect(camera.initializeCount, 2);
     expect(find.byKey(const ValueKey('camera-preview')), findsOneWidget);
+  });
+
+  testWidgets('un fallo de captura permite reintentar la cámara', (
+    tester,
+  ) async {
+    final camera = _FakeCaptureCamera()
+      ..captureFailure = const CaptureCameraException(
+        CaptureCameraFailure.captureFailed,
+      );
+    await pumpCapture(
+      tester,
+      CaptureScreen(visionAvailable: true, camera: camera),
+    );
+
+    await startCamera(tester);
+    await tester.tap(find.byTooltip('Capturar'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('No se pudo iniciar o usar la cámara. Inténtalo de nuevo.'),
+      findsOneWidget,
+    );
+    expect(find.text('Reintentar'), findsOneWidget);
+    expect(find.byKey(const ValueKey('camera-preview')), findsNothing);
+
+    await tester.tap(find.text('Reintentar'));
+    await tester.pumpAndSettle();
+
+    expect(camera.initializeCount, 2);
+    expect(find.byKey(const ValueKey('camera-preview')), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('muestra permiso denegado y permite reintentarlo', (

@@ -10,6 +10,8 @@ import '../../../core/ui/ui.dart';
 import '../../../i18n/strings.g.dart';
 import '../data/capture_camera.dart';
 
+const _captureTimeout = Duration(seconds: 30);
+
 /// Captura guiada. La guía (encuadre, inclinación, distancia) es estática por
 /// ahora: shortcut: sin pipeline de visión conectado, los valores se alimentan
 /// cuando `core/vision` entregue pose + segmentación.
@@ -112,7 +114,7 @@ class _CaptureScreenState extends State<CaptureScreen>
     });
 
     try {
-      final image = await _camera.takePicture();
+      final image = await _camera.takePicture().timeout(_captureTimeout);
       if (operationId != _operationId || !_isAppResumed) {
         image.fillRange(0, image.length, 0);
         return;
@@ -125,17 +127,33 @@ class _CaptureScreenState extends State<CaptureScreen>
       });
     } on CaptureCameraException catch (error) {
       if (operationId == _operationId && mounted) {
-        setState(() => _failure = error.failure);
+        setState(() {
+          _isCameraReady = false;
+          _failure = error.failure;
+        });
+      }
+    } on TimeoutException {
+      if (operationId == _operationId && mounted) {
+        setState(() {
+          _isCameraReady = false;
+          _failure = CaptureCameraFailure.captureFailed;
+        });
       }
     } on CameraException catch (error, stackTrace) {
       _reportCameraError(error, stackTrace);
       if (operationId == _operationId && mounted) {
-        setState(() => _failure = CaptureCameraFailure.captureFailed);
+        setState(() {
+          _isCameraReady = false;
+          _failure = CaptureCameraFailure.captureFailed;
+        });
       }
     } on PlatformException catch (error, stackTrace) {
       _reportCameraError(error, stackTrace);
       if (operationId == _operationId && mounted) {
-        setState(() => _failure = CaptureCameraFailure.captureFailed);
+        setState(() {
+          _isCameraReady = false;
+          _failure = CaptureCameraFailure.captureFailed;
+        });
       }
     } finally {
       if (operationId == _operationId && mounted) {

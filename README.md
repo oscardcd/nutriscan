@@ -8,9 +8,9 @@ recomendación de evaluación profesional.
 ## Estado del proyecto
 
 La app ofrece consentimiento, navegación, perfil, historial local, configuración
-de idioma/tema y pantallas de captura y resultados. La captura, los modelos de
-visión y la medición automática todavía no están integrados: el obturador está
-deshabilitado y no se generan mediciones reales desde una foto.
+de idioma/tema y pantallas de captura y resultados. En móvil se puede activar la
+cámara y guardar una foto temporalmente en memoria, pero todavía no se analiza
+ni se generan mediciones reales a partir de ella.
 
 La versión web permite explorar las pantallas compatibles, pero no captura
 imágenes ni ejecuta los modelos de visión. Su historial vive solo en memoria y
@@ -19,8 +19,9 @@ se pierde al recargar la página. La app móvil usa almacenamiento local.
 ## Tecnologías
 
 - Flutter y Dart; Riverpod para estado y `go_router` para navegación.
-- `camera` y `flutter_pose_detection` están previstos para la captura y el
-  procesamiento móvil; TFLite y segmentación todavía no están integrados.
+- `camera` está integrado para capturar fotos en móvil. `flutter_pose_detection`
+  está declarado, pero el pipeline de visión, TFLite y la segmentación todavía
+  no están integrados.
 - Slang para traducciones en español e inglés.
 - Vercel para compilar y publicar la versión web estática.
 
