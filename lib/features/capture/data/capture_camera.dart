@@ -94,7 +94,7 @@ class DeviceCaptureCamera implements CaptureCamera {
       }
 
       final camera = cameras.firstWhere(
-        (camera) => camera.lensDirection == CameraLensDirection.front,
+        (camera) => camera.lensDirection == CameraLensDirection.back,
         orElse: () => cameras.first,
       );
       controller = CameraController(
