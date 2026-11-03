@@ -38,7 +38,7 @@
     "cameraRetake": "Take another photo",
     "localNote": "Photos stay on this phone and are not sent to any server.",
     "webUnavailableTitle": "Capture not available in this browser",
-    "webUnavailable": "Image-based screening needs the on-device vision models of the mobile app. Use NutriScan on your phone to take a measurement; it is a screening tool, not a diagnosis."
+    "webUnavailable": "Image analysis is not available in this browser yet. NutriScan is an educational prototype, not a medical tool."
   },
   "history": {
     "title": "Your progress",
@@ -65,34 +65,34 @@
     "obese": "Obese"
   },
   "disclaimer": {
-    "screening": "Screening estimate. Not a diagnosis. Consult a healthcare professional for evaluation."
+    "screening": "Educational prototype. Results are experimental, may be inaccurate, and are not validated for medical use. Do not use them for diagnosis, treatment, or clinical decisions."
   },
   "onDevice": {
     "pill": "100% On-Device"
   },
   "consent": {
     "subtitle": "Home",
-    "heroTitle": "Know your range, not a number",
-    "heroBody": "Body composition estimate and BMI band processed 100% locally and privately on your device.",
+    "heroTitle": "Educational body-analysis prototype",
+    "heroBody": "Experimental academic project. Image analysis and estimates are not validated yet; results may be inaccurate.",
     "deviceTitle": "100% on your device",
     "deviceBody": "Photos are never uploaded or leave your phone. The calculation runs on your device.",
     "privacyTitle": "Strict photo privacy",
     "privacyBody": "No cloud storage and no third-party access.",
-    "screeningTitle": "Preventive screening tool",
-    "screeningBody": "Educational guidance on wellness and healthy habits, not a binding clinical diagnosis.",
+    "screeningTitle": "Educational use, not medical use",
+    "screeningBody": "Not validated for medical use and must not be used for diagnosis, treatment, or health decisions. This consent does not authorize storing or reusing photos for research or training.",
     "termsTitle": "Consent Terms",
     "termsBody": "To ensure safe and ethical use, confirm the following two premises before continuing:",
     "screeningPrefix": "I understand this is a ",
-    "screeningHighlight": "preliminary screening tool",
-    "screeningSuffix": " and does not constitute a clinical medical diagnosis.",
+    "screeningHighlight": "experimental educational prototype",
+    "screeningSuffix": " and is not a medical tool or for diagnosis, treatment, or clinical decisions.",
     "processingPrefix": "I authorize ",
-    "processingHighlight": "biometric visual processing",
-    "processingSuffix": " on my device to calculate my BMI bands.",
+    "processingHighlight": "on-device image processing",
+    "processingSuffix": " to try experimental learning features when available.",
     "cta": "Start assessment"
   },
   "result": {
     "subtitle": "Result",
-    "screeningLabel": "Screening result",
+    "screeningLabel": "Experimental result",
     "bmiLabel": "Estimated body mass index",
     "rangeCaption": "±${margin} · estimate range ${min} – ${max}",
     "confidenceLow": "Low confidence",

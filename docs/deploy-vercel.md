@@ -59,7 +59,7 @@ El build corre en Vercel con lo definido en `vercel.json`.
 - Cámara, detección de pose, segmentación y TFLite no existen en navegador: la captura muestra el estado "no disponible".
 - Las mediciones usan un store en memoria: se pierden al recargar la pestaña.
 - El consentimiento se guarda en `localStorage` cifrado con WebCrypto; borrar datos del sitio lo reinicia.
-- El procesado sigue siendo 100 % local; NutriScan es una herramienta de cribado, no un diagnóstico.
+- NutriScan es un prototipo educativo, no una herramienta médica; sus resultados experimentales no deben usarse para decisiones de salud.
 
 ## Troubleshooting
 

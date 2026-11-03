@@ -6,7 +6,7 @@
 /// Locales: 2
 /// Strings: 199 (99 per locale)
 ///
-/// Built on 2026-11-01 at 21:36 UTC
+/// Built on 2026-11-03 at 02:42 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -212,7 +212,7 @@ class _StringsCaptureEs {
 	String get cameraRetake => 'Tomar otra foto';
 	String get localNote => 'Las fotos permanecen en este teléfono y no se envían a ningún servidor.';
 	String get webUnavailableTitle => 'Captura no disponible en este navegador';
-	String get webUnavailable => 'El cribado por imagen necesita los modelos de visión on-device de la app móvil. Usa NutriScan en tu teléfono para tomar una medición; es una herramienta de cribado, no un diagnóstico.';
+	String get webUnavailable => 'El análisis de imagen aún no está disponible en este navegador. NutriScan es un prototipo educativo, no una herramienta médica.';
 }
 
 // Path: history
@@ -267,7 +267,7 @@ class _StringsDisclaimerEs {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	String get screening => 'Estimación de tamizaje. No es un diagnóstico. Consulte a un profesional de la salud para una evaluación.';
+	String get screening => 'Prototipo educativo. Los resultados son experimentales, pueden ser inexactos y no están validados para uso médico. No los uses para diagnóstico, tratamiento ni decisiones clínicas.';
 }
 
 // Path: onDevice
@@ -288,23 +288,23 @@ class _StringsConsentEs {
 
 	// Translations
 	String get subtitle => 'Inicio';
-	String get heroTitle => 'Conoce tu rango, no un número';
-	String get heroBody => 'Estimación de composición corporal y banda de IMC procesada 100% de manera local y privada en tu dispositivo.';
+	String get heroTitle => 'Prototipo educativo de análisis corporal';
+	String get heroBody => 'Proyecto académico experimental. El análisis de imágenes y las estimaciones aún no están validados; los resultados pueden ser inexactos.';
 	String get deviceTitle => '100% en tu dispositivo';
 	String get deviceBody => 'Las fotos nunca se suben ni salen de tu teléfono. El cálculo se ejecuta en tu dispositivo.';
 	String get privacyTitle => 'Privacidad fotográfica estricta';
 	String get privacyBody => 'Sin almacenamiento en la nube ni acceso a terceros.';
-	String get screeningTitle => 'Herramienta de cribado preventivo';
-	String get screeningBody => 'Orientación formativa de bienestar y hábitos saludables, no un diagnóstico clínico vinculante.';
+	String get screeningTitle => 'Uso educativo, no médico';
+	String get screeningBody => 'No está validado para uso médico ni debe usarse para diagnóstico, tratamiento o decisiones sobre tu salud. Este consentimiento no autoriza guardar ni reutilizar fotos para investigación o entrenamiento.';
 	String get termsTitle => 'Términos de Consentimiento';
 	String get required => 'Requerido';
 	String get termsBody => 'Para garantizar un uso seguro y ético, confirma las siguientes dos premisas antes de continuar:';
 	String get screeningPrefix => 'Entiendo que es una ';
-	String get screeningHighlight => 'herramienta de cribado preliminar';
-	String get screeningSuffix => ' y no constituye un diagnóstico médico clínico.';
+	String get screeningHighlight => 'prototipo educativo experimental';
+	String get screeningSuffix => ' y no es una herramienta médica ni debe usarse para diagnóstico, tratamiento o decisiones clínicas.';
 	String get processingPrefix => 'Autorizo el ';
-	String get processingHighlight => 'procesamiento visual biométrico';
-	String get processingSuffix => ' en mi dispositivo para calcular mis bandas de IMC.';
+	String get processingHighlight => 'procesamiento local de imágenes';
+	String get processingSuffix => ' para probar funciones experimentales de aprendizaje cuando estén disponibles.';
 	String get cta => 'Comenzar evaluación';
 }
 
@@ -316,7 +316,7 @@ class _StringsResultEs {
 
 	// Translations
 	String get subtitle => 'Resultado';
-	String get screeningLabel => 'Resultado de cribado';
+	String get screeningLabel => 'Resultado experimental';
 	String get bmiLabel => 'Índice de masa corporal estimado';
 	String rangeCaption({required Object margin, required Object min, required Object max}) => '±${margin} · rango de estimación ${min} – ${max}';
 	String get confidenceLow => 'Confianza baja';
@@ -440,7 +440,7 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	@override String get cameraRetake => 'Take another photo';
 	@override String get localNote => 'Photos stay on this phone and are not sent to any server.';
 	@override String get webUnavailableTitle => 'Capture not available in this browser';
-	@override String get webUnavailable => 'Image-based screening needs the on-device vision models of the mobile app. Use NutriScan on your phone to take a measurement; it is a screening tool, not a diagnosis.';
+	@override String get webUnavailable => 'Image analysis is not available in this browser yet. NutriScan is an educational prototype, not a medical tool.';
 }
 
 // Path: history
@@ -495,7 +495,7 @@ class _StringsDisclaimerEn extends _StringsDisclaimerEs {
 	@override final _StringsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get screening => 'Screening estimate. Not a diagnosis. Consult a healthcare professional for evaluation.';
+	@override String get screening => 'Educational prototype. Results are experimental, may be inaccurate, and are not validated for medical use. Do not use them for diagnosis, treatment, or clinical decisions.';
 }
 
 // Path: onDevice
@@ -516,22 +516,22 @@ class _StringsConsentEn extends _StringsConsentEs {
 
 	// Translations
 	@override String get subtitle => 'Home';
-	@override String get heroTitle => 'Know your range, not a number';
-	@override String get heroBody => 'Body composition estimate and BMI band processed 100% locally and privately on your device.';
+	@override String get heroTitle => 'Educational body-analysis prototype';
+	@override String get heroBody => 'Experimental academic project. Image analysis and estimates are not validated yet; results may be inaccurate.';
 	@override String get deviceTitle => '100% on your device';
 	@override String get deviceBody => 'Photos are never uploaded or leave your phone. The calculation runs on your device.';
 	@override String get privacyTitle => 'Strict photo privacy';
 	@override String get privacyBody => 'No cloud storage and no third-party access.';
-	@override String get screeningTitle => 'Preventive screening tool';
-	@override String get screeningBody => 'Educational guidance on wellness and healthy habits, not a binding clinical diagnosis.';
+	@override String get screeningTitle => 'Educational use, not medical use';
+	@override String get screeningBody => 'Not validated for medical use and must not be used for diagnosis, treatment, or health decisions. This consent does not authorize storing or reusing photos for research or training.';
 	@override String get termsTitle => 'Consent Terms';
 	@override String get termsBody => 'To ensure safe and ethical use, confirm the following two premises before continuing:';
 	@override String get screeningPrefix => 'I understand this is a ';
-	@override String get screeningHighlight => 'preliminary screening tool';
-	@override String get screeningSuffix => ' and does not constitute a clinical medical diagnosis.';
+	@override String get screeningHighlight => 'experimental educational prototype';
+	@override String get screeningSuffix => ' and is not a medical tool or for diagnosis, treatment, or clinical decisions.';
 	@override String get processingPrefix => 'I authorize ';
-	@override String get processingHighlight => 'biometric visual processing';
-	@override String get processingSuffix => ' on my device to calculate my BMI bands.';
+	@override String get processingHighlight => 'on-device image processing';
+	@override String get processingSuffix => ' to try experimental learning features when available.';
 	@override String get cta => 'Start assessment';
 }
 
@@ -543,7 +543,7 @@ class _StringsResultEn extends _StringsResultEs {
 
 	// Translations
 	@override String get subtitle => 'Result';
-	@override String get screeningLabel => 'Screening result';
+	@override String get screeningLabel => 'Experimental result';
 	@override String get bmiLabel => 'Estimated body mass index';
 	@override String rangeCaption({required Object margin, required Object min, required Object max}) => '±${margin} · estimate range ${min} – ${max}';
 	@override String get confidenceLow => 'Low confidence';
@@ -619,7 +619,7 @@ extension on Translations {
 			case 'capture.cameraRetake': return 'Tomar otra foto';
 			case 'capture.localNote': return 'Las fotos permanecen en este teléfono y no se envían a ningún servidor.';
 			case 'capture.webUnavailableTitle': return 'Captura no disponible en este navegador';
-			case 'capture.webUnavailable': return 'El cribado por imagen necesita los modelos de visión on-device de la app móvil. Usa NutriScan en tu teléfono para tomar una medición; es una herramienta de cribado, no un diagnóstico.';
+			case 'capture.webUnavailable': return 'El análisis de imagen aún no está disponible en este navegador. NutriScan es un prototipo educativo, no una herramienta médica.';
 			case 'history.title': return 'Tu progreso';
 			case 'history.empty': return 'Aún no hay mediciones';
 			case 'profile.title': return 'Perfil';
@@ -638,29 +638,29 @@ extension on Translations {
 			case 'band.normal': return 'Normal';
 			case 'band.overweight': return 'Sobrepeso';
 			case 'band.obese': return 'Obesidad';
-			case 'disclaimer.screening': return 'Estimación de tamizaje. No es un diagnóstico. Consulte a un profesional de la salud para una evaluación.';
+			case 'disclaimer.screening': return 'Prototipo educativo. Los resultados son experimentales, pueden ser inexactos y no están validados para uso médico. No los uses para diagnóstico, tratamiento ni decisiones clínicas.';
 			case 'onDevice.pill': return '100% On-Device';
 			case 'consent.subtitle': return 'Inicio';
-			case 'consent.heroTitle': return 'Conoce tu rango, no un número';
-			case 'consent.heroBody': return 'Estimación de composición corporal y banda de IMC procesada 100% de manera local y privada en tu dispositivo.';
+			case 'consent.heroTitle': return 'Prototipo educativo de análisis corporal';
+			case 'consent.heroBody': return 'Proyecto académico experimental. El análisis de imágenes y las estimaciones aún no están validados; los resultados pueden ser inexactos.';
 			case 'consent.deviceTitle': return '100% en tu dispositivo';
 			case 'consent.deviceBody': return 'Las fotos nunca se suben ni salen de tu teléfono. El cálculo se ejecuta en tu dispositivo.';
 			case 'consent.privacyTitle': return 'Privacidad fotográfica estricta';
 			case 'consent.privacyBody': return 'Sin almacenamiento en la nube ni acceso a terceros.';
-			case 'consent.screeningTitle': return 'Herramienta de cribado preventivo';
-			case 'consent.screeningBody': return 'Orientación formativa de bienestar y hábitos saludables, no un diagnóstico clínico vinculante.';
+			case 'consent.screeningTitle': return 'Uso educativo, no médico';
+			case 'consent.screeningBody': return 'No está validado para uso médico ni debe usarse para diagnóstico, tratamiento o decisiones sobre tu salud. Este consentimiento no autoriza guardar ni reutilizar fotos para investigación o entrenamiento.';
 			case 'consent.termsTitle': return 'Términos de Consentimiento';
 			case 'consent.required': return 'Requerido';
 			case 'consent.termsBody': return 'Para garantizar un uso seguro y ético, confirma las siguientes dos premisas antes de continuar:';
 			case 'consent.screeningPrefix': return 'Entiendo que es una ';
-			case 'consent.screeningHighlight': return 'herramienta de cribado preliminar';
-			case 'consent.screeningSuffix': return ' y no constituye un diagnóstico médico clínico.';
+			case 'consent.screeningHighlight': return 'prototipo educativo experimental';
+			case 'consent.screeningSuffix': return ' y no es una herramienta médica ni debe usarse para diagnóstico, tratamiento o decisiones clínicas.';
 			case 'consent.processingPrefix': return 'Autorizo el ';
-			case 'consent.processingHighlight': return 'procesamiento visual biométrico';
-			case 'consent.processingSuffix': return ' en mi dispositivo para calcular mis bandas de IMC.';
+			case 'consent.processingHighlight': return 'procesamiento local de imágenes';
+			case 'consent.processingSuffix': return ' para probar funciones experimentales de aprendizaje cuando estén disponibles.';
 			case 'consent.cta': return 'Comenzar evaluación';
 			case 'result.subtitle': return 'Resultado';
-			case 'result.screeningLabel': return 'Resultado de cribado';
+			case 'result.screeningLabel': return 'Resultado experimental';
 			case 'result.bmiLabel': return 'Índice de masa corporal estimado';
 			case 'result.rangeCaption': return ({required Object margin, required Object min, required Object max}) => '±${margin} · rango de estimación ${min} – ${max}';
 			case 'result.confidenceLow': return 'Confianza baja';
@@ -727,7 +727,7 @@ extension on _StringsEn {
 			case 'capture.cameraRetake': return 'Take another photo';
 			case 'capture.localNote': return 'Photos stay on this phone and are not sent to any server.';
 			case 'capture.webUnavailableTitle': return 'Capture not available in this browser';
-			case 'capture.webUnavailable': return 'Image-based screening needs the on-device vision models of the mobile app. Use NutriScan on your phone to take a measurement; it is a screening tool, not a diagnosis.';
+			case 'capture.webUnavailable': return 'Image analysis is not available in this browser yet. NutriScan is an educational prototype, not a medical tool.';
 			case 'history.title': return 'Your progress';
 			case 'history.empty': return 'No measurements yet';
 			case 'profile.title': return 'Profile';
@@ -746,28 +746,28 @@ extension on _StringsEn {
 			case 'band.normal': return 'Normal';
 			case 'band.overweight': return 'Overweight';
 			case 'band.obese': return 'Obese';
-			case 'disclaimer.screening': return 'Screening estimate. Not a diagnosis. Consult a healthcare professional for evaluation.';
+			case 'disclaimer.screening': return 'Educational prototype. Results are experimental, may be inaccurate, and are not validated for medical use. Do not use them for diagnosis, treatment, or clinical decisions.';
 			case 'onDevice.pill': return '100% On-Device';
 			case 'consent.subtitle': return 'Home';
-			case 'consent.heroTitle': return 'Know your range, not a number';
-			case 'consent.heroBody': return 'Body composition estimate and BMI band processed 100% locally and privately on your device.';
+			case 'consent.heroTitle': return 'Educational body-analysis prototype';
+			case 'consent.heroBody': return 'Experimental academic project. Image analysis and estimates are not validated yet; results may be inaccurate.';
 			case 'consent.deviceTitle': return '100% on your device';
 			case 'consent.deviceBody': return 'Photos are never uploaded or leave your phone. The calculation runs on your device.';
 			case 'consent.privacyTitle': return 'Strict photo privacy';
 			case 'consent.privacyBody': return 'No cloud storage and no third-party access.';
-			case 'consent.screeningTitle': return 'Preventive screening tool';
-			case 'consent.screeningBody': return 'Educational guidance on wellness and healthy habits, not a binding clinical diagnosis.';
+			case 'consent.screeningTitle': return 'Educational use, not medical use';
+			case 'consent.screeningBody': return 'Not validated for medical use and must not be used for diagnosis, treatment, or health decisions. This consent does not authorize storing or reusing photos for research or training.';
 			case 'consent.termsTitle': return 'Consent Terms';
 			case 'consent.termsBody': return 'To ensure safe and ethical use, confirm the following two premises before continuing:';
 			case 'consent.screeningPrefix': return 'I understand this is a ';
-			case 'consent.screeningHighlight': return 'preliminary screening tool';
-			case 'consent.screeningSuffix': return ' and does not constitute a clinical medical diagnosis.';
+			case 'consent.screeningHighlight': return 'experimental educational prototype';
+			case 'consent.screeningSuffix': return ' and is not a medical tool or for diagnosis, treatment, or clinical decisions.';
 			case 'consent.processingPrefix': return 'I authorize ';
-			case 'consent.processingHighlight': return 'biometric visual processing';
-			case 'consent.processingSuffix': return ' on my device to calculate my BMI bands.';
+			case 'consent.processingHighlight': return 'on-device image processing';
+			case 'consent.processingSuffix': return ' to try experimental learning features when available.';
 			case 'consent.cta': return 'Start assessment';
 			case 'result.subtitle': return 'Result';
-			case 'result.screeningLabel': return 'Screening result';
+			case 'result.screeningLabel': return 'Experimental result';
 			case 'result.bmiLabel': return 'Estimated body mass index';
 			case 'result.rangeCaption': return ({required Object margin, required Object min, required Object max}) => '±${margin} · estimate range ${min} – ${max}';
 			case 'result.confidenceLow': return 'Low confidence';
