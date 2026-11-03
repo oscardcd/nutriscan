@@ -38,7 +38,7 @@
     "cameraRetake": "Tomar otra foto",
     "localNote": "Las fotos permanecen en este teléfono y no se envían a ningún servidor.",
     "webUnavailableTitle": "Captura no disponible en este navegador",
-    "webUnavailable": "El cribado por imagen necesita los modelos de visión on-device de la app móvil. Usa NutriScan en tu teléfono para tomar una medición; es una herramienta de cribado, no un diagnóstico."
+    "webUnavailable": "El análisis de imagen aún no está disponible en este navegador. NutriScan es un prototipo educativo, no una herramienta médica."
   },
   "history": {
     "title": "Tu progreso",
@@ -65,35 +65,35 @@
     "obese": "Obesidad"
   },
   "disclaimer": {
-    "screening": "Estimación de tamizaje. No es un diagnóstico. Consulte a un profesional de la salud para una evaluación."
+    "screening": "Prototipo educativo. Los resultados son experimentales, pueden ser inexactos y no están validados para uso médico. No los uses para diagnóstico, tratamiento ni decisiones clínicas."
   },
   "onDevice": {
     "pill": "100% On-Device"
   },
   "consent": {
     "subtitle": "Inicio",
-    "heroTitle": "Conoce tu rango, no un número",
-    "heroBody": "Estimación de composición corporal y banda de IMC procesada 100% de manera local y privada en tu dispositivo.",
+    "heroTitle": "Prototipo educativo de análisis corporal",
+    "heroBody": "Proyecto académico experimental. El análisis de imágenes y las estimaciones aún no están validados; los resultados pueden ser inexactos.",
     "deviceTitle": "100% en tu dispositivo",
     "deviceBody": "Las fotos nunca se suben ni salen de tu teléfono. El cálculo se ejecuta en tu dispositivo.",
     "privacyTitle": "Privacidad fotográfica estricta",
     "privacyBody": "Sin almacenamiento en la nube ni acceso a terceros.",
-    "screeningTitle": "Herramienta de cribado preventivo",
-    "screeningBody": "Orientación formativa de bienestar y hábitos saludables, no un diagnóstico clínico vinculante.",
+    "screeningTitle": "Uso educativo, no médico",
+    "screeningBody": "No está validado para uso médico ni debe usarse para diagnóstico, tratamiento o decisiones sobre tu salud. Este consentimiento no autoriza guardar ni reutilizar fotos para investigación o entrenamiento.",
     "termsTitle": "Términos de Consentimiento",
     "required": "Requerido",
     "termsBody": "Para garantizar un uso seguro y ético, confirma las siguientes dos premisas antes de continuar:",
     "screeningPrefix": "Entiendo que es una ",
-    "screeningHighlight": "herramienta de cribado preliminar",
-    "screeningSuffix": " y no constituye un diagnóstico médico clínico.",
+    "screeningHighlight": "prototipo educativo experimental",
+    "screeningSuffix": " y no es una herramienta médica ni debe usarse para diagnóstico, tratamiento o decisiones clínicas.",
     "processingPrefix": "Autorizo el ",
-    "processingHighlight": "procesamiento visual biométrico",
-    "processingSuffix": " en mi dispositivo para calcular mis bandas de IMC.",
+    "processingHighlight": "procesamiento local de imágenes",
+    "processingSuffix": " para probar funciones experimentales de aprendizaje cuando estén disponibles.",
     "cta": "Comenzar evaluación"
   },
   "result": {
     "subtitle": "Resultado",
-    "screeningLabel": "Resultado de cribado",
+    "screeningLabel": "Resultado experimental",
     "bmiLabel": "Índice de masa corporal estimado",
     "rangeCaption": "±${margin} · rango de estimación ${min} – ${max}",
     "confidenceLow": "Confianza baja",

@@ -1,16 +1,16 @@
 # NutriScan
 
-Aplicación Flutter de **cribado del estado nutricional** para adultos (≥18), con
-estimación de banda de IMC a partir de captura guiada. No es una herramienta de
-diagnóstico médico; las pantallas de resultado incluyen una advertencia y una
-recomendación de evaluación profesional.
+Aplicación Flutter de **prototipo educativo y académico** para explorar captura
+guiada y análisis de imágenes. No está validada para uso médico y sus resultados
+experimentales no deben usarse para diagnóstico, tratamiento ni decisiones
+clínicas.
 
 ## Estado del proyecto
 
 La app ofrece consentimiento, navegación, perfil, historial local, configuración
-de idioma/tema y pantallas de captura y resultados. En móvil se puede activar la
-cámara y guardar una foto temporalmente en memoria, pero todavía no se analiza
-ni se generan mediciones reales a partir de ella.
+de idioma/tema y pantallas de captura y resultados de demostración. En móvil se
+puede activar la cámara y guardar una foto temporalmente en memoria, pero todavía
+no se analiza ni se generan mediciones reales a partir de ella.
 
 La versión web permite explorar las pantallas compatibles, pero no captura
 imágenes ni ejecuta los modelos de visión. Su historial vive solo en memoria y
@@ -72,9 +72,11 @@ versionado de Flutter, verificación y solución de problemas, consulta la
 
 ## Privacidad y alcance
 
-La app es una herramienta de **cribado**, no de diagnóstico. La versión web no
-sube fotos ni ejecuta análisis de imágenes; la captura y los modelos de visión
-están pendientes y no se debe interpretar el sitio como una medición clínica.
+NutriScan es un prototipo **educativo**, no una herramienta médica. Los
+resultados experimentales pueden ser inexactos y no deben usarse para decisiones
+de salud. La versión web no sube fotos ni ejecuta análisis de imágenes; la
+captura y los modelos de visión están pendientes. El consentimiento general de
+uso no autoriza guardar ni reutilizar fotos para investigación o entrenamiento.
 En web, el consentimiento se guarda localmente y las mediciones de demostración
 no persisten al recargar. El perfil permite borrar los datos disponibles.
 

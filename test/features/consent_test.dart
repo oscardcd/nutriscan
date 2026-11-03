@@ -50,7 +50,10 @@ void main() {
 
     expect(find.text('100% en tu dispositivo'), findsOneWidget);
     expect(find.text('Privacidad fotográfica estricta'), findsOneWidget);
-    expect(find.text('Herramienta de cribado preventivo'), findsOneWidget);
-    expect(find.textContaining('No es un diagnóstico'), findsOneWidget);
+    expect(find.text('Uso educativo, no médico'), findsOneWidget);
+    expect(
+      find.textContaining('No está validado para uso médico'),
+      findsOneWidget,
+    );
   });
 }

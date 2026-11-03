@@ -56,7 +56,11 @@ void main() {
     expect(find.text('Sobrepeso'), findsNWidgets(2));
     expect(find.text('Cintura-altura (WHtR)'), findsOneWidget);
     expect(find.text('Confianza alta'), findsOneWidget);
-    expect(find.textContaining('No es un diagnóstico'), findsOneWidget);
+    expect(find.text('RESULTADO EXPERIMENTAL'), findsOneWidget);
+    expect(
+      find.textContaining('no están validados para uso médico'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('en inglés los decimales usan punto', (tester) async {
@@ -64,5 +68,10 @@ void main() {
 
     expect(find.text('27.4'), findsOneWidget);
     expect(find.text('±1.8 · estimate range 25.6 – 29.2'), findsOneWidget);
+    expect(find.text('EXPERIMENTAL RESULT'), findsOneWidget);
+    expect(
+      find.textContaining('not validated for medical use'),
+      findsOneWidget,
+    );
   });
 }
