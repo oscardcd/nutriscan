@@ -9,8 +9,10 @@ clínicas.
 
 La app ofrece consentimiento, navegación, perfil, historial local, configuración
 de idioma/tema y pantallas de captura y resultados de demostración. En móvil se
-puede activar la cámara y guardar una foto temporalmente en memoria, pero todavía
-no se analiza ni se generan mediciones reales a partir de ella.
+puede activar la cámara y guardar una foto temporalmente en memoria. Hay un
+servicio experimental independiente para detectar pose, pero aún no está
+conectado a la captura; no se generan mediciones reales ni resultados desde la
+foto.
 
 La versión web permite explorar las pantallas compatibles, pero no captura
 imágenes ni ejecuta los modelos de visión. Su historial vive solo en memoria y
@@ -19,9 +21,10 @@ se pierde al recargar la página. La app móvil usa almacenamiento local.
 ## Tecnologías
 
 - Flutter y Dart; Riverpod para estado y `go_router` para navegación.
-- `camera` está integrado para capturar fotos en móvil. `flutter_pose_detection`
-  está declarado, pero el pipeline de visión, TFLite y la segmentación todavía
-  no están integrados.
+- `camera` está integrado para capturar fotos en móvil.
+  `flutter_pose_detection` y el servicio experimental de pose están disponibles
+  en el código; el servicio aún no está conectado a la UI. Segmentación, medidas
+  físicas y TFLite no están integrados.
 - Slang para traducciones en español e inglés.
 - Vercel para compilar y publicar la versión web estática.
 

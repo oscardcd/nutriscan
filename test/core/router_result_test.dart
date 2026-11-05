@@ -58,7 +58,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Captura biométrica'), findsOneWidget);
-    expect(find.text('RESULTADO DE CRIBADO'), findsNothing);
+    expect(find.text('RESULTADO EXPERIMENTAL'), findsNothing);
   });
 
   testWidgets('/result con extra muestra el resultado', (tester) async {
@@ -78,6 +78,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('27,4'), findsOneWidget);
-    expect(find.text('RESULTADO DE CRIBADO'), findsOneWidget);
+    expect(find.text('RESULTADO EXPERIMENTAL'), findsOneWidget);
   });
 }

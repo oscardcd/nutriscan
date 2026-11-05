@@ -2,17 +2,17 @@
 
 ## Objetivo y límites
 
-Implementar el flujo móvil de captura y evaluar si las imágenes permiten
-estimar una **banda probable de IMC** con calidad suficiente para mostrarla como
-cribado. La pantalla de resultado debe priorizar la banda estimada y una
-descripción breve; no necesita exponer índices antropométricos ni detalles del
-modelo.
+Implementar el flujo móvil de captura como prototipo educativo y explorar si
+las imágenes permiten estimar una **banda probable de IMC**. Cualquier resultado
+experimental debe identificarse como tal; la app no se presenta para uso
+médico. La pantalla de resultado debe priorizar una descripción breve y no
+necesita exponer índices antropométricos ni detalles del modelo.
 
 La app no debe presentar el resultado como diagnóstico ni afirmar que mide el
-peso desde una fotografía. La estimación visual es incierta; si la calidad de
-captura o la confianza son insuficientes, se debe pedir repetir o no mostrar una
-banda. La evaluación del modelo es una puerta de decisión: si no alcanza los
-criterios definidos, no se integra en producción.
+peso desde una fotografía. La estimación visual es experimental e incierta; si
+la calidad de captura o la confianza son insuficientes, se debe pedir repetir o
+no mostrar una banda. El proyecto no afirma validez clínica ni autoriza el uso
+de resultados para decisiones de salud.
 
 ## Estado actual
 
@@ -23,7 +23,9 @@ criterios definidos, no se integra en producción.
 - [x] Android e iOS declaran permiso/motivo de uso de cámara.
 - [x] La pantalla inicia la cámara tras una acción explícita y permite tomar
   una foto local y repetirla.
-- [ ] No hay servicios de visión, extracción de mediciones ni modelo conectado.
+- [x] Existe un servicio técnico local de detección de pose, aún no conectado a
+  la pantalla de captura.
+- [ ] No hay segmentación, extracción de medidas físicas ni modelo de IMC.
 - [ ] La galería todavía está deshabilitada.
 - [ ] La ruta de resultado requiere un `ScreeningResult`, pero la captura no lo
   produce.
@@ -34,9 +36,10 @@ criterios definidos, no se integra en producción.
   persona, foto(s) y, si el método lo requiere, edad y sexo. Salida: banda
   probable, confianza/estado de calidad y motivo de rechazo. No devolver peso
   absoluto inferido de la foto.
-- [ ] **Fijar criterios de aceptación antes de entrenar.** Acordar con asesoría
-  técnica y clínica las métricas, intervalos de confianza, límites por
-  subgrupo y cuándo abstenerse. No usar exactitud global como único criterio.
+- [ ] **Fijar criterios de aceptación antes de entrenar.** Acordar criterios
+  técnicos y de producto para un experimento educativo: métricas, incertidumbre,
+  límites por subgrupo y cuándo abstenerse. No usar exactitud global como único
+  criterio ni presentar la evaluación como validación médica.
 - [ ] **Diseñar un protocolo de captura reproducible.** Definir vista frontal y
   si la lateral será requisito o mejora; distancia/encuadre, iluminación,
   postura, ropa, fondo, resolución y dispositivos compatibles.
@@ -47,7 +50,7 @@ criterios definidos, no se integra en producción.
 - [ ] **Preparar una evaluación exploratoria sin fuga de datos.** Separar
   participantes —no solo imágenes— entre entrenamiento, validación y prueba;
   documentar el tamaño y las limitaciones. Una muestra pequeña sirve para
-  detectar problemas y estimar viabilidad, no para afirmar validez clínica.
+  detectar problemas y estimar viabilidad, no para afirmar validez médica.
 - [ ] **Comparar una línea base simple** de proporciones/landmarks contra una
   alternativa de modelo. Registrar MAE de IMC si aplica, matriz de confusión,
   sensibilidad por banda, calibración e intervalos de incertidumbre.
@@ -102,28 +105,47 @@ e iOS sigue pendiente.
 
 ## F2 — Pipeline de visión sin predicción clínica
 
-- [ ] **Definir interfaces de dominio** para captura, calidad, landmarks,
-  segmentación y errores; no acoplar la UI a tipos de plugins.
-- [ ] **Implementar un servicio de pose** con `flutter_pose_detection`.
-  Normalizar coordenadas, orientación y dimensiones; detectar ausencia o baja
-  confianza de landmarks. El plugin requiere Android API 31+.
+- [x] **Definir interfaces de dominio** para calidad, landmarks y errores de
+  pose; `PoseDetectionEngine` desacopla el servicio del plugin. La abstracción
+  de captura sigue en `features/capture`.
+- [x] **Implementar un servicio de pose** con `flutter_pose_detection`.
+  Convierte JPEG/PNG a una imagen JPEG con orientación EXIF aplicada, mantiene
+  dimensiones y coordenadas normalizadas, limita la entrada a 15 MiB/12 MP y
+  devuelve estados para cero/múltiples personas, baja confianza e hitos de
+  cuerpo incompletos (filtros técnicos: pose y visibilidad de landmarks ≥0.5).
+  El plugin requiere Android API 31+.
+- [ ] Validar frontalidad, rotación del dispositivo, encuadre real y salidas del
+  plugin en dispositivos físicos. Los umbrales de pose actuales solo son
+  filtros técnicos experimentales, no confianza nutricional.
 - [ ] **Implementar segmentación de persona** y medir cobertura/contorno.
   Rechazar máscaras vacías, múltiples personas o recortes truncados.
 - [ ] **Calcular características con unidades y validaciones explícitas.**
   Registrar el origen y error de cada medida; no convertir píxeles a
   centímetros sin una escala válida. Usar la estatura ingresada solo conforme
   al protocolo validado.
-- [ ] **Añadir ejecución fuera del hilo UI** (isolate o mecanismo compatible con
-  los plugins) y límites de memoria, tiempo y tamaño de imagen.
+- [x] **Añadir ejecución fuera del hilo UI** para decodificar, orientar y
+  normalizar imágenes mediante isolate, con límites de tamaño y timeout. La
+  inferencia se delega al plugin nativo; no se mueve un canal de plataforma a
+  un isolate Dart.
 - [ ] **Verificar determinismo y casos límite** con imágenes sintéticas o
-  autorizadas: rotación, espejo, varias personas, pose parcial, máscara vacía y
-  entrada corrupta.
+  autorizadas. Las pruebas actuales cubren normalización JPEG/PNG, entradas
+  inválidas, límites de bytes, personas simuladas, landmarks incompletos o
+  fuera de rango y timeout; quedan rotación EXIF, espejo, fixtures de personas,
+  integración con el modelo nativo y segmentación.
 - [ ] **Medir latencia y consumo** en dispositivos de referencia de gama baja y
   media; reducir resolución solo sin invalidar las mediciones.
 
-**Criterio de aceptación:** el pipeline devuelve mediciones de calidad
-explícita o un error tipado; nunca transforma una entrada inválida en valores
-por defecto que parezcan un resultado válido.
+**Estado F2:** parcial. El servicio devuelve pose y estado de calidad técnica o
+un error tipado; no produce medidas físicas, IMC ni una predicción. Ningún
+estado de pose debe presentarse como confianza nutricional. Segmentación,
+características físicas, pruebas del modelo nativo y benchmarks en hardware
+siguen pendientes.
+
+**Criterio de aceptación:** cada paso implementado devuelve una pose con
+calidad técnica explícita o un error tipado; una entrada inválida nunca se
+transforma en valores por defecto que parezcan válidos. El pipeline completo
+no se considera terminado hasta cubrir segmentación, medidas y validación en
+dispositivos.
 
 ## F3 — Modelo, calibración e inferencia on-device
 

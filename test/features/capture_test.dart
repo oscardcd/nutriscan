@@ -18,6 +18,8 @@ class _FakeCaptureCamera implements CaptureCamera {
   bool openSettingsResult = true;
   CaptureCameraException? initializationFailure;
   CaptureCameraException? captureFailure;
+  bool previewIsMounted = false;
+  bool disposedWhilePreviewMounted = false;
 
   @override
   Future<void> initialize() async {
@@ -30,8 +32,10 @@ class _FakeCaptureCamera implements CaptureCamera {
   }
 
   @override
-  Widget buildPreview() =>
-      const ColoredBox(key: ValueKey('camera-preview'), color: Colors.black);
+  Widget buildPreview() => _FakeCameraPreview(
+    onMount: () => previewIsMounted = true,
+    onUnmount: () => previewIsMounted = false,
+  );
 
   @override
   Future<Uint8List> takePicture() async {
@@ -54,8 +58,39 @@ class _FakeCaptureCamera implements CaptureCamera {
 
   @override
   Future<void> dispose() async {
+    if (previewIsMounted) disposedWhilePreviewMounted = true;
     disposeCount++;
   }
+}
+
+class _FakeCameraPreview extends StatefulWidget {
+  const _FakeCameraPreview({required this.onMount, required this.onUnmount});
+
+  final VoidCallback onMount;
+  final VoidCallback onUnmount;
+
+  @override
+  State<_FakeCameraPreview> createState() => _FakeCameraPreviewState();
+}
+
+class _FakeCameraPreviewState extends State<_FakeCameraPreview> {
+  @override
+  void initState() {
+    super.initState();
+    widget.onMount();
+  }
+
+  @override
+  void dispose() {
+    widget.onUnmount();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => const ColoredBox(
+    key: ValueKey('camera-preview'),
+    color: Colors.black,
+  );
 }
 
 void main() {
@@ -119,6 +154,7 @@ void main() {
 
     expect(camera.captureCount, 1);
     expect(camera.disposeCount, 1);
+    expect(camera.disposedWhilePreviewMounted, isFalse);
     expect(
       find.text(
         'Foto guardada temporalmente en memoria. El análisis visual aún no está disponible.',
@@ -255,6 +291,7 @@ void main() {
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
     await tester.pumpAndSettle();
     expect(camera.initializeCount, 2);
+    expect(camera.disposedWhilePreviewMounted, isFalse);
   });
 
   testWidgets('web mantiene captura deshabilitada sin inicializar cámara', (

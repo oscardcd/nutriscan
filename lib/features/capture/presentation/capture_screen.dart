@@ -57,7 +57,12 @@ class _CaptureScreenState extends State<CaptureScreen>
       if (mounted && widget.visionAvailable && _capturedImage == null) {
         setState(() {});
       }
-      unawaited(_disposeCamera());
+      unawaited(
+        _disposeCameraAfterPreviewRemoved(
+          _operationId,
+          onlyWhenPaused: true,
+        ),
+      );
     } else if (widget.visionAvailable &&
         _hasStartedCamera &&
         _capturedImage == null) {
@@ -119,12 +124,12 @@ class _CaptureScreenState extends State<CaptureScreen>
         image.fillRange(0, image.length, 0);
         return;
       }
-      await _disposeCamera();
       if (!mounted) return;
       setState(() {
         _capturedImage = image;
         _isCameraReady = false;
       });
+      await _disposeCameraAfterPreviewRemoved(operationId);
     } on CaptureCameraException catch (error) {
       if (operationId == _operationId && mounted) {
         setState(() {
@@ -195,6 +200,16 @@ class _CaptureScreenState extends State<CaptureScreen>
     } on MissingPluginException catch (error, stackTrace) {
       _reportCameraError(error, stackTrace);
     }
+  }
+
+  Future<void> _disposeCameraAfterPreviewRemoved(
+    int operationId, {
+    bool onlyWhenPaused = false,
+  }) async {
+    await WidgetsBinding.instance.endOfFrame;
+    if (!mounted || operationId != _operationId) return;
+    if (onlyWhenPaused && _isAppResumed) return;
+    await _disposeCamera();
   }
 
   void _reportCameraError(Object error, StackTrace stackTrace) {
