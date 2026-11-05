@@ -170,6 +170,17 @@ void main() {
           ),
         ),
       );
+      final hugePng = img.encodePng(img.Image(width: 4000, height: 3200));
+      await expectLater(
+        service.analyze(Uint8List.fromList(hugePng)),
+        throwsA(
+          isA<VisionException>().having(
+            (error) => error.failure,
+            'failure',
+            VisionFailure.imageTooLarge,
+          ),
+        ),
+      );
       await service.dispose();
     });
 
@@ -200,6 +211,11 @@ void main() {
         (await service.analyze(_imageBytes)).quality,
         PoseQuality.incompleteBody,
       );
+
+      engine.people = [_person(shoulderX: 1.02)];
+      final borderline = await service.analyze(_imageBytes);
+      expect(borderline.quality, PoseQuality.incompleteBody);
+      expect(borderline.pose, isNotNull);
       await service.dispose();
     });
 

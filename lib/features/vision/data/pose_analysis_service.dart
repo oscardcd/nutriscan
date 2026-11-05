@@ -17,6 +17,7 @@ class PoseAnalysisService {
 
   static const _minimumPoseConfidence = 0.5;
   static const _minimumLandmarkVisibility = 0.5;
+  static const _landmarkCoordinateTolerance = 0.05;
   static const _requiredBodyLandmarks = {
     BodyLandmarkType.leftShoulder,
     BodyLandmarkType.rightShoulder,
@@ -28,6 +29,8 @@ class PoseAnalysisService {
 
   final PoseDetectionEngine _engine;
   final Duration timeout;
+  // shortcut: el plugin no cancela inferencias; tras un timeout el servicio
+  // sigue ocupado hasta que el futuro nativo complete.
   Future<PoseAnalysis>? _pendingAnalysis;
   bool _initialized = false;
   bool _disposed = false;
@@ -143,9 +146,14 @@ class PoseAnalysisService {
     if (pose.score < _minimumPoseConfidence) {
       return PoseQuality.lowPoseConfidence;
     }
-    if (_requiredBodyLandmarks.any(
-      (type) => pose.landmark(type).visibility < _minimumLandmarkVisibility,
-    )) {
+    if (_requiredBodyLandmarks.any((type) {
+      final landmark = pose.landmark(type);
+      return landmark.visibility < _minimumLandmarkVisibility ||
+          landmark.x < 0 ||
+          landmark.x > 1 ||
+          landmark.y < 0 ||
+          landmark.y > 1;
+    })) {
       return PoseQuality.incompleteBody;
     }
     return PoseQuality.usableForTechnicalChecks;
@@ -161,10 +169,12 @@ class PoseAnalysisService {
       if (!landmark.x.isFinite ||
           !landmark.y.isFinite ||
           !landmark.visibility.isFinite ||
-          landmark.x < 0 ||
-          landmark.x > 1 ||
-          landmark.y < 0 ||
-          landmark.y > 1 ||
+          // Fuera del encuadre por poco es normal en cuerpos al borde; solo
+          // se tolera un margen y se reporta como cuerpo incompleto.
+          landmark.x < -_landmarkCoordinateTolerance ||
+          landmark.x > 1 + _landmarkCoordinateTolerance ||
+          landmark.y < -_landmarkCoordinateTolerance ||
+          landmark.y > 1 + _landmarkCoordinateTolerance ||
           landmark.visibility < 0 ||
           landmark.visibility > 1 ||
           landmarks.containsKey(landmark.type)) {
