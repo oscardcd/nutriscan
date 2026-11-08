@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/ui/ui.dart';
 import '../../../i18n/strings.g.dart';
+import '../../vision/data/pose_analysis_service.dart';
 import '../../vision/data/pose_realtime_detector.dart';
 import '../../vision/domain/pose_alignment.dart';
 import '../../vision/domain/pose_analysis.dart';
@@ -66,6 +67,12 @@ class _CaptureScreenState extends State<CaptureScreen>
   Timer? _escapeTimer;
   StreamSubscription<CameraFrame>? _poseFrames;
   PoseRealtimeDetector? _poseDetector;
+
+  /// Una sola instancia para toda la pantalla: el detector nativo es único y
+  /// cerrarlo desde el panel o el watcher deja a la cámara sin detector.
+  PoseAnalysisService? _analysisService;
+  PoseAnalysisService get _analysisServiceOrCreate =>
+      _analysisService ??= PoseAnalysisService();
   Timer? _poseIdleTimer;
   bool _disposed = false;
 
@@ -389,6 +396,7 @@ class _CaptureScreenState extends State<CaptureScreen>
     unawaited(_poseFrames?.cancel());
     _poseFrames = null;
     _poseDetector?.dispose();
+    unawaited(_analysisService?.dispose());
     _livePose.dispose();
     _liveHint.dispose();
     WidgetsBinding.instance.removeObserver(this);
@@ -453,6 +461,7 @@ class _CaptureScreenState extends State<CaptureScreen>
           if (_capturedImage != null)
             PhotoAlignmentWatcher(
               image: _capturedImage!,
+              service: _analysisServiceOrCreate,
               onResult: _onPhotoAnalyzed,
             ),
           SafeArea(
@@ -631,7 +640,10 @@ class _CaptureScreenState extends State<CaptureScreen>
               ),
               if (_capturedImage != null) ...[
                 const SizedBox(height: AppSpacing.sm),
-                PoseDebugPanel(image: _capturedImage!),
+                PoseDebugPanel(
+                  image: _capturedImage!,
+                  service: _analysisServiceOrCreate,
+                ),
               ],
             ],
           ),

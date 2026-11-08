@@ -50,7 +50,8 @@ class _PhotoAlignmentWatcherState extends State<PhotoAlignmentWatcher> {
 
   @override
   void dispose() {
-    unawaited(_service?.dispose());
+    // Un servicio inyectado lo cierra quien lo creó: el nativo es compartido.
+    if (widget.service == null) unawaited(_service?.dispose());
     super.dispose();
   }
 
