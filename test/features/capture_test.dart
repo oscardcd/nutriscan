@@ -51,6 +51,12 @@ class _FakeCaptureCamera implements CaptureCamera {
   }
 
   @override
+  Stream<CameraFrame> startStream() => const Stream.empty();
+
+  @override
+  Future<void> stopStream() async {}
+
+  @override
   Future<bool> openSettings() async {
     openSettingsCount++;
     return openSettingsResult;

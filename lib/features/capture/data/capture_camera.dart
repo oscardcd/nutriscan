@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,10 +25,43 @@ class CaptureCameraException implements Exception {
   final CaptureCameraFailure failure;
 }
 
+/// Plano crudo de un frame del image stream.
+class CameraFramePlane {
+  const CameraFramePlane({
+    required this.bytes,
+    required this.bytesPerRow,
+    required this.bytesPerPixel,
+  });
+
+  final Uint8List bytes;
+  final int bytesPerRow;
+  final int bytesPerPixel;
+}
+
+/// Frame del image stream en yuv420, listo para el detector de pose.
+class CameraFrame {
+  const CameraFrame({
+    required this.planes,
+    required this.width,
+    required this.height,
+    required this.rotationDegrees,
+  });
+
+  final List<CameraFramePlane> planes;
+  final int width;
+  final int height;
+  final int rotationDegrees;
+}
+
 abstract interface class CaptureCamera {
   Future<void> initialize();
 
   Widget buildPreview();
+
+  /// Frames del image stream. Se detiene con [stopStream] o al capturar.
+  Stream<CameraFrame> startStream();
+
+  Future<void> stopStream();
 
   Future<Uint8List> takePicture();
 
@@ -37,6 +72,7 @@ abstract interface class CaptureCamera {
 
 class DeviceCaptureCamera implements CaptureCamera {
   CameraController? _controller;
+  StreamController<CameraFrame>? _frames;
   int _generation = 0;
 
   @override
@@ -101,6 +137,8 @@ class DeviceCaptureCamera implements CaptureCamera {
         camera,
         ResolutionPreset.medium,
         enableAudio: false,
+        // Requisito del image stream: el detector necesita yuv420.
+        imageFormatGroup: ImageFormatGroup.yuv420,
       );
       _controller = controller;
       await controller.initialize();
@@ -133,6 +171,54 @@ class DeviceCaptureCamera implements CaptureCamera {
   }
 
   @override
+  Stream<CameraFrame> startStream() {
+    final controller = _controller;
+    if (controller == null || !controller.value.isInitialized) {
+      throw StateError('La cámara debe estar inicializada para transmitir.');
+    }
+    unawaited(_detachFrames());
+
+    final frames = StreamController<CameraFrame>.broadcast();
+    _frames = frames;
+    final rotation = controller.description.sensorOrientation;
+
+    unawaited(
+      controller
+          .startImageStream((image) {
+            if (frames.isClosed) return;
+            frames.add(
+              CameraFrame(
+                planes: [
+                  for (final plane in image.planes)
+                    CameraFramePlane(
+                      bytes: plane.bytes,
+                      bytesPerRow: plane.bytesPerRow,
+                      bytesPerPixel: plane.bytesPerPixel ?? 1,
+                    ),
+                ],
+                width: image.width,
+                height: image.height,
+                rotationDegrees: rotation,
+              ),
+            );
+          })
+          .catchError((Object error) {
+            if (!frames.isClosed) frames.addError(error);
+          }),
+    );
+    return frames.stream;
+  }
+
+  @override
+  Future<void> stopStream() async {
+    await _detachFrames();
+    final controller = _controller;
+    if (controller == null || !controller.value.isInitialized) return;
+    if (!controller.value.isStreamingImages) return;
+    await controller.stopImageStream();
+  }
+
+  @override
   Future<Uint8List> takePicture() async {
     final controller = _controller;
     if (controller == null || !controller.value.isInitialized) {
@@ -140,6 +226,8 @@ class DeviceCaptureCamera implements CaptureCamera {
     }
 
     try {
+      // iOS no captura mientras el image stream está activo.
+      await stopStream();
       final file = await controller.takePicture();
       late final Uint8List bytes;
       try {
@@ -174,14 +262,22 @@ class DeviceCaptureCamera implements CaptureCamera {
   @override
   Future<void> dispose() async {
     _generation++;
+    await _detachFrames();
     final controller = _controller;
     _controller = null;
     await controller?.dispose();
   }
 
+  Future<void> _detachFrames() async {
+    final frames = _frames;
+    _frames = null;
+    if (frames != null && !frames.isClosed) await frames.close();
+  }
+
   Future<void> _discard(CameraController? controller) async {
     if (controller == null) return;
     if (!identical(_controller, controller)) return;
+    await _detachFrames();
     _controller = null;
     await controller.dispose();
   }
