@@ -8,8 +8,11 @@ import 'package:flutter/services.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/ui/ui.dart';
 import '../../../i18n/strings.g.dart';
+import '../../vision/data/pose_realtime_detector.dart';
+import '../../vision/domain/pose_analysis.dart';
 import '../../vision/presentation/pose_debug_panel_stub.dart'
     if (dart.library.io) '../../vision/presentation/pose_debug_panel.dart';
+import '../../vision/presentation/pose_guide_painter.dart';
 import '../data/capture_camera.dart';
 
 const _captureTimeout = Duration(seconds: 30);
@@ -40,6 +43,12 @@ class _CaptureScreenState extends State<CaptureScreen>
   CaptureCameraFailure? _failure;
   Uint8List? _capturedImage;
 
+  final ValueNotifier<DetectedPose?> _livePose = ValueNotifier(null);
+  StreamSubscription<CameraFrame>? _poseFrames;
+  PoseRealtimeDetector? _poseDetector;
+  Timer? _poseIdleTimer;
+  bool _disposed = false;
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +68,7 @@ class _CaptureScreenState extends State<CaptureScreen>
       if (mounted && widget.visionAvailable && _capturedImage == null) {
         setState(() {});
       }
+      unawaited(_stopPoseStream());
       unawaited(
         _disposeCameraAfterPreviewRemoved(
           _operationId,
@@ -91,6 +101,8 @@ class _CaptureScreenState extends State<CaptureScreen>
         return;
       }
       setState(() => _isCameraReady = true);
+      // No se espera: el modelo puede tardar y el preview ya es usable.
+      unawaited(_startPoseStream());
     } on CaptureCameraException catch (error) {
       if (operationId == _operationId && mounted && _isAppResumed) {
         setState(() => _failure = error.failure);
@@ -121,6 +133,7 @@ class _CaptureScreenState extends State<CaptureScreen>
     });
 
     try {
+      await _stopPoseStream();
       final image = await _camera.takePicture().timeout(_captureTimeout);
       if (operationId != _operationId || !_isAppResumed) {
         image.fillRange(0, image.length, 0);
@@ -193,6 +206,7 @@ class _CaptureScreenState extends State<CaptureScreen>
   }
 
   Future<void> _disposeCamera() async {
+    await _stopPoseStream();
     try {
       await _camera.dispose();
     } on CameraException catch (error, stackTrace) {
@@ -212,6 +226,55 @@ class _CaptureScreenState extends State<CaptureScreen>
     if (!mounted || operationId != _operationId) return;
     if (onlyWhenPaused && _isAppResumed) return;
     await _disposeCamera();
+  }
+
+  Future<void> _startPoseStream() async {
+    if (!widget.visionAvailable ||
+        _poseFrames != null ||
+        _capturedImage != null) {
+      return;
+    }
+    final detector = _poseDetector ??= PoseRealtimeDetector();
+    try {
+      await detector.initialize();
+      if (!mounted || !_isCameraReady || !_isAppResumed) return;
+      _poseFrames = _camera
+          .startStream()
+          .listen(_onPoseFrame, onError: _reportCameraError);
+    } on PlatformException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+    } on MissingPluginException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+    } on StateError catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+    }
+  }
+
+  Future<void> _stopPoseStream() async {
+    _poseIdleTimer?.cancel();
+    final frames = _poseFrames;
+    _poseFrames = null;
+    await frames?.cancel();
+    if (!_disposed) _livePose.value = null;
+    try {
+      await _camera.stopStream();
+    } on PlatformException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+    } on MissingPluginException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+    }
+  }
+
+  Future<void> _onPoseFrame(CameraFrame frame) async {
+    final detector = _poseDetector;
+    if (detector == null) return;
+    final pose = await detector.process(frame);
+    if (!mounted || _disposed || _poseFrames == null || pose == null) return;
+    _livePose.value = pose;
+    _poseIdleTimer?.cancel();
+    _poseIdleTimer = Timer(const Duration(milliseconds: 800), () {
+      if (mounted && !_disposed) _livePose.value = null;
+    });
   }
 
   void _reportCameraError(Object error, StackTrace stackTrace) {
@@ -241,6 +304,12 @@ class _CaptureScreenState extends State<CaptureScreen>
   @override
   void dispose() {
     _operationId++;
+    _disposed = true;
+    _poseIdleTimer?.cancel();
+    unawaited(_poseFrames?.cancel());
+    _poseFrames = null;
+    _poseDetector?.dispose();
+    _livePose.dispose();
     WidgetsBinding.instance.removeObserver(this);
     _capturedImage?.fillRange(0, _capturedImage!.length, 0);
     unawaited(_disposeCamera());
@@ -277,6 +346,13 @@ class _CaptureScreenState extends State<CaptureScreen>
                   ),
                   children: [
                     _ScanPreview(
+                      overlay: _capturedImage == null
+                          ? ValueListenableBuilder<DetectedPose?>(
+                              valueListenable: _livePose,
+                              builder: (context, pose, _) =>
+                                  CustomPaint(painter: PoseGuidePainter(pose: pose)),
+                            )
+                          : null,
                       child: _capturedImage != null
                           ? Image.memory(
                               _capturedImage!,
@@ -485,9 +561,10 @@ class _TopBar extends StatelessWidget {
 }
 
 class _ScanPreview extends StatelessWidget {
-  const _ScanPreview({required this.child});
+  const _ScanPreview({required this.child, this.overlay});
 
   final Widget child;
+  final Widget? overlay;
 
   @override
   Widget build(BuildContext context) {
@@ -508,6 +585,15 @@ class _ScanPreview extends StatelessWidget {
                 child: child,
               ),
             ),
+            if (overlay case final overlay?)
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppRadius.container),
+                    child: overlay,
+                  ),
+                ),
+              ),
             Positioned.fill(
               child: IgnorePointer(
                 child: Padding(
