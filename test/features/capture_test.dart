@@ -32,6 +32,9 @@ class _FakeCaptureCamera implements CaptureCamera {
   }
 
   @override
+  double get previewAspectRatio => 3 / 4;
+
+  @override
   Widget buildPreview() => _FakeCameraPreview(
     onMount: () => previewIsMounted = true,
     onUnmount: () => previewIsMounted = false,
@@ -130,7 +133,9 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('captura muestra criterios y preview de cámara', (tester) async {
+  testWidgets('preview a pantalla completa y criterios en la hoja', (
+    tester,
+  ) async {
     final camera = _FakeCaptureCamera();
     await pumpCapture(
       tester,
@@ -138,12 +143,16 @@ void main() {
     );
 
     expect(find.text('Captura biométrica'), findsOneWidget);
-    expect(find.text('CRITERIOS DE ESCANEO'), findsOneWidget);
-    expect(find.text('Buscando tu cuerpo…'), findsOneWidget);
+    expect(find.byTooltip('Capturar'), findsOneWidget);
     expect(camera.initializeCount, 0);
     await startCamera(tester);
     expect(find.byKey(const ValueKey('camera-preview')), findsOneWidget);
     expect(camera.initializeCount, 1);
+
+    await tester.tap(find.byTooltip('Criterios de escaneo'));
+    await tester.pumpAndSettle();
+    expect(find.text('CRITERIOS DE ESCANEO'), findsOneWidget);
+    expect(find.text('Cuerpo completo'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 
@@ -156,18 +165,18 @@ void main() {
       CaptureScreen(visionAvailable: true, camera: camera),
     );
 
-    IconButton shutter() => tester.widget<IconButton>(
-      find.ancestor(
-        of: find.byTooltip('Capturar'),
-        matching: find.byType(IconButton),
-      ),
-    );
-
     await startCamera(tester);
-    expect(shutter().onPressed, isNull);
 
+    // Sin pose válida el disparador está cerrado: tocar no captura nada.
+    await tester.tap(find.byTooltip('Capturar'));
+    await tester.pumpAndSettle();
+    expect(camera.captureCount, 0);
+
+    // A los 10 s se abre igual para no dejar a nadie atrapado.
     await tester.pump(const Duration(seconds: 11));
-    expect(shutter().onPressed, isNotNull);
+    await tester.tap(find.byTooltip('Capturar'));
+    await tester.pumpAndSettle();
+    expect(camera.captureCount, 1);
   });
 
   testWidgets('captura una foto local y permite repetirla', (tester) async {

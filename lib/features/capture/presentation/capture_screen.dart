@@ -11,9 +11,11 @@ import '../../../i18n/strings.g.dart';
 import '../../vision/data/pose_realtime_detector.dart';
 import '../../vision/domain/pose_alignment.dart';
 import '../../vision/domain/pose_analysis.dart';
+import '../../vision/presentation/alignment_text.dart';
+import '../../vision/presentation/photo_alignment_watcher_stub.dart'
+    if (dart.library.io) '../../vision/presentation/photo_alignment_watcher.dart';
 import '../../vision/presentation/pose_debug_panel_stub.dart'
     if (dart.library.io) '../../vision/presentation/pose_debug_panel.dart';
-import '../../vision/presentation/alignment_text.dart';
 import '../../vision/presentation/pose_guide_painter.dart';
 import '../data/capture_camera.dart';
 
@@ -56,6 +58,7 @@ class _CaptureScreenState extends State<CaptureScreen>
 
   final ValueNotifier<DetectedPose?> _livePose = ValueNotifier(null);
   final ValueNotifier<AlignmentHint?> _liveHint = ValueNotifier(null);
+  AlignmentHint? _lastAnnouncedHint;
   final AlignmentStabilizer _alignmentStabilizer = AlignmentStabilizer();
   int _alignedFrames = 0;
   bool _gateOpen = false;
@@ -124,16 +127,19 @@ class _CaptureScreenState extends State<CaptureScreen>
     } on CaptureCameraException catch (error) {
       if (operationId == _operationId && mounted && _isAppResumed) {
         setState(() => _failure = error.failure);
+        _announceFailure(error.failure);
       }
     } on CameraException catch (error, stackTrace) {
       _reportCameraError(error, stackTrace);
       if (operationId == _operationId && mounted && _isAppResumed) {
         setState(() => _failure = CaptureCameraFailure.unavailable);
+        _announceFailure(CaptureCameraFailure.unavailable);
       }
     } on PlatformException catch (error, stackTrace) {
       _reportCameraError(error, stackTrace);
       if (operationId == _operationId && mounted && _isAppResumed) {
         setState(() => _failure = CaptureCameraFailure.unavailable);
+        _announceFailure(CaptureCameraFailure.unavailable);
       }
     } finally {
       if (operationId == _operationId && mounted) {
@@ -162,6 +168,10 @@ class _CaptureScreenState extends State<CaptureScreen>
         _capturedImage = image;
         _isCameraReady = false;
       });
+      _showSnack(
+        Translations.of(context).capture.cameraCaptured,
+        icon: Icons.check_circle_outline,
+      );
       await _disposeCameraAfterPreviewRemoved(operationId);
     } on CaptureCameraException catch (error) {
       if (operationId == _operationId && mounted) {
@@ -169,6 +179,7 @@ class _CaptureScreenState extends State<CaptureScreen>
           _isCameraReady = false;
           _failure = error.failure;
         });
+        _announceFailure(error.failure);
       }
     } on TimeoutException {
       if (operationId == _operationId && mounted) {
@@ -176,6 +187,7 @@ class _CaptureScreenState extends State<CaptureScreen>
           _isCameraReady = false;
           _failure = CaptureCameraFailure.captureFailed;
         });
+        _announceFailure(CaptureCameraFailure.captureFailed);
       }
     } on CameraException catch (error, stackTrace) {
       _reportCameraError(error, stackTrace);
@@ -184,6 +196,7 @@ class _CaptureScreenState extends State<CaptureScreen>
           _isCameraReady = false;
           _failure = CaptureCameraFailure.captureFailed;
         });
+        _announceFailure(CaptureCameraFailure.captureFailed);
       }
     } on PlatformException catch (error, stackTrace) {
       _reportCameraError(error, stackTrace);
@@ -192,6 +205,7 @@ class _CaptureScreenState extends State<CaptureScreen>
           _isCameraReady = false;
           _failure = CaptureCameraFailure.captureFailed;
         });
+        _announceFailure(CaptureCameraFailure.captureFailed);
       }
     } finally {
       if (operationId == _operationId && mounted) {
@@ -213,6 +227,7 @@ class _CaptureScreenState extends State<CaptureScreen>
       if (opened && _isAppResumed) await _initializeCamera();
       if (!opened && mounted) {
         setState(() => _failure = CaptureCameraFailure.unavailable);
+        _announceFailure(CaptureCameraFailure.unavailable);
       }
     } on PlatformException catch (error, stackTrace) {
       _reportCameraError(error, stackTrace);
@@ -292,6 +307,7 @@ class _CaptureScreenState extends State<CaptureScreen>
       _livePose.value = null;
       _liveHint.value = null;
     }
+    _lastAnnouncedHint = null;
     _alignmentStabilizer.reset();
     _resetGate();
     try {
@@ -319,6 +335,7 @@ class _CaptureScreenState extends State<CaptureScreen>
       _alignmentEvaluator.evaluate(pose),
     );
     _liveHint.value = hint;
+    _announceHint(hint);
     _alignedFrames = hint == AlignmentHint.ok ? _alignedFrames + 1 : 0;
     final open = _alignedFrames >= _gateFrames;
     if (open != _gateOpen) setState(() => _gateOpen = open);
@@ -385,124 +402,239 @@ class _CaptureScreenState extends State<CaptureScreen>
     final theme = Theme.of(context);
     final t = Translations.of(context);
 
-    return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            _TopBar(title: t.capture.title),
-            if (!widget.visionAvailable)
+    if (!widget.visionAvailable) {
+      return Scaffold(
+        body: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              _OverlayHeader(
+                title: t.capture.title,
+                subtitle: t.capture.onDevice,
+                foreground: theme.colorScheme.onSurface,
+              ),
               Expanded(
                 child: EmptyState(
                   icon: Icons.no_photography_outlined,
                   title: t.capture.webUnavailableTitle,
                   message: t.capture.webUnavailable,
                 ),
-              )
-            else ...[
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.marginMobile,
-                    AppSpacing.md,
-                    AppSpacing.marginMobile,
-                    AppSpacing.md,
-                  ),
-                  children: [
-                    _ScanPreview(
-                      overlay: _capturedImage == null
-                          ? ValueListenableBuilder<DetectedPose?>(
-                              valueListenable: _livePose,
-                              builder: (context, pose, _) =>
-                                  CustomPaint(painter: PoseGuidePainter(pose: pose)),
-                            )
-                          : null,
-                      child: _capturedImage != null
-                          ? Image.memory(
-                              _capturedImage!,
-                              fit: BoxFit.cover,
-                              gaplessPlayback: true,
-                            )
-                          : _isCameraReady
-                          ? _camera.buildPreview()
-                          : _CameraPlaceholder(
-                              isLoading: _isInitializing,
-                              message: _failure == null
-                                  ? _isInitializing
-                                        ? t.capture.cameraPreparing
-                                        : t.capture.cameraStartHint
-                                  : '',
-                              startLabel: t.capture.cameraStart,
-                              onStart: _failure == null && !_isInitializing
-                                  ? _initializeCamera
-                                  : null,
-                            ),
-                    ),
-                    if (_failure != null) ...[
-                      const SizedBox(height: AppSpacing.sm),
-                      _CameraError(
-                        message: _failureMessage(t, _failure!),
-                        actionLabel:
-                            _failure ==
-                                    CaptureCameraFailure
-                                        .permissionPermanentlyDenied ||
-                                _failure ==
-                                    CaptureCameraFailure.permissionRestricted
-                            ? t.capture.cameraOpenSettings
-                            : t.capture.cameraRetry,
-                        onPressed:
-                            _failure ==
-                                    CaptureCameraFailure
-                                        .permissionPermanentlyDenied ||
-                                _failure ==
-                                    CaptureCameraFailure.permissionRestricted
-                            ? _openCameraSettings
-                            : _initializeCamera,
-                      ),
-                    ],
-                    if (_capturedImage != null) ...[
-                      const SizedBox(height: AppSpacing.sm),
-                      Text(
-                        t.capture.cameraCaptured,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      if (widget.visionAvailable) ...[
-                        const SizedBox(height: AppSpacing.sm),
-                        PoseDebugPanel(image: _capturedImage!),
-                      ],
-                    ],
-                    const SizedBox(height: AppSpacing.md),
-                    ValueListenableBuilder<AlignmentHint?>(
-                      valueListenable: _liveHint,
-                      builder: (context, hint, _) =>
-                          _AlignmentCard(t: t, theme: theme, hint: hint),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    _CriteriaCard(t: t),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      t.capture.localNote,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-              _CaptureBar(
-                t: t,
-                canCapture: _canCapture,
-                isCapturing: _isCapturing,
-                hasCapturedImage: _capturedImage != null,
-                onCapture: _captureImage,
-                onRetake: _retakeImage,
               ),
             ],
+          ),
+        ),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          _buildMedia(t),
+          if (_capturedImage == null && _isCameraReady)
+            IgnorePointer(
+              child: ValueListenableBuilder<DetectedPose?>(
+                valueListenable: _livePose,
+                builder: (context, pose, _) =>
+                    CustomPaint(painter: PoseGuidePainter(pose: pose)),
+              ),
+            ),
+          Positioned.fill(
+            child: IgnorePointer(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: CustomPaint(
+                  painter: _CornersPainter(theme.colorScheme.primary),
+                ),
+              ),
+            ),
+          ),
+          if (_capturedImage != null)
+            PhotoAlignmentWatcher(
+              image: _capturedImage!,
+              onResult: _onPhotoAnalyzed,
+            ),
+          SafeArea(
+            child: Column(
+              children: [
+                _OverlayHeader(
+                  title: t.capture.title,
+                  subtitle: t.capture.onDevice,
+                  foreground: Colors.white,
+                  onBack: Navigator.of(context).canPop()
+                      ? () => Navigator.of(context).pop()
+                      : null,
+                  onInfo: _openInfoSheet,
+                ),
+                const Spacer(),
+                _OverlayControls(
+                  t: t,
+                  isCapturing: _isCapturing,
+                  hasCapturedImage: _capturedImage != null,
+                  canCapture: _canCapture,
+                  onCapture: _captureImage,
+                  onRetake: _retakeImage,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMedia(Translations t) {
+    final image = _capturedImage;
+    if (image != null) {
+      return Image.memory(image, fit: BoxFit.cover, gaplessPlayback: true);
+    }
+    if (!_isCameraReady) {
+      return ColoredBox(
+        color: Colors.black,
+        child: _CameraPlaceholder(
+          isLoading: _isInitializing,
+          message: _failure == null
+              ? _isInitializing
+                    ? t.capture.cameraPreparing
+                    : t.capture.cameraStartHint
+              : '',
+          startLabel: t.capture.cameraStart,
+          onStart: _failure == null && !_isInitializing
+              ? _initializeCamera
+              : null,
+        ),
+      );
+    }
+    // shortcut: cover-fit por widget; el overlay de pose usa el frame completo,
+    // así que en pantallas muy alargadas el esqueleto se desvía del borde.
+    final ratio = _camera.previewAspectRatio;
+    return ClipRect(
+      child: FittedBox(
+        fit: BoxFit.cover,
+        child: SizedBox(
+          width: 100,
+          height: 100 / ratio,
+          child: _camera.buildPreview(),
+        ),
+      ),
+    );
+  }
+
+  void _showSnack(
+    String message, {
+    IconData? icon,
+    bool isError = false,
+    SnackBarAction? action,
+  }) {
+    if (!mounted) return;
+    final theme = Theme.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            if (icon != null) ...[
+              Icon(
+                icon,
+                size: 18,
+                color: isError ? theme.colorScheme.onError : null,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+            ],
+            Expanded(child: Text(message)),
           ],
+        ),
+        backgroundColor: isError ? theme.colorScheme.error : null,
+        behavior: SnackBarBehavior.floating,
+        // Deja libre el disparador: el aviso no debe tapar el control.
+        margin: const EdgeInsets.fromLTRB(
+          AppSpacing.md,
+          0,
+          AppSpacing.md,
+          128,
+        ),
+        duration: const Duration(seconds: 4),
+        action: action,
+      ),
+    );
+  }
+
+  void _announceFailure(CaptureCameraFailure failure) {
+    final t = Translations.of(context);
+    final needsSettings =
+        failure == CaptureCameraFailure.permissionPermanentlyDenied ||
+        failure == CaptureCameraFailure.permissionRestricted;
+    _showSnack(
+      _failureMessage(t, failure),
+      icon: Icons.videocam_off_outlined,
+      isError: true,
+      action: SnackBarAction(
+        label: needsSettings
+            ? t.capture.cameraOpenSettings
+            : t.capture.cameraRetry,
+        onPressed: needsSettings ? _openCameraSettings : _initializeCamera,
+      ),
+    );
+  }
+
+  /// Un aviso por cambio: mover el cuerpo no debe inundar la pantalla.
+  void _announceHint(AlignmentHint? hint) {
+    if (hint == null || hint == _lastAnnouncedHint) return;
+    _lastAnnouncedHint = hint;
+    final (text, icon) = alignmentReadout(Translations.of(context), hint);
+    _showSnack(text, icon: icon, isError: hint != AlignmentHint.ok);
+  }
+
+  void _onPhotoAnalyzed(PoseAnalysis result) {
+    final hint = result.alignment;
+    if (hint == null) return;
+    final t = Translations.of(context);
+    final (text, icon) = alignmentReadout(t, hint);
+    _showSnack(
+      hint == AlignmentHint.ok
+          ? text
+          : '$text\n${t.capture.alignmentPhotoWarning}',
+      icon: icon,
+      isError: hint != AlignmentHint.ok,
+    );
+  }
+
+  void _openInfoSheet() {
+    final t = Translations.of(context);
+    final theme = Theme.of(context);
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      backgroundColor: theme.colorScheme.surface,
+      builder: (context) => SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.marginMobile,
+            0,
+            AppSpacing.marginMobile,
+            AppSpacing.lg,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _CriteriaCard(t: t),
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                t.capture.localNote,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              if (_capturedImage != null) ...[
+                const SizedBox(height: AppSpacing.sm),
+                PoseDebugPanel(image: _capturedImage!),
+              ],
+            ],
+          ),
         ),
       ),
     );
@@ -558,135 +690,6 @@ class _CameraPlaceholder extends StatelessWidget {
   }
 }
 
-class _CameraError extends StatelessWidget {
-  const _CameraError({
-    required this.message,
-    required this.actionLabel,
-    required this.onPressed,
-  });
-
-  final String message;
-  final String actionLabel;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            message,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.error,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          OutlinedButton(onPressed: onPressed, child: Text(actionLabel)),
-        ],
-      ),
-    );
-  }
-}
-
-class _TopBar extends StatelessWidget {
-  const _TopBar({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.xs,
-        AppSpacing.xs,
-        AppSpacing.sm,
-        AppSpacing.xs,
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(title, style: theme.textTheme.headlineSmall),
-                Text(
-                  Translations.of(context).capture.onDevice,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ScanPreview extends StatelessWidget {
-  const _ScanPreview({required this.child, this.overlay});
-
-  final Widget child;
-  final Widget? overlay;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return AspectRatio(
-      aspectRatio: 3 / 4,
-      child: Container(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(AppRadius.container),
-          border: Border.all(color: theme.colorScheme.outline),
-        ),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(AppRadius.container),
-                child: child,
-              ),
-            ),
-            if (overlay case final overlay?)
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(AppRadius.container),
-                    child: overlay,
-                  ),
-                ),
-              ),
-            Positioned.fill(
-              child: IgnorePointer(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
-                  child: CustomPaint(
-                    painter: _CornersPainter(theme.colorScheme.primary),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: AppSpacing.md,
-              left: AppSpacing.md,
-              child: StatusPill(
-                text: Translations.of(context).capture.localBadge,
-                icon: Icons.lock_outline,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _CornersPainter extends CustomPainter {
   _CornersPainter(this.color);
 
@@ -724,58 +727,6 @@ class _CornersPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_CornersPainter oldDelegate) => oldDelegate.color != color;
-}
-
-class _AlignmentCard extends StatelessWidget {
-  const _AlignmentCard({required this.t, required this.theme, this.hint});
-
-  final Translations t;
-  final ThemeData theme;
-
-  /// `null` mientras no hay pose evaluada.
-  final AlignmentHint? hint;
-
-  @override
-  Widget build(BuildContext context) {
-    final text = _message(t);
-    final icon = _icon(t);
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SectionLabel(t.capture.alignment),
-          const SizedBox(height: AppSpacing.sm),
-          _AlignmentRow(icon: icon, text: text),
-        ],
-      ),
-    );
-  }
-
-  String _message(Translations t) => alignmentReadout(t, hint).$1;
-
-  IconData _icon(Translations t) => alignmentReadout(t, hint).$2;
-}
-
-class _AlignmentRow extends StatelessWidget {
-  const _AlignmentRow({required this.icon, required this.text});
-
-  final IconData icon;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        children: [
-          Icon(icon, size: 18, color: theme.colorScheme.primary),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(child: Text(text, style: theme.textTheme.bodyMedium)),
-        ],
-      ),
-    );
-  }
 }
 
 class _CriteriaCard extends StatelessWidget {
@@ -845,96 +796,145 @@ class _CriteriaCard extends StatelessWidget {
   }
 }
 
-class _CaptureBar extends StatelessWidget {
-  const _CaptureBar({
+class _OverlayHeader extends StatelessWidget {
+  const _OverlayHeader({
+    required this.title,
+    required this.subtitle,
+    required this.foreground,
+    this.onBack,
+    this.onInfo,
+  });
+
+  final String title;
+  final String subtitle;
+  final Color foreground;
+  final VoidCallback? onBack;
+  final VoidCallback? onInfo;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final shadow = [
+      Shadow(color: Colors.black.withValues(alpha: 0.45), blurRadius: 8),
+    ];
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.xs,
+        AppSpacing.xs,
+        AppSpacing.xs,
+        0,
+      ),
+      child: Row(
+        children: [
+          if (onBack != null)
+            IconButton(
+              onPressed: onBack,
+              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+              icon: Icon(Icons.arrow_back, color: foreground),
+            ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    color: foreground,
+                    shadows: shadow,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: foreground.withValues(alpha: 0.8),
+                    shadows: shadow,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (onInfo != null)
+            IconButton(
+              onPressed: onInfo,
+              tooltip: Translations.of(context).capture.criteria,
+              icon: Icon(Icons.info_outline, color: foreground),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _OverlayControls extends StatelessWidget {
+  const _OverlayControls({
     required this.t,
-    required this.canCapture,
     required this.isCapturing,
     required this.hasCapturedImage,
+    required this.canCapture,
     required this.onCapture,
     required this.onRetake,
   });
 
   final Translations t;
-  final bool canCapture;
   final bool isCapturing;
   final bool hasCapturedImage;
+  final bool canCapture;
   final VoidCallback onCapture;
   final VoidCallback onRetake;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final enabled = hasCapturedImage || canCapture;
+    final action = isCapturing
+        ? null
+        : hasCapturedImage
+        ? onRetake
+        : canCapture
+        ? onCapture
+        : null;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.marginMobile,
-        AppSpacing.sm,
-        AppSpacing.marginMobile,
-        AppSpacing.md,
-      ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final compact = constraints.maxWidth < 360;
-          final captureButton = IconButton.filled(
-            onPressed: isCapturing
-                ? null
-                : hasCapturedImage
-                ? onRetake
-                : canCapture
-                ? onCapture
-                : null,
-            tooltip: hasCapturedImage
-                ? t.capture.cameraRetake
-                : t.capture.shutter,
-            style: IconButton.styleFrom(
-              fixedSize: const Size(64, 64),
-              backgroundColor: theme.colorScheme.primary,
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+      child: Center(
+        child: Tooltip(
+          message: hasCapturedImage ? t.capture.cameraRetake : t.capture.shutter,
+          child: Semantics(
+            button: true,
+            label: hasCapturedImage ? t.capture.cameraRetake : t.capture.shutter,
+            child: GestureDetector(
+              onTap: action,
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                width: 78,
+                height: 78,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 4),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(7),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: enabled
+                          ? Colors.white
+                          : Colors.white.withValues(alpha: 0.35),
+                    ),
+                    child: isCapturing
+                        ? const Padding(
+                            padding: EdgeInsets.all(18),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.black54,
+                            ),
+                          )
+                        : const SizedBox.expand(),
+                  ),
+                ),
+              ),
             ),
-            icon: isCapturing
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : Icon(hasCapturedImage ? Icons.refresh : Icons.camera_alt),
-          );
-          final galleryButton = compact
-              ? IconButton(
-                  onPressed: null,
-                  tooltip: t.capture.gallery,
-                  icon: const Icon(Icons.photo_library_outlined),
-                )
-              : Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: null,
-                    icon: const Icon(Icons.photo_library_outlined, size: 18),
-                    label: Text(t.capture.gallery),
-                  ),
-                );
-          final timerButton = compact
-              ? IconButton(
-                  onPressed: null,
-                  tooltip: t.capture.timer,
-                  icon: const Icon(Icons.timer_outlined),
-                )
-              : Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: null,
-                    icon: const Icon(Icons.timer_outlined, size: 18),
-                    label: Text(t.capture.timer),
-                  ),
-                );
-
-          return Row(
-            children: [
-              galleryButton,
-              const SizedBox(width: AppSpacing.sm),
-              captureButton,
-              const SizedBox(width: AppSpacing.sm),
-              timerButton,
-            ],
-          );
-        },
+          ),
+        ),
       ),
     );
   }
