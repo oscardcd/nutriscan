@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/settings/settings_menu.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/ui/ui.dart';
 import '../../../data/local/body_metrics.dart';
@@ -25,6 +24,12 @@ import '../../vision/presentation/pose_debug_panel_stub.dart'
     if (dart.library.io) '../../vision/presentation/pose_debug_panel.dart';
 import '../../vision/presentation/pose_guide_painter.dart';
 import '../data/capture_camera.dart';
+import 'widgets/body_metrics_dialog.dart';
+import 'widgets/camera_placeholder.dart';
+import 'widgets/corners_painter.dart';
+import 'widgets/criteria_card.dart';
+import 'widgets/overlay_controls.dart';
+import 'widgets/overlay_header.dart';
 
 const _captureTimeout = Duration(seconds: 30);
 
@@ -444,7 +449,7 @@ class _CaptureScreenState extends State<CaptureScreen>
           bottom: false,
           child: Column(
             children: [
-              _OverlayHeader(
+              OverlayHeader(
                 title: t.capture.title,
                 subtitle: t.capture.onDevice,
                 foreground: theme.colorScheme.onSurface,
@@ -481,7 +486,7 @@ class _CaptureScreenState extends State<CaptureScreen>
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.lg),
                 child: CustomPaint(
-                  painter: _CornersPainter(theme.colorScheme.primary),
+                  painter: CornersPainter(theme.colorScheme.primary),
                 ),
               ),
             ),
@@ -495,7 +500,7 @@ class _CaptureScreenState extends State<CaptureScreen>
           SafeArea(
             child: Column(
               children: [
-                _OverlayHeader(
+                OverlayHeader(
                   title: t.capture.title,
                   subtitle: t.capture.onDevice,
                   foreground: Colors.white,
@@ -505,7 +510,7 @@ class _CaptureScreenState extends State<CaptureScreen>
                   onInfo: _openInfoSheet,
                 ),
                 const Spacer(),
-                _OverlayControls(
+                OverlayControls(
                   t: t,
                   isCapturing: _isCapturing,
                   hasCapturedImage: _capturedImage != null,
@@ -529,7 +534,7 @@ class _CaptureScreenState extends State<CaptureScreen>
     if (!_isCameraReady) {
       return ColoredBox(
         color: Colors.black,
-        child: _CameraPlaceholder(
+        child: CameraPlaceholder(
           isLoading: _isInitializing,
           message: _failure == null
               ? _isInitializing
@@ -697,7 +702,7 @@ class _CaptureScreenState extends State<CaptureScreen>
     final choice = await showDialog<({BodyMetrics? metrics})>(
       context: context,
       builder: (context) =>
-          _BodyMetricsDialog(t: Translations.of(context), initial: saved),
+          BodyMetricsDialog(t: Translations.of(context), initial: saved),
     );
     if (choice?.metrics case final metrics?) await _metricsStore.write(metrics);
     return choice;
@@ -722,7 +727,7 @@ class _CaptureScreenState extends State<CaptureScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _CriteriaCard(t: t),
+              CriteriaCard(t: t),
               const SizedBox(height: AppSpacing.sm),
               Text(
                 t.capture.localNote,
@@ -742,404 +747,6 @@ class _CaptureScreenState extends State<CaptureScreen>
           ),
         ),
       ),
-    );
-  }
-}
-
-class _CameraPlaceholder extends StatelessWidget {
-  const _CameraPlaceholder({
-    required this.isLoading,
-    required this.message,
-    required this.startLabel,
-    this.onStart,
-  });
-
-  final bool isLoading;
-  final String message;
-  final String startLabel;
-  final VoidCallback? onStart;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (isLoading)
-              const CircularProgressIndicator()
-            else
-              Icon(
-                Icons.photo_camera_outlined,
-                size: 44,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            if (message.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.sm),
-              Text(message, textAlign: TextAlign.center),
-            ],
-            if (onStart != null) ...[
-              const SizedBox(height: AppSpacing.sm),
-              FilledButton.icon(
-                onPressed: onStart,
-                icon: const Icon(Icons.camera_alt_outlined),
-                label: Text(startLabel),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CornersPainter extends CustomPainter {
-  _CornersPainter(this.color);
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.5
-      ..strokeCap = StrokeCap.round;
-    const arm = 24.0;
-    const radius = 8.0;
-
-    void corner(Offset origin, double dx, double dy) {
-      final path = Path()
-        ..moveTo(origin.dx, origin.dy + dy * arm)
-        ..lineTo(origin.dx, origin.dy + dy * radius)
-        ..quadraticBezierTo(
-          origin.dx,
-          origin.dy,
-          origin.dx + dx * radius,
-          origin.dy,
-        )
-        ..lineTo(origin.dx + dx * arm, origin.dy);
-      canvas.drawPath(path, paint);
-    }
-
-    corner(Offset.zero, 1, 1);
-    corner(Offset(size.width, 0), -1, 1);
-    corner(Offset(0, size.height), 1, -1);
-    corner(Offset(size.width, size.height), -1, -1);
-  }
-
-  @override
-  bool shouldRepaint(_CornersPainter oldDelegate) => oldDelegate.color != color;
-}
-
-class _CriteriaCard extends StatelessWidget {
-  const _CriteriaCard({required this.t});
-
-  final Translations t;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SectionLabel(t.capture.criteria),
-          const SizedBox(height: AppSpacing.sm),
-          ScanCriterion(label: t.capture.fullBody),
-          ScanCriterion(label: t.capture.twoMeters),
-          ScanCriterion(
-            label: t.capture.plainBackground,
-            icon: Icons.info_outline,
-            ok: false,
-          ),
-          ScanCriterion(
-            label: t.capture.looseClothing,
-            icon: Icons.info_outline,
-            ok: false,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Container(
-            padding: const EdgeInsets.all(AppSpacing.sm),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.secondaryContainer,
-              borderRadius: BorderRadius.circular(AppRadius.base),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.threesixty,
-                  size: 18,
-                  color: theme.colorScheme.primary,
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        t.capture.sideView,
-                        style: theme.textTheme.labelLarge,
-                      ),
-                      Text(
-                        t.capture.sideViewHint,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _OverlayHeader extends StatelessWidget {
-  const _OverlayHeader({
-    required this.title,
-    required this.subtitle,
-    required this.foreground,
-    this.onBack,
-    this.onInfo,
-  });
-
-  final String title;
-  final String subtitle;
-  final Color foreground;
-  final VoidCallback? onBack;
-  final VoidCallback? onInfo;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final shadow = [
-      Shadow(color: Colors.black.withValues(alpha: 0.45), blurRadius: 8),
-    ];
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.xs,
-        AppSpacing.xs,
-        AppSpacing.xs,
-        0,
-      ),
-      child: Row(
-        children: [
-          if (onBack != null)
-            IconButton(
-              onPressed: onBack,
-              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-              icon: Icon(Icons.arrow_back, color: foreground),
-            ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  title,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    color: foreground,
-                    shadows: shadow,
-                  ),
-                ),
-                Text(
-                  subtitle,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: foreground.withValues(alpha: 0.8),
-                    shadows: shadow,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SettingsMenu(),
-          if (onInfo != null)
-            IconButton(
-              onPressed: onInfo,
-              tooltip: Translations.of(context).capture.criteria,
-              icon: Icon(Icons.info_outline, color: foreground),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _OverlayControls extends StatelessWidget {
-  const _OverlayControls({
-    required this.t,
-    required this.isCapturing,
-    required this.hasCapturedImage,
-    required this.canCapture,
-    required this.onCapture,
-    required this.onRetake,
-  });
-
-  final Translations t;
-  final bool isCapturing;
-  final bool hasCapturedImage;
-  final bool canCapture;
-  final VoidCallback onCapture;
-  final VoidCallback onRetake;
-
-  @override
-  Widget build(BuildContext context) {
-    final enabled = hasCapturedImage || canCapture;
-    final action = isCapturing
-        ? null
-        : hasCapturedImage
-        ? onRetake
-        : canCapture
-        ? onCapture
-        : null;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
-      child: Center(
-        child: Tooltip(
-          message: hasCapturedImage
-              ? t.capture.cameraRetake
-              : t.capture.shutter,
-          child: Semantics(
-            button: true,
-            label: hasCapturedImage
-                ? t.capture.cameraRetake
-                : t.capture.shutter,
-            child: GestureDetector(
-              onTap: action,
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                width: 78,
-                height: 78,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 4),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(7),
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: enabled
-                          ? Colors.white
-                          : Colors.white.withValues(alpha: 0.35),
-                    ),
-                    child: isCapturing
-                        ? const Padding(
-                            padding: EdgeInsets.all(18),
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.black54,
-                            ),
-                          )
-                        : const SizedBox.expand(),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Diálogo con peso y estatura. Es un widget con estado para que los
-/// controladores vivan lo mismo que el diálogo y no se liberen mientras la
-/// ruta todavía se está animando.
-class _BodyMetricsDialog extends StatefulWidget {
-  const _BodyMetricsDialog({required this.t, this.initial});
-
-  final Translations t;
-  final BodyMetrics? initial;
-
-  @override
-  State<_BodyMetricsDialog> createState() => _BodyMetricsDialogState();
-}
-
-class _BodyMetricsDialogState extends State<_BodyMetricsDialog> {
-  final _formKey = GlobalKey<FormState>();
-  late final _height = TextEditingController(
-    text: widget.initial == null
-        ? ''
-        : widget.initial!.heightCm.toStringAsFixed(0),
-  );
-  late final _weight = TextEditingController(
-    text: widget.initial == null
-        ? ''
-        : widget.initial!.weightKg.toStringAsFixed(0),
-  );
-
-  @override
-  void dispose() {
-    _height.dispose();
-    _weight.dispose();
-    super.dispose();
-  }
-
-  String? _validate(String? raw, double min, double max, String message) {
-    final value = double.tryParse((raw ?? '').replaceAll(',', '.'));
-    if (value == null || value < min || value > max) return message;
-    return null;
-  }
-
-  void _submit() {
-    if (_formKey.currentState?.validate() != true) return;
-    Navigator.of(context).pop((
-      metrics: BodyMetrics(
-        heightCm: double.parse(_height.text.replaceAll(',', '.')),
-        weightKg: double.parse(_weight.text.replaceAll(',', '.')),
-      ),
-    ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final t = widget.t;
-    return AlertDialog(
-      title: Text(t.capture.bodyDataTitle),
-      content: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              controller: _height,
-              autofocus: widget.initial == null,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              decoration: InputDecoration(labelText: t.capture.bodyHeight),
-              validator: (value) =>
-                  _validate(value, 80, 250, t.capture.bodyHeightError),
-            ),
-            TextFormField(
-              controller: _weight,
-              autofocus: widget.initial != null,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              decoration: InputDecoration(labelText: t.capture.bodyWeight),
-              validator: (value) =>
-                  _validate(value, 20, 400, t.capture.bodyWeightError),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        // Sin peso ni estatura el WHtR de la foto sigue siendo válido.
-        TextButton(
-          onPressed: () => Navigator.of(context).pop((metrics: null)),
-          child: Text(t.capture.bodySkip),
-        ),
-        FilledButton(onPressed: _submit, child: Text(t.capture.bodyContinue)),
-      ],
     );
   }
 }
