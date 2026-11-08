@@ -32,7 +32,7 @@ void main() {
       body[_indexOf(body, type)] = _landmark(
         type,
         old.x,
-        old.y + 0.20,
+        old.y + 0.30,
         visibility: old.visibility,
       );
     }

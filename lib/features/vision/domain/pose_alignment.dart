@@ -21,7 +21,9 @@ class PoseAlignmentEvaluator {
   const PoseAlignmentEvaluator();
 
   /// Alto del cuerpo (nariz → tobillos) en fracción del alto del frame.
-  static const double minBodyHeight = 0.75;
+  /// A 2 m con la cámara trasera el cuerpo mide ~0,60-0,70: pedir 0,75
+  /// marcaba "acércate" incluso bien encuadrado.
+  static const double minBodyHeight = 0.55;
   static const double maxBodyHeight = 0.95;
 
   /// Distancia máxima de la cadera al centro horizontal.
