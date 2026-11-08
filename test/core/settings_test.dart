@@ -37,9 +37,8 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  // Los ajustes viven en el header de la captura: no hay barra de navegación.
   Future<void> openSettings(WidgetTester tester) async {
-    await tester.tap(find.text('Historial'));
-    await tester.pumpAndSettle();
     await tester.tap(find.byIcon(Icons.tune));
     await tester.pumpAndSettle();
   }
@@ -67,8 +66,6 @@ void main() {
     await tester.tap(find.text('English'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Measure'));
-    await tester.pumpAndSettle();
     expect(find.text('Biometric capture'), findsOneWidget);
   });
 }
