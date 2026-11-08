@@ -43,3 +43,15 @@ kotlin {
 flutter {
     source = "../.."
 }
+
+// flutter_pose_detection fija TFLite 2.14.0, donde los 3 AAR declaran el mismo
+// namespace (org.tensorflow.lite) y AGP 9 rechaza el merge. 2.16.1 ya los separa.
+configurations.all {
+    resolutionStrategy {
+        force(
+            "org.tensorflow:tensorflow-lite:2.16.1",
+            "org.tensorflow:tensorflow-lite-gpu:2.16.1",
+            "org.tensorflow:tensorflow-lite-api:2.16.1",
+        )
+    }
+}
