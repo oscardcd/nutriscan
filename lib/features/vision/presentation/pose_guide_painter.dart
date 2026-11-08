@@ -23,14 +23,14 @@ class PoseGuidePainter extends CustomPainter {
     BodyLandmarkType.nose: Offset(0.50, 0.28),
     BodyLandmarkType.leftShoulder: Offset(0.40, 0.36),
     BodyLandmarkType.rightShoulder: Offset(0.60, 0.36),
-    BodyLandmarkType.leftElbow: Offset(0.36, 0.46),
-    BodyLandmarkType.rightElbow: Offset(0.64, 0.46),
-    BodyLandmarkType.leftWrist: Offset(0.33, 0.56),
-    BodyLandmarkType.rightWrist: Offset(0.67, 0.56),
+    BodyLandmarkType.leftElbow: Offset(0.31, 0.45),
+    BodyLandmarkType.rightElbow: Offset(0.69, 0.45),
+    BodyLandmarkType.leftWrist: Offset(0.23, 0.53),
+    BodyLandmarkType.rightWrist: Offset(0.77, 0.53),
     BodyLandmarkType.leftHip: Offset(0.42, 0.57),
     BodyLandmarkType.rightHip: Offset(0.58, 0.57),
-    BodyLandmarkType.leftAnkle: Offset(0.43, 0.90),
-    BodyLandmarkType.rightAnkle: Offset(0.57, 0.90),
+    BodyLandmarkType.leftAnkle: Offset(0.38, 0.90),
+    BodyLandmarkType.rightAnkle: Offset(0.62, 0.90),
   };
 
   static const _bones = <(BodyLandmarkType, BodyLandmarkType)>[

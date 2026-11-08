@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nutriscan/core/theme/app_theme.dart';
 import 'package:nutriscan/features/classify/domain/bmi_band.dart';
+import 'package:nutriscan/features/classify/domain/screening_outcome.dart';
 import 'package:nutriscan/features/classify/domain/screening_result.dart';
 import 'package:nutriscan/features/result/presentation/result_screen.dart';
 import 'package:nutriscan/i18n/strings.g.dart';
@@ -40,7 +41,7 @@ void main() {
             locale: locale.flutterLocale,
             supportedLocales: AppLocaleUtils.supportedLocales,
             localizationsDelegates: GlobalMaterialLocalizations.delegates,
-            home: const ResultScreen(result: result),
+            home: const ResultScreen(outcome: ScreeningPrediction(result)),
           ),
         ),
       ),
@@ -54,7 +55,7 @@ void main() {
     expect(find.text('±1,8 · rango de estimación 25,6 – 29,2'), findsOneWidget);
     expect(find.text('0,53'), findsOneWidget);
     expect(find.text('Sobrepeso'), findsNWidgets(2));
-    expect(find.text('Cintura-altura (WHtR)'), findsOneWidget);
+    expect(find.text('CINTURA-ALTURA (WHTR)'), findsOneWidget);
     expect(find.text('Confianza alta'), findsOneWidget);
     expect(find.text('RESULTADO EXPERIMENTAL'), findsOneWidget);
     expect(

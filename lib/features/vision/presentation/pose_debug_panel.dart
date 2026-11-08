@@ -64,7 +64,8 @@ class _PoseDebugPanelState extends State<PoseDebugPanel> {
 
   @override
   void dispose() {
-    unawaited(_service?.dispose());
+    // Un servicio inyectado lo cierra quien lo creó: el nativo es compartido.
+    if (widget.service == null) unawaited(_service?.dispose());
     super.dispose();
   }
 

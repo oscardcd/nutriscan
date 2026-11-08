@@ -62,6 +62,9 @@ abstract interface class CaptureCamera {
 
   Widget buildPreview();
 
+  /// Ancho/alto del preview tal como se ve en pantalla (vertical en iOS).
+  double get previewAspectRatio;
+
   /// Frames del image stream. Se detiene con [stopStream] o al capturar.
   Stream<CameraFrame> startStream();
 
@@ -164,6 +167,14 @@ class DeviceCaptureCamera implements CaptureCamera {
       await _discard(controller);
       throw const CaptureCameraException(CaptureCameraFailure.unavailable);
     }
+  }
+
+  @override
+  double get previewAspectRatio {
+    final value = _controller?.value;
+    if (value == null || !value.isInitialized) return 3 / 4;
+    // En iOS el sensor reporta apaisado (16:9); en pantalla se ve vertical.
+    return value.aspectRatio > 1 ? 1 / value.aspectRatio : value.aspectRatio;
   }
 
   @override

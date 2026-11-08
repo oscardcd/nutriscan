@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 237 (118 per locale)
+/// Strings: 279 (139 per locale)
 ///
-/// Built on 2026-11-08 at 15:15 UTC
+/// Built on 2026-11-08 at 19:49 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -232,6 +232,15 @@ class _StringsCaptureEs {
 	String get alignmentNotFrontal => 'Ponte de frente a la cámara';
 	String get alignmentArms => 'Separa los brazos del torso';
 	String get alignmentPhotoWarning => 'La foto se guarda igual; puedes repetirla si quieres.';
+	String get photoResultTitle => 'Revisión de la foto';
+	String get photoResultKeep => 'Usar esta foto';
+	String get bodyDataTitle => 'Tus datos';
+	String get bodyHeight => 'Estatura (cm)';
+	String get bodyWeight => 'Peso (kg)';
+	String get bodyHeightError => 'Entre 80 y 250 cm';
+	String get bodyWeightError => 'Entre 20 y 400 kg';
+	String get bodyContinue => 'Calcular IMC';
+	String get bodySkip => 'Ahora no';
 }
 
 // Path: history
@@ -345,6 +354,8 @@ class _StringsResultEs {
 	String get indicesTitle => 'Índices antropométricos';
 	String get whtr => 'Cintura-altura (WHtR)';
 	String get whtrNote => 'Proporción entre cintura y estatura';
+	String get whtrExperimental => 'Estimado a partir de las proporciones de tu foto';
+	String get whtrWarning => 'Aproximado (±10 %): se calcula con puntos de la pose, no es una medición clínica.';
 	String get bri => 'Redondez corporal (BRI)';
 	String get briNote => 'Forma del cuerpo derivada de perímetros';
 	String get rfm => 'Masa grasa relativa (RFM)';
@@ -352,6 +363,16 @@ class _StringsResultEs {
 	String get meaningTitle => '¿Qué significa este resultado?';
 	String get meaningBody => 'Tu silueta se sitúa en una banda de referencia. El IMC y las proyecciones visuales no distinguen masa muscular magra de tejido adiposo: es un punto de partida preventivo para tu seguimiento.';
 	String get cta => 'Volver a medir';
+	String get noEstimateLabel => 'Resultado experimental';
+	String get abstainPoseTitle => 'No se pudo medir la pose';
+	String get abstainPoseBody => 'La foto no permite medir el cuerpo completo. Repite la captura siguiendo la silueta.';
+	String get abstainAlignmentTitle => 'La foto no cumple la guía';
+	String get abstainAlignmentBody => 'La posición no coincide con la silueta de referencia. Repite la captura con el cuerpo completo, centrado y de frente.';
+	String get abstainNoModelTitle => 'Todavía no hay estimación';
+	String get abstainNoModelBody => 'El modelo de estimación no está integrado en esta versión. La captura quedó validada técnicamente, pero no se muestran cifras para no inventar un resultado.';
+	String get bmiComputedCaption => 'Calculado con el peso y la estatura que ingresaste';
+	String get abstainBodyTitle => 'Faltan tus datos';
+	String get abstainBodyBody => 'Necesitamos tu peso y estatura para calcular el IMC. Repite la captura e ingrésalos.';
 }
 
 // Path: settings
@@ -479,6 +500,15 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	@override String get alignmentNotFrontal => 'Face the camera';
 	@override String get alignmentArms => 'Keep your arms away from your torso';
 	@override String get alignmentPhotoWarning => 'The photo is kept anyway; you can retake it if you want.';
+	@override String get photoResultTitle => 'Photo check';
+	@override String get photoResultKeep => 'Use this photo';
+	@override String get bodyDataTitle => 'Your data';
+	@override String get bodyHeight => 'Height (cm)';
+	@override String get bodyWeight => 'Weight (kg)';
+	@override String get bodyHeightError => 'Between 80 and 250 cm';
+	@override String get bodyWeightError => 'Between 20 and 400 kg';
+	@override String get bodyContinue => 'Calculate BMI';
+	@override String get bodySkip => 'Not now';
 }
 
 // Path: history
@@ -591,6 +621,8 @@ class _StringsResultEn extends _StringsResultEs {
 	@override String get indicesTitle => 'Anthropometric indices';
 	@override String get whtr => 'Waist-to-height (WHtR)';
 	@override String get whtrNote => 'Ratio of waist to height';
+	@override String get whtrExperimental => 'Estimated from the proportions in your photo';
+	@override String get whtrWarning => 'Approximate (±10%): computed from pose landmarks, not a clinical measurement.';
 	@override String get bri => 'Body roundness (BRI)';
 	@override String get briNote => 'Body shape derived from circumferences';
 	@override String get rfm => 'Relative fat mass (RFM)';
@@ -598,6 +630,16 @@ class _StringsResultEn extends _StringsResultEs {
 	@override String get meaningTitle => 'What does this result mean?';
 	@override String get meaningBody => 'Your silhouette falls in a reference band. BMI and visual projections do not distinguish lean muscle from fat tissue: it is a preventive starting point for your tracking.';
 	@override String get cta => 'Measure again';
+	@override String get noEstimateLabel => 'Experimental result';
+	@override String get abstainPoseTitle => 'The pose could not be measured';
+	@override String get abstainPoseBody => 'This photo does not allow measuring the full body. Retake it following the silhouette.';
+	@override String get abstainAlignmentTitle => 'The photo does not follow the guide';
+	@override String get abstainAlignmentBody => 'Your position does not match the reference silhouette. Retake it with your full body, centered and facing the camera.';
+	@override String get abstainNoModelTitle => 'No estimate yet';
+	@override String get abstainNoModelBody => 'The estimation model is not integrated in this version. The capture passed the technical checks, but no figures are shown so we do not invent a result.';
+	@override String get bmiComputedCaption => 'Calculated from the weight and height you entered';
+	@override String get abstainBodyTitle => 'Your data is missing';
+	@override String get abstainBodyBody => 'We need your weight and height to calculate BMI. Retake the capture and enter them.';
 }
 
 // Path: settings
@@ -677,6 +719,15 @@ extension on Translations {
 			case 'capture.alignmentNotFrontal': return 'Ponte de frente a la cámara';
 			case 'capture.alignmentArms': return 'Separa los brazos del torso';
 			case 'capture.alignmentPhotoWarning': return 'La foto se guarda igual; puedes repetirla si quieres.';
+			case 'capture.photoResultTitle': return 'Revisión de la foto';
+			case 'capture.photoResultKeep': return 'Usar esta foto';
+			case 'capture.bodyDataTitle': return 'Tus datos';
+			case 'capture.bodyHeight': return 'Estatura (cm)';
+			case 'capture.bodyWeight': return 'Peso (kg)';
+			case 'capture.bodyHeightError': return 'Entre 80 y 250 cm';
+			case 'capture.bodyWeightError': return 'Entre 20 y 400 kg';
+			case 'capture.bodyContinue': return 'Calcular IMC';
+			case 'capture.bodySkip': return 'Ahora no';
 			case 'history.title': return 'Tu progreso';
 			case 'history.empty': return 'Aún no hay mediciones';
 			case 'profile.title': return 'Perfil';
@@ -727,6 +778,8 @@ extension on Translations {
 			case 'result.indicesTitle': return 'Índices antropométricos';
 			case 'result.whtr': return 'Cintura-altura (WHtR)';
 			case 'result.whtrNote': return 'Proporción entre cintura y estatura';
+			case 'result.whtrExperimental': return 'Estimado a partir de las proporciones de tu foto';
+			case 'result.whtrWarning': return 'Aproximado (±10 %): se calcula con puntos de la pose, no es una medición clínica.';
 			case 'result.bri': return 'Redondez corporal (BRI)';
 			case 'result.briNote': return 'Forma del cuerpo derivada de perímetros';
 			case 'result.rfm': return 'Masa grasa relativa (RFM)';
@@ -734,6 +787,16 @@ extension on Translations {
 			case 'result.meaningTitle': return '¿Qué significa este resultado?';
 			case 'result.meaningBody': return 'Tu silueta se sitúa en una banda de referencia. El IMC y las proyecciones visuales no distinguen masa muscular magra de tejido adiposo: es un punto de partida preventivo para tu seguimiento.';
 			case 'result.cta': return 'Volver a medir';
+			case 'result.noEstimateLabel': return 'Resultado experimental';
+			case 'result.abstainPoseTitle': return 'No se pudo medir la pose';
+			case 'result.abstainPoseBody': return 'La foto no permite medir el cuerpo completo. Repite la captura siguiendo la silueta.';
+			case 'result.abstainAlignmentTitle': return 'La foto no cumple la guía';
+			case 'result.abstainAlignmentBody': return 'La posición no coincide con la silueta de referencia. Repite la captura con el cuerpo completo, centrado y de frente.';
+			case 'result.abstainNoModelTitle': return 'Todavía no hay estimación';
+			case 'result.abstainNoModelBody': return 'El modelo de estimación no está integrado en esta versión. La captura quedó validada técnicamente, pero no se muestran cifras para no inventar un resultado.';
+			case 'result.bmiComputedCaption': return 'Calculado con el peso y la estatura que ingresaste';
+			case 'result.abstainBodyTitle': return 'Faltan tus datos';
+			case 'result.abstainBodyBody': return 'Necesitamos tu peso y estatura para calcular el IMC. Repite la captura e ingrésalos.';
 			case 'settings.title': return 'Idioma y tema';
 			case 'settings.language': return 'IDIOMA';
 			case 'settings.theme': return 'TEMA';
@@ -804,6 +867,15 @@ extension on _StringsEn {
 			case 'capture.alignmentNotFrontal': return 'Face the camera';
 			case 'capture.alignmentArms': return 'Keep your arms away from your torso';
 			case 'capture.alignmentPhotoWarning': return 'The photo is kept anyway; you can retake it if you want.';
+			case 'capture.photoResultTitle': return 'Photo check';
+			case 'capture.photoResultKeep': return 'Use this photo';
+			case 'capture.bodyDataTitle': return 'Your data';
+			case 'capture.bodyHeight': return 'Height (cm)';
+			case 'capture.bodyWeight': return 'Weight (kg)';
+			case 'capture.bodyHeightError': return 'Between 80 and 250 cm';
+			case 'capture.bodyWeightError': return 'Between 20 and 400 kg';
+			case 'capture.bodyContinue': return 'Calculate BMI';
+			case 'capture.bodySkip': return 'Not now';
 			case 'history.title': return 'Your progress';
 			case 'history.empty': return 'No measurements yet';
 			case 'profile.title': return 'Profile';
@@ -853,6 +925,8 @@ extension on _StringsEn {
 			case 'result.indicesTitle': return 'Anthropometric indices';
 			case 'result.whtr': return 'Waist-to-height (WHtR)';
 			case 'result.whtrNote': return 'Ratio of waist to height';
+			case 'result.whtrExperimental': return 'Estimated from the proportions in your photo';
+			case 'result.whtrWarning': return 'Approximate (±10%): computed from pose landmarks, not a clinical measurement.';
 			case 'result.bri': return 'Body roundness (BRI)';
 			case 'result.briNote': return 'Body shape derived from circumferences';
 			case 'result.rfm': return 'Relative fat mass (RFM)';
@@ -860,6 +934,16 @@ extension on _StringsEn {
 			case 'result.meaningTitle': return 'What does this result mean?';
 			case 'result.meaningBody': return 'Your silhouette falls in a reference band. BMI and visual projections do not distinguish lean muscle from fat tissue: it is a preventive starting point for your tracking.';
 			case 'result.cta': return 'Measure again';
+			case 'result.noEstimateLabel': return 'Experimental result';
+			case 'result.abstainPoseTitle': return 'The pose could not be measured';
+			case 'result.abstainPoseBody': return 'This photo does not allow measuring the full body. Retake it following the silhouette.';
+			case 'result.abstainAlignmentTitle': return 'The photo does not follow the guide';
+			case 'result.abstainAlignmentBody': return 'Your position does not match the reference silhouette. Retake it with your full body, centered and facing the camera.';
+			case 'result.abstainNoModelTitle': return 'No estimate yet';
+			case 'result.abstainNoModelBody': return 'The estimation model is not integrated in this version. The capture passed the technical checks, but no figures are shown so we do not invent a result.';
+			case 'result.bmiComputedCaption': return 'Calculated from the weight and height you entered';
+			case 'result.abstainBodyTitle': return 'Your data is missing';
+			case 'result.abstainBodyBody': return 'We need your weight and height to calculate BMI. Retake the capture and enter them.';
 			case 'settings.title': return 'Language and theme';
 			case 'settings.language': return 'LANGUAGE';
 			case 'settings.theme': return 'THEME';
