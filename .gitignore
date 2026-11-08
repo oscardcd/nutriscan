@@ -46,3 +46,6 @@ app.*.map.json
 
 # Flutter SDK que clona el build de Vercel (vercel.json)
 /flutter/
+
+# Documentos locales (no versionados)
+/docs/local/
