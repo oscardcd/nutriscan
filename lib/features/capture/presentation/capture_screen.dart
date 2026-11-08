@@ -26,11 +26,19 @@ const _captureTimeout = Duration(seconds: 30);
 /// ahora: shortcut: sin pipeline de visión conectado, los valores se alimentan
 /// cuando `core/vision` entregue pose + segmentación.
 class CaptureScreen extends StatefulWidget {
-  const CaptureScreen({super.key, this.visionAvailable = !kIsWeb, this.camera});
+  const CaptureScreen({
+    super.key,
+    this.visionAvailable = !kIsWeb,
+    this.camera,
+    this.analysisService,
+  });
 
   /// Cámara y modelos de visión (ML Kit, TFLite) solo existen en móvil.
   final bool visionAvailable;
   final CaptureCamera? camera;
+
+  /// Inyectable para pruebas; por defecto la pantalla crea la suya.
+  final PoseAnalysisService? analysisService;
 
   @override
   State<CaptureScreen> createState() => _CaptureScreenState();
@@ -60,6 +68,7 @@ class _CaptureScreenState extends State<CaptureScreen>
   final ValueNotifier<DetectedPose?> _livePose = ValueNotifier(null);
   final ValueNotifier<AlignmentHint?> _liveHint = ValueNotifier(null);
   AlignmentHint? _lastAnnouncedHint;
+  Uint8List? _analyzedImage;
   final AlignmentStabilizer _alignmentStabilizer = AlignmentStabilizer();
   int _alignedFrames = 0;
   bool _gateOpen = false;
@@ -72,7 +81,7 @@ class _CaptureScreenState extends State<CaptureScreen>
   /// cerrarlo desde el panel o el watcher deja a la cámara sin detector.
   PoseAnalysisService? _analysisService;
   PoseAnalysisService get _analysisServiceOrCreate =>
-      _analysisService ??= PoseAnalysisService();
+      _analysisService ??= widget.analysisService ?? PoseAnalysisService();
   Timer? _poseIdleTimer;
   bool _disposed = false;
 
@@ -396,7 +405,10 @@ class _CaptureScreenState extends State<CaptureScreen>
     unawaited(_poseFrames?.cancel());
     _poseFrames = null;
     _poseDetector?.dispose();
-    unawaited(_analysisService?.dispose());
+    // Solo se cierra lo que creó la pantalla.
+    if (widget.analysisService == null) {
+      unawaited(_analysisService?.dispose());
+    }
     _livePose.dispose();
     _liveHint.dispose();
     WidgetsBinding.instance.removeObserver(this);
@@ -596,18 +608,56 @@ class _CaptureScreenState extends State<CaptureScreen>
     _showSnack(text, icon: icon, isError: hint != AlignmentHint.ok);
   }
 
-  void _onPhotoAnalyzed(PoseAnalysis result) {
+  Future<void> _onPhotoAnalyzed(PoseAnalysis result) async {
     final hint = result.alignment;
-    if (hint == null) return;
+    final image = _capturedImage;
+    if (hint == null || image == null) return;
+    // Una revisión por foto: el panel puede reejecutar el análisis.
+    if (identical(_analyzedImage, image)) return;
+    _analyzedImage = image;
+
     final t = Translations.of(context);
+    final theme = Theme.of(context);
     final (text, icon) = alignmentReadout(t, hint);
-    _showSnack(
-      hint == AlignmentHint.ok
-          ? text
-          : '$text\n${t.capture.alignmentPhotoWarning}',
-      icon: icon,
-      isError: hint != AlignmentHint.ok,
+    final ok = hint == AlignmentHint.ok;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    final retake = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: Icon(
+          icon,
+          color: ok ? theme.colorScheme.primary : theme.colorScheme.error,
+        ),
+        title: Text(t.capture.photoResultTitle),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(text, textAlign: TextAlign.center),
+            if (!ok) ...[
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                t.capture.alignmentPhotoWarning,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(t.capture.cameraRetake),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(t.capture.photoResultKeep),
+          ),
+        ],
+      ),
     );
+    if (retake == true && mounted) await _retakeImage();
   }
 
   void _openInfoSheet() {

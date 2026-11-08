@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 237 (118 per locale)
+/// Strings: 241 (120 per locale)
 ///
-/// Built on 2026-11-08 at 15:15 UTC
+/// Built on 2026-11-08 at 16:21 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -232,6 +232,8 @@ class _StringsCaptureEs {
 	String get alignmentNotFrontal => 'Ponte de frente a la cámara';
 	String get alignmentArms => 'Separa los brazos del torso';
 	String get alignmentPhotoWarning => 'La foto se guarda igual; puedes repetirla si quieres.';
+	String get photoResultTitle => 'Revisión de la foto';
+	String get photoResultKeep => 'Usar esta foto';
 }
 
 // Path: history
@@ -479,6 +481,8 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	@override String get alignmentNotFrontal => 'Face the camera';
 	@override String get alignmentArms => 'Keep your arms away from your torso';
 	@override String get alignmentPhotoWarning => 'The photo is kept anyway; you can retake it if you want.';
+	@override String get photoResultTitle => 'Photo check';
+	@override String get photoResultKeep => 'Use this photo';
 }
 
 // Path: history
@@ -677,6 +681,8 @@ extension on Translations {
 			case 'capture.alignmentNotFrontal': return 'Ponte de frente a la cámara';
 			case 'capture.alignmentArms': return 'Separa los brazos del torso';
 			case 'capture.alignmentPhotoWarning': return 'La foto se guarda igual; puedes repetirla si quieres.';
+			case 'capture.photoResultTitle': return 'Revisión de la foto';
+			case 'capture.photoResultKeep': return 'Usar esta foto';
 			case 'history.title': return 'Tu progreso';
 			case 'history.empty': return 'Aún no hay mediciones';
 			case 'profile.title': return 'Perfil';
@@ -804,6 +810,8 @@ extension on _StringsEn {
 			case 'capture.alignmentNotFrontal': return 'Face the camera';
 			case 'capture.alignmentArms': return 'Keep your arms away from your torso';
 			case 'capture.alignmentPhotoWarning': return 'The photo is kept anyway; you can retake it if you want.';
+			case 'capture.photoResultTitle': return 'Photo check';
+			case 'capture.photoResultKeep': return 'Use this photo';
 			case 'history.title': return 'Your progress';
 			case 'history.empty': return 'No measurements yet';
 			case 'profile.title': return 'Profile';

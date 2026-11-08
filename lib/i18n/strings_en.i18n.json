@@ -57,7 +57,9 @@
     "alignmentTilted": "Stand straight, level shoulders and hips",
     "alignmentNotFrontal": "Face the camera",
     "alignmentArms": "Keep your arms away from your torso",
-    "alignmentPhotoWarning": "The photo is kept anyway; you can retake it if you want."
+    "alignmentPhotoWarning": "The photo is kept anyway; you can retake it if you want.",
+    "photoResultTitle": "Photo check",
+    "photoResultKeep": "Use this photo"
   },
   "history": {
     "title": "Your progress",

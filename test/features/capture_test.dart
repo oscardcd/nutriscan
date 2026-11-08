@@ -8,6 +8,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nutriscan/core/theme/app_theme.dart';
 import 'package:nutriscan/features/capture/data/capture_camera.dart';
 import 'package:nutriscan/features/capture/presentation/capture_screen.dart';
+import 'package:nutriscan/features/vision/data/pose_analysis_service.dart';
+import 'package:nutriscan/features/vision/domain/pose_alignment.dart';
+import 'package:nutriscan/features/vision/domain/pose_analysis.dart';
 import 'package:nutriscan/i18n/strings.g.dart';
 
 class _FakeCaptureCamera implements CaptureCamera {
@@ -70,6 +73,27 @@ class _FakeCaptureCamera implements CaptureCamera {
     if (previewIsMounted) disposedWhilePreviewMounted = true;
     disposeCount++;
   }
+}
+
+class _FakeAnalysisService extends PoseAnalysisService {
+  _FakeAnalysisService(this.hint);
+
+  final AlignmentHint hint;
+
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  Future<PoseAnalysis> analyze(Uint8List image) async => PoseAnalysis(
+    quality: PoseQuality.usableForTechnicalChecks,
+    imageWidth: 1,
+    imageHeight: 1,
+    processingTime: Duration.zero,
+    alignment: hint,
+  );
+
+  @override
+  Future<void> dispose() async {}
 }
 
 class _FakeCameraPreview extends StatefulWidget {
@@ -177,6 +201,37 @@ void main() {
     await tester.tap(find.byTooltip('Capturar'));
     await tester.pumpAndSettle();
     expect(camera.captureCount, 1);
+  });
+
+  testWidgets('al capturar entrega el resultado en un modal', (tester) async {
+    final camera = _FakeCaptureCamera();
+    await pumpCapture(
+      tester,
+      CaptureScreen(
+        visionAvailable: true,
+        camera: camera,
+        analysisService: _FakeAnalysisService(AlignmentHint.notCentered),
+      ),
+    );
+
+    await startCamera(tester);
+    await tester.pump(const Duration(seconds: 11));
+    await tester.tap(find.byTooltip('Capturar'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Revisión de la foto'), findsOneWidget);
+    expect(find.text('Céntrate en el encuadre'), findsOneWidget);
+    expect(
+      find.text('La foto se guarda igual; puedes repetirla si quieres.'),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.text('Usar esta foto'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Revisión de la foto'), findsNothing);
+    expect(camera.captureCount, 1);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('captura una foto local y permite repetirla', (tester) async {
