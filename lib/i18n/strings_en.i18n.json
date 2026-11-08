@@ -65,7 +65,8 @@
     "bodyWeight": "Weight (kg)",
     "bodyHeightError": "Between 80 and 250 cm",
     "bodyWeightError": "Between 20 and 400 kg",
-    "bodyContinue": "Calculate BMI"
+    "bodyContinue": "Calculate BMI",
+    "bodySkip": "Not now"
   },
   "history": {
     "title": "Your progress",
@@ -129,6 +130,8 @@
     "indicesTitle": "Anthropometric indices",
     "whtr": "Waist-to-height (WHtR)",
     "whtrNote": "Ratio of waist to height",
+    "whtrExperimental": "Estimated from the proportions in your photo",
+    "whtrWarning": "Approximate (±10%): computed from pose landmarks, not a clinical measurement.",
     "bri": "Body roundness (BRI)",
     "briNote": "Body shape derived from circumferences",
     "rfm": "Relative fat mass (RFM)",

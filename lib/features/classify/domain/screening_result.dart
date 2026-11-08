@@ -12,7 +12,7 @@ enum ScreeningConfidence { low, medium, high }
 /// con valores inventados.
 class ScreeningResult {
   const ScreeningResult({
-    required this.bmi,
+    this.bmi,
     this.margin,
     this.confidence,
     this.waistToHeight,
@@ -20,7 +20,9 @@ class ScreeningResult {
     this.relativeFatMass,
   });
 
-  final double bmi;
+  /// IMC, solo cuando hay peso y estatura declarados. `null` si el resultado
+  /// se limita a índices de forma (WHtR) medidos en la foto.
+  final double? bmi;
 
   /// Margen de error (±IMC). `null` cuando el IMC es un cálculo directo.
   final double? margin;
@@ -38,7 +40,7 @@ class ScreeningResult {
   bool get hasAnthropometrics =>
       waistToHeight != null || bodyRoundness != null || relativeFatMass != null;
 
-  BmiBand get band => classifyBmi(bmi);
-  double? get bmiMin => margin == null ? null : bmi - margin!;
-  double? get bmiMax => margin == null ? null : bmi + margin!;
+  BmiBand? get band => bmi == null ? null : classifyBmi(bmi!);
+  double? get bmiMin => bmi == null || margin == null ? null : bmi! - margin!;
+  double? get bmiMax => bmi == null || margin == null ? null : bmi! + margin!;
 }

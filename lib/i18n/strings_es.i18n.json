@@ -65,7 +65,8 @@
     "bodyWeight": "Peso (kg)",
     "bodyHeightError": "Entre 80 y 250 cm",
     "bodyWeightError": "Entre 20 y 400 kg",
-    "bodyContinue": "Calcular IMC"
+    "bodyContinue": "Calcular IMC",
+    "bodySkip": "Ahora no"
   },
   "history": {
     "title": "Tu progreso",
@@ -130,6 +131,8 @@
     "indicesTitle": "Índices antropométricos",
     "whtr": "Cintura-altura (WHtR)",
     "whtrNote": "Proporción entre cintura y estatura",
+    "whtrExperimental": "Estimado a partir de las proporciones de tu foto",
+    "whtrWarning": "Aproximado (±10 %): se calcula con puntos de la pose, no es una medición clínica.",
     "bri": "Redondez corporal (BRI)",
     "briNote": "Forma del cuerpo derivada de perímetros",
     "rfm": "Masa grasa relativa (RFM)",

@@ -8,9 +8,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/ui/ui.dart';
-import '../../../i18n/strings.g.dart';
 import '../../../data/local/body_metrics.dart';
 import '../../../data/local/body_metrics_store.dart';
+import '../../../i18n/strings.g.dart';
 import '../../classify/application/screening_service.dart';
 import '../../classify/domain/screening_outcome.dart';
 import '../../vision/data/pose_analysis_service.dart';
@@ -123,10 +123,7 @@ class _CaptureScreenState extends State<CaptureScreen>
       }
       unawaited(_stopPoseStream());
       unawaited(
-        _disposeCameraAfterPreviewRemoved(
-          _operationId,
-          onlyWhenPaused: true,
-        ),
+        _disposeCameraAfterPreviewRemoved(_operationId, onlyWhenPaused: true),
       );
     } else if (widget.visionAvailable &&
         _hasStartedCamera &&
@@ -304,9 +301,10 @@ class _CaptureScreenState extends State<CaptureScreen>
     try {
       await detector.initialize();
       if (!mounted || !_isCameraReady || !_isAppResumed) return;
-      _poseFrames = _camera
-          .startStream()
-          .listen(_onPoseFrame, onError: _reportCameraError);
+      _poseFrames = _camera.startStream().listen(
+        _onPoseFrame,
+        onError: _reportCameraError,
+      );
     } on PlatformException catch (error, stackTrace) {
       _reportCameraError(error, stackTrace);
     } on MissingPluginException catch (error, stackTrace) {
@@ -587,12 +585,7 @@ class _CaptureScreenState extends State<CaptureScreen>
         backgroundColor: isError ? theme.colorScheme.error : null,
         behavior: SnackBarBehavior.floating,
         // Deja libre el disparador: el aviso no debe tapar el control.
-        margin: const EdgeInsets.fromLTRB(
-          AppSpacing.md,
-          0,
-          AppSpacing.md,
-          128,
-        ),
+        margin: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, 128),
         duration: const Duration(seconds: 4),
         action: action,
       ),
@@ -679,12 +672,13 @@ class _CaptureScreenState extends State<CaptureScreen>
       return;
     }
     if (!mounted) return;
-    final metrics = await _askBodyMetrics();
-    if (metrics == null || !mounted) return;
+    final choice = await _askBodyMetrics();
+    if (choice == null || !mounted) return;
+    final metrics = choice.metrics;
     final outcome = const ScreeningService().evaluate(
       result,
-      heightCm: metrics.heightCm,
-      weightKg: metrics.weightKg,
+      heightCm: metrics?.heightCm,
+      weightKg: metrics?.weightKg,
     );
     final onUsePhoto = widget.onUsePhoto;
     if (onUsePhoto != null) {
@@ -696,16 +690,16 @@ class _CaptureScreenState extends State<CaptureScreen>
 
   /// Peso y estatura sin los cuales no hay IMC posible. Se piden después de
   /// aceptar la foto y se recuerdan en el dispositivo.
-  Future<BodyMetrics?> _askBodyMetrics() async {
+  Future<({BodyMetrics? metrics})?> _askBodyMetrics() async {
     final saved = await _metricsStore.read();
     if (!mounted) return null;
-    final metrics = await showDialog<BodyMetrics>(
+    final choice = await showDialog<({BodyMetrics? metrics})>(
       context: context,
       builder: (context) =>
           _BodyMetricsDialog(t: Translations.of(context), initial: saved),
     );
-    if (metrics != null) await _metricsStore.write(metrics);
-    return metrics;
+    if (choice?.metrics case final metrics?) await _metricsStore.write(metrics);
+    return choice;
   }
 
   void _openInfoSheet() {
@@ -1007,10 +1001,14 @@ class _OverlayControls extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
       child: Center(
         child: Tooltip(
-          message: hasCapturedImage ? t.capture.cameraRetake : t.capture.shutter,
+          message: hasCapturedImage
+              ? t.capture.cameraRetake
+              : t.capture.shutter,
           child: Semantics(
             button: true,
-            label: hasCapturedImage ? t.capture.cameraRetake : t.capture.shutter,
+            label: hasCapturedImage
+                ? t.capture.cameraRetake
+                : t.capture.shutter,
             child: GestureDetector(
               onTap: action,
               behavior: HitTestBehavior.opaque,
@@ -1091,12 +1089,12 @@ class _BodyMetricsDialogState extends State<_BodyMetricsDialog> {
 
   void _submit() {
     if (_formKey.currentState?.validate() != true) return;
-    Navigator.of(context).pop(
-      BodyMetrics(
+    Navigator.of(context).pop((
+      metrics: BodyMetrics(
         heightCm: double.parse(_height.text.replaceAll(',', '.')),
         weightKg: double.parse(_weight.text.replaceAll(',', '.')),
       ),
-    );
+    ));
   }
 
   @override
@@ -1133,14 +1131,12 @@ class _BodyMetricsDialogState extends State<_BodyMetricsDialog> {
         ),
       ),
       actions: [
+        // Sin peso ni estatura el WHtR de la foto sigue siendo válido.
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(t.capture.cameraRetake),
+          onPressed: () => Navigator.of(context).pop((metrics: null)),
+          child: Text(t.capture.bodySkip),
         ),
-        FilledButton(
-          onPressed: _submit,
-          child: Text(t.capture.bodyContinue),
-        ),
+        FilledButton(onPressed: _submit, child: Text(t.capture.bodyContinue)),
       ],
     );
   }

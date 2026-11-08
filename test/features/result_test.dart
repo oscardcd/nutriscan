@@ -55,7 +55,7 @@ void main() {
     expect(find.text('±1,8 · rango de estimación 25,6 – 29,2'), findsOneWidget);
     expect(find.text('0,53'), findsOneWidget);
     expect(find.text('Sobrepeso'), findsNWidgets(2));
-    expect(find.text('Cintura-altura (WHtR)'), findsOneWidget);
+    expect(find.text('CINTURA-ALTURA (WHTR)'), findsOneWidget);
     expect(find.text('Confianza alta'), findsOneWidget);
     expect(find.text('RESULTADO EXPERIMENTAL'), findsOneWidget);
     expect(

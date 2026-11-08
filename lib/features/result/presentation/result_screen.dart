@@ -58,87 +58,93 @@ class ResultScreen extends StatelessWidget {
                 children: [
                   SectionLabel(t.result.screeningLabel),
                   const SizedBox(height: AppSpacing.sm),
-                  AppCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        MetricTile(
-                          label: t.result.bmiLabel,
-                          value: n(result.bmi),
-                          unit: 'kg/m²',
-                          trailing: BmiBandChip(band: result.band),
-                          caption: _bmiCaption(t, result),
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        BmiRangeGauge(
-                          bmi: result.bmi,
-                          label: t.result.scaleTitle,
-                        ),
-                        if (result.confidence case final confidence?) ...[
+                  if (result.bmi case final bmi?) ...[
+                    AppCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          MetricTile(
+                            label: t.result.bmiLabel,
+                            value: n(bmi),
+                            unit: 'kg/m²',
+                            trailing: result.band == null
+                                ? null
+                                : BmiBandChip(band: result.band!),
+                            caption: _bmiCaption(t, result),
+                          ),
                           const SizedBox(height: AppSpacing.md),
-                          ConfidenceMeter(
-                            level: switch (confidence) {
-                              ScreeningConfidence.low => ConfidenceLevel.low,
-                              ScreeningConfidence.medium =>
-                                ConfidenceLevel.medium,
-                              ScreeningConfidence.high => ConfidenceLevel.high,
-                            },
-                            label: switch (confidence) {
-                              ScreeningConfidence.low => t.result.confidenceLow,
-                              ScreeningConfidence.medium =>
-                                t.result.confidenceMedium,
-                              ScreeningConfidence.high =>
-                                t.result.confidenceHigh,
-                            },
-                          ),
+                          BmiRangeGauge(bmi: bmi, label: t.result.scaleTitle),
+                          if (result.confidence case final confidence?) ...[
+                            const SizedBox(height: AppSpacing.md),
+                            ConfidenceMeter(
+                              level: switch (confidence) {
+                                ScreeningConfidence.low => ConfidenceLevel.low,
+                                ScreeningConfidence.medium =>
+                                  ConfidenceLevel.medium,
+                                ScreeningConfidence.high => ConfidenceLevel.high,
+                              },
+                              label: switch (confidence) {
+                                ScreeningConfidence.low =>
+                                  t.result.confidenceLow,
+                                ScreeningConfidence.medium =>
+                                  t.result.confidenceMedium,
+                                ScreeningConfidence.high =>
+                                  t.result.confidenceHigh,
+                              },
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  AppCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SectionLabel(t.result.scaleTitle),
-                        const SizedBox(height: AppSpacing.sm),
-                        for (final row in _scaleRows)
-                          _ScaleRow(
-                            band: row.$1,
-                            range: row.$2,
-                            label: bandLabel(row.$1, t),
-                          ),
-                      ],
-                    ),
-                  ),
-                  if (result.hasAnthropometrics) ...[
                     const SizedBox(height: AppSpacing.md),
                     AppCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SectionLabel(t.result.indicesTitle),
-                          if (result.waistToHeight case final whtr?)
-                            IndexTile(
-                              icon: Icons.swap_vert_circle_outlined,
-                              label: t.result.whtr,
-                              value: n(whtr, 2),
-                              description: t.result.whtrNote,
+                          SectionLabel(t.result.scaleTitle),
+                          const SizedBox(height: AppSpacing.sm),
+                          for (final row in _scaleRows)
+                            _ScaleRow(
+                              band: row.$1,
+                              range: row.$2,
+                              label: bandLabel(row.$1, t),
                             ),
-                          if (result.bodyRoundness case final bri?)
-                            IndexTile(
-                              icon: Icons.motion_photos_on_outlined,
-                              label: t.result.bri,
-                              value: n(bri),
-                              description: t.result.briNote,
-                            ),
-                          if (result.relativeFatMass case final rfm?)
-                            IndexTile(
-                              icon: Icons.pie_chart_outline,
-                              label: t.result.rfm,
-                              value: '${n(rfm)}%',
-                              description: t.result.rfmNote,
-                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  if (result.waistToHeight case final whtr?) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    AppCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          MetricTile(
+                            label: t.result.whtr,
+                            value: n(whtr, 2),
+                            unit: '',
+                            caption: t.result.whtrExperimental,
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.info_outline,
+                                size: 16,
+                                color: theme.colorScheme.error,
+                              ),
+                              const SizedBox(width: AppSpacing.xs),
+                              Expanded(
+                                child: Text(
+                                  t.result.whtrWarning,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.error,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -297,11 +303,6 @@ class _AbstentionScreen extends StatelessWidget {
         Icons.science_outlined,
         t.result.abstainNoModelTitle,
         t.result.abstainNoModelBody,
-      ),
-      ScreeningAbstentionReason.noBodyData => (
-        Icons.monitor_weight_outlined,
-        t.result.abstainBodyTitle,
-        t.result.abstainBodyBody,
       ),
     };
 

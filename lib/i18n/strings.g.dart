@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 273 (136 per locale)
+/// Strings: 279 (139 per locale)
 ///
-/// Built on 2026-11-08 at 19:39 UTC
+/// Built on 2026-11-08 at 19:49 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -240,6 +240,7 @@ class _StringsCaptureEs {
 	String get bodyHeightError => 'Entre 80 y 250 cm';
 	String get bodyWeightError => 'Entre 20 y 400 kg';
 	String get bodyContinue => 'Calcular IMC';
+	String get bodySkip => 'Ahora no';
 }
 
 // Path: history
@@ -353,6 +354,8 @@ class _StringsResultEs {
 	String get indicesTitle => 'Índices antropométricos';
 	String get whtr => 'Cintura-altura (WHtR)';
 	String get whtrNote => 'Proporción entre cintura y estatura';
+	String get whtrExperimental => 'Estimado a partir de las proporciones de tu foto';
+	String get whtrWarning => 'Aproximado (±10 %): se calcula con puntos de la pose, no es una medición clínica.';
 	String get bri => 'Redondez corporal (BRI)';
 	String get briNote => 'Forma del cuerpo derivada de perímetros';
 	String get rfm => 'Masa grasa relativa (RFM)';
@@ -505,6 +508,7 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	@override String get bodyHeightError => 'Between 80 and 250 cm';
 	@override String get bodyWeightError => 'Between 20 and 400 kg';
 	@override String get bodyContinue => 'Calculate BMI';
+	@override String get bodySkip => 'Not now';
 }
 
 // Path: history
@@ -617,6 +621,8 @@ class _StringsResultEn extends _StringsResultEs {
 	@override String get indicesTitle => 'Anthropometric indices';
 	@override String get whtr => 'Waist-to-height (WHtR)';
 	@override String get whtrNote => 'Ratio of waist to height';
+	@override String get whtrExperimental => 'Estimated from the proportions in your photo';
+	@override String get whtrWarning => 'Approximate (±10%): computed from pose landmarks, not a clinical measurement.';
 	@override String get bri => 'Body roundness (BRI)';
 	@override String get briNote => 'Body shape derived from circumferences';
 	@override String get rfm => 'Relative fat mass (RFM)';
@@ -721,6 +727,7 @@ extension on Translations {
 			case 'capture.bodyHeightError': return 'Entre 80 y 250 cm';
 			case 'capture.bodyWeightError': return 'Entre 20 y 400 kg';
 			case 'capture.bodyContinue': return 'Calcular IMC';
+			case 'capture.bodySkip': return 'Ahora no';
 			case 'history.title': return 'Tu progreso';
 			case 'history.empty': return 'Aún no hay mediciones';
 			case 'profile.title': return 'Perfil';
@@ -771,6 +778,8 @@ extension on Translations {
 			case 'result.indicesTitle': return 'Índices antropométricos';
 			case 'result.whtr': return 'Cintura-altura (WHtR)';
 			case 'result.whtrNote': return 'Proporción entre cintura y estatura';
+			case 'result.whtrExperimental': return 'Estimado a partir de las proporciones de tu foto';
+			case 'result.whtrWarning': return 'Aproximado (±10 %): se calcula con puntos de la pose, no es una medición clínica.';
 			case 'result.bri': return 'Redondez corporal (BRI)';
 			case 'result.briNote': return 'Forma del cuerpo derivada de perímetros';
 			case 'result.rfm': return 'Masa grasa relativa (RFM)';
@@ -866,6 +875,7 @@ extension on _StringsEn {
 			case 'capture.bodyHeightError': return 'Between 80 and 250 cm';
 			case 'capture.bodyWeightError': return 'Between 20 and 400 kg';
 			case 'capture.bodyContinue': return 'Calculate BMI';
+			case 'capture.bodySkip': return 'Not now';
 			case 'history.title': return 'Your progress';
 			case 'history.empty': return 'No measurements yet';
 			case 'profile.title': return 'Profile';
@@ -915,6 +925,8 @@ extension on _StringsEn {
 			case 'result.indicesTitle': return 'Anthropometric indices';
 			case 'result.whtr': return 'Waist-to-height (WHtR)';
 			case 'result.whtrNote': return 'Ratio of waist to height';
+			case 'result.whtrExperimental': return 'Estimated from the proportions in your photo';
+			case 'result.whtrWarning': return 'Approximate (±10%): computed from pose landmarks, not a clinical measurement.';
 			case 'result.bri': return 'Body roundness (BRI)';
 			case 'result.briNote': return 'Body shape derived from circumferences';
 			case 'result.rfm': return 'Relative fat mass (RFM)';
