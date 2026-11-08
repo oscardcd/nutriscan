@@ -1,4 +1,7 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- flutter_pose_detection declara minSdk 31; en API 30 usa MediaPipe GPU/CPU. -->
+    <uses-sdk tools:overrideLibrary="com.example.npu_pose_detection"/>
     <!-- Cámara: captura guiada del cuerpo. Nada se sube. -->
     <uses-permission android:name="android.permission.CAMERA"/>
     <!-- Micrófono: solo si se graba un video de referencia. El audio no se procesa. -->
