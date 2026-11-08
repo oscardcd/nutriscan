@@ -6,13 +6,17 @@ const _landmarkTypes = <pose.LandmarkType, BodyLandmarkType>{
   pose.LandmarkType.nose: BodyLandmarkType.nose,
   pose.LandmarkType.leftShoulder: BodyLandmarkType.leftShoulder,
   pose.LandmarkType.rightShoulder: BodyLandmarkType.rightShoulder,
+  pose.LandmarkType.leftElbow: BodyLandmarkType.leftElbow,
+  pose.LandmarkType.rightElbow: BodyLandmarkType.rightElbow,
+  pose.LandmarkType.leftWrist: BodyLandmarkType.leftWrist,
+  pose.LandmarkType.rightWrist: BodyLandmarkType.rightWrist,
   pose.LandmarkType.leftHip: BodyLandmarkType.leftHip,
   pose.LandmarkType.rightHip: BodyLandmarkType.rightHip,
   pose.LandmarkType.leftAnkle: BodyLandmarkType.leftAnkle,
   pose.LandmarkType.rightAnkle: BodyLandmarkType.rightAnkle,
 };
 
-/// Convierte las 33 landmarks del plugin en los 7 puntos que usa el dominio.
+/// Convierte las 33 landmarks del plugin en los 11 puntos que usa el dominio.
 List<NormalizedLandmark> mapBodyLandmarks(pose.Pose detectedPose) => [
   for (final entry in _landmarkTypes.entries)
     _landmark(detectedPose, entry.key, entry.value),

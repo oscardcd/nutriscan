@@ -45,12 +45,16 @@ class CameraFrame {
     required this.width,
     required this.height,
     required this.rotationDegrees,
+    required this.format,
   });
 
   final List<CameraFramePlane> planes;
   final int width;
   final int height;
   final int rotationDegrees;
+
+  /// 'yuv420' o 'bgra8888', según lo que entregue el image stream.
+  final String format;
 }
 
 abstract interface class CaptureCamera {
@@ -137,8 +141,9 @@ class DeviceCaptureCamera implements CaptureCamera {
         camera,
         ResolutionPreset.medium,
         enableAudio: false,
-        // Requisito del image stream: el detector necesita yuv420.
-        imageFormatGroup: ImageFormatGroup.yuv420,
+        // bgra8888 es el formato que MediaPipe espera en iOS; con yuv420
+        // el plugin entrega landmarks degenerados.
+        imageFormatGroup: ImageFormatGroup.bgra8888,
       );
       _controller = controller;
       await controller.initialize();
@@ -199,6 +204,9 @@ class DeviceCaptureCamera implements CaptureCamera {
                 width: image.width,
                 height: image.height,
                 rotationDegrees: rotation,
+                format: image.format.group == ImageFormatGroup.yuv420
+                    ? 'yuv420'
+                    : 'bgra8888',
               ),
             );
           })

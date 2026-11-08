@@ -23,6 +23,10 @@ class PoseGuidePainter extends CustomPainter {
     BodyLandmarkType.nose: Offset(0.50, 0.28),
     BodyLandmarkType.leftShoulder: Offset(0.40, 0.36),
     BodyLandmarkType.rightShoulder: Offset(0.60, 0.36),
+    BodyLandmarkType.leftElbow: Offset(0.36, 0.46),
+    BodyLandmarkType.rightElbow: Offset(0.64, 0.46),
+    BodyLandmarkType.leftWrist: Offset(0.33, 0.56),
+    BodyLandmarkType.rightWrist: Offset(0.67, 0.56),
     BodyLandmarkType.leftHip: Offset(0.42, 0.57),
     BodyLandmarkType.rightHip: Offset(0.58, 0.57),
     BodyLandmarkType.leftAnkle: Offset(0.43, 0.90),
@@ -33,6 +37,10 @@ class PoseGuidePainter extends CustomPainter {
     (BodyLandmarkType.nose, BodyLandmarkType.leftShoulder),
     (BodyLandmarkType.nose, BodyLandmarkType.rightShoulder),
     (BodyLandmarkType.leftShoulder, BodyLandmarkType.rightShoulder),
+    (BodyLandmarkType.leftShoulder, BodyLandmarkType.leftElbow),
+    (BodyLandmarkType.leftElbow, BodyLandmarkType.leftWrist),
+    (BodyLandmarkType.rightShoulder, BodyLandmarkType.rightElbow),
+    (BodyLandmarkType.rightElbow, BodyLandmarkType.rightWrist),
     (BodyLandmarkType.leftShoulder, BodyLandmarkType.leftHip),
     (BodyLandmarkType.rightShoulder, BodyLandmarkType.rightHip),
     (BodyLandmarkType.leftHip, BodyLandmarkType.rightHip),
@@ -48,7 +56,9 @@ class PoseGuidePainter extends CustomPainter {
     if (pose == null) return;
     _draw(canvas, size, {
       for (final landmark in pose.landmarks)
-        landmark.type: Offset(landmark.x, landmark.y),
+        // MediaPipe devuelve (0,0) en los puntos que no ve.
+        if (landmark.visibility >= 0.3)
+          landmark.type: Offset(landmark.x, landmark.y),
     }, detectedColor, strokeWidth: 4);
   }
 

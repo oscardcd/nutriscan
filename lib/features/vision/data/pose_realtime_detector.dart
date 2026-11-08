@@ -28,6 +28,8 @@ class PoseRealtimeDetector {
   final Stopwatch _clock = Stopwatch()..start();
   Duration? _lastFrameAt;
   DetectedPose? _previous;
+  final Map<BodyLandmarkType, (NormalizedLandmark, int)> _lastVisible = {};
+  int _frameIndex = 0;
   bool _busy = false;
   bool _ready = false;
 
@@ -59,14 +61,16 @@ class PoseRealtimeDetector {
         ],
         width: frame.width,
         height: frame.height,
-        // CaptureCamera abre el stream en yuv420.
-        format: 'yuv420',
+        format: frame.format,
         rotation: frame.rotationDegrees,
       );
       if (result.poses.isEmpty) return null;
-      final detected = DetectedPose(
-        score: result.poses.first.score,
-        landmarks: mapBodyLandmarks(result.poses.first),
+      _frameIndex++;
+      final detected = _keepVisible(
+        DetectedPose(
+          score: result.poses.first.score,
+          landmarks: mapBodyLandmarks(result.poses.first),
+        ),
       );
       final previous = _previous;
       _previous = detected;
@@ -82,6 +86,7 @@ class PoseRealtimeDetector {
   void dispose() {
     _ready = false;
     _previous = null;
+    _lastVisible.clear();
     _detector.dispose();
   }
 
@@ -93,17 +98,44 @@ class PoseRealtimeDetector {
       landmarks: [
         for (final landmark in next.landmarks)
           if (before[landmark.type] case final old?)
-            NormalizedLandmark(
-              type: landmark.type,
-              x: _mix(old.x, landmark.x),
-              y: _mix(old.y, landmark.y),
-              visibility: _mix(old.visibility, landmark.visibility),
-            )
+            // Con visibilidad baja el plugin devuelve (0,0): mantener la
+            // posición anterior evita que el punto vuele a la esquina.
+            if (landmark.visibility < _minBlendVisibility)
+              old
+            else
+              NormalizedLandmark(
+                type: landmark.type,
+                x: _mix(old.x, landmark.x),
+                y: _mix(old.y, landmark.y),
+                visibility: _mix(old.visibility, landmark.visibility),
+              )
           else
             landmark,
       ],
     );
   }
+
+  /// Un punto que ya se vio se mantiene [keepFrames] frames aunque MediaPipe
+  /// baje la confianza (brazos pegados al torso): sin esto parpadea.
+  DetectedPose _keepVisible(DetectedPose detected) {
+    final landmarks = <NormalizedLandmark>[];
+    for (final landmark in detected.landmarks) {
+      if (landmark.visibility >= _visibleVisibility) {
+        _lastVisible[landmark.type] = (landmark, _frameIndex);
+        landmarks.add(landmark);
+        continue;
+      }
+      final held = _lastVisible[landmark.type];
+      final stillFresh =
+          held != null && _frameIndex - held.$2 <= keepFrames;
+      landmarks.add(stillFresh ? held.$1 : landmark);
+    }
+    return DetectedPose(score: detected.score, landmarks: landmarks);
+  }
+
+  static const int keepFrames = 20;
+  static const double _visibleVisibility = 0.5;
+  static const double _minBlendVisibility = 0.5;
 
   double _mix(double previous, double next) =>
       next * (1 - smoothing) + previous * smoothing;
