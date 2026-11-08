@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 199 (99 per locale)
+/// Strings: 237 (118 per locale)
 ///
-/// Built on 2026-11-03 at 02:42 UTC
+/// Built on 2026-11-08 at 15:15 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -213,6 +213,25 @@ class _StringsCaptureEs {
 	String get localNote => 'Las fotos permanecen en este teléfono y no se envían a ningún servidor.';
 	String get webUnavailableTitle => 'Captura no disponible en este navegador';
 	String get webUnavailable => 'El análisis de imagen aún no está disponible en este navegador. NutriScan es un prototipo educativo, no una herramienta médica.';
+	String get poseDebugTitle => 'Diagnóstico de pose (experimental)';
+	String get poseDebugHint => 'Ejecuta el detector local sobre la foto capturada. Solo para pruebas en dispositivo.';
+	String get poseDebugRun => 'Analizar pose';
+	String get poseDebugFailed => 'Error de análisis';
+	String get poseQualityUsable => 'Pose utilizable para verificación técnica';
+	String get poseQualityNoPerson => 'No se detectó persona';
+	String get poseQualityMultiple => 'Varias personas en la foto';
+	String get poseQualityLowConfidence => 'Confianza baja de pose';
+	String get poseQualityIncomplete => 'Cuerpo incompleto en el encuadre';
+	String get alignmentSearching => 'Buscando tu cuerpo…';
+	String get alignmentOk => 'Posición correcta';
+	String get alignmentIncomplete => 'Cuerpo completo: de la cabeza a los pies';
+	String get alignmentTooFar => 'Acércate: el cuerpo se ve pequeño';
+	String get alignmentTooClose => 'Aléjate: el cuerpo no cabe en el encuadre';
+	String get alignmentNotCentered => 'Céntrate en el encuadre';
+	String get alignmentTilted => 'Ponte recto, hombros y caderas nivelados';
+	String get alignmentNotFrontal => 'Ponte de frente a la cámara';
+	String get alignmentArms => 'Separa los brazos del torso';
+	String get alignmentPhotoWarning => 'La foto se guarda igual; puedes repetirla si quieres.';
 }
 
 // Path: history
@@ -441,6 +460,25 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	@override String get localNote => 'Photos stay on this phone and are not sent to any server.';
 	@override String get webUnavailableTitle => 'Capture not available in this browser';
 	@override String get webUnavailable => 'Image analysis is not available in this browser yet. NutriScan is an educational prototype, not a medical tool.';
+	@override String get poseDebugTitle => 'Pose diagnostics (experimental)';
+	@override String get poseDebugHint => 'Runs the on-device detector over the captured photo. Device testing only.';
+	@override String get poseDebugRun => 'Analyze pose';
+	@override String get poseDebugFailed => 'Analysis error';
+	@override String get poseQualityUsable => 'Pose usable for technical checks';
+	@override String get poseQualityNoPerson => 'No person detected';
+	@override String get poseQualityMultiple => 'Multiple people in the photo';
+	@override String get poseQualityLowConfidence => 'Low pose confidence';
+	@override String get poseQualityIncomplete => 'Body incomplete in frame';
+	@override String get alignmentSearching => 'Looking for your body…';
+	@override String get alignmentOk => 'Position looks good';
+	@override String get alignmentIncomplete => 'Full body: head to feet';
+	@override String get alignmentTooFar => 'Step closer: your body looks small';
+	@override String get alignmentTooClose => 'Step back: your body doesn\'t fit the frame';
+	@override String get alignmentNotCentered => 'Center yourself in the frame';
+	@override String get alignmentTilted => 'Stand straight, level shoulders and hips';
+	@override String get alignmentNotFrontal => 'Face the camera';
+	@override String get alignmentArms => 'Keep your arms away from your torso';
+	@override String get alignmentPhotoWarning => 'The photo is kept anyway; you can retake it if you want.';
 }
 
 // Path: history
@@ -620,6 +658,25 @@ extension on Translations {
 			case 'capture.localNote': return 'Las fotos permanecen en este teléfono y no se envían a ningún servidor.';
 			case 'capture.webUnavailableTitle': return 'Captura no disponible en este navegador';
 			case 'capture.webUnavailable': return 'El análisis de imagen aún no está disponible en este navegador. NutriScan es un prototipo educativo, no una herramienta médica.';
+			case 'capture.poseDebugTitle': return 'Diagnóstico de pose (experimental)';
+			case 'capture.poseDebugHint': return 'Ejecuta el detector local sobre la foto capturada. Solo para pruebas en dispositivo.';
+			case 'capture.poseDebugRun': return 'Analizar pose';
+			case 'capture.poseDebugFailed': return 'Error de análisis';
+			case 'capture.poseQualityUsable': return 'Pose utilizable para verificación técnica';
+			case 'capture.poseQualityNoPerson': return 'No se detectó persona';
+			case 'capture.poseQualityMultiple': return 'Varias personas en la foto';
+			case 'capture.poseQualityLowConfidence': return 'Confianza baja de pose';
+			case 'capture.poseQualityIncomplete': return 'Cuerpo incompleto en el encuadre';
+			case 'capture.alignmentSearching': return 'Buscando tu cuerpo…';
+			case 'capture.alignmentOk': return 'Posición correcta';
+			case 'capture.alignmentIncomplete': return 'Cuerpo completo: de la cabeza a los pies';
+			case 'capture.alignmentTooFar': return 'Acércate: el cuerpo se ve pequeño';
+			case 'capture.alignmentTooClose': return 'Aléjate: el cuerpo no cabe en el encuadre';
+			case 'capture.alignmentNotCentered': return 'Céntrate en el encuadre';
+			case 'capture.alignmentTilted': return 'Ponte recto, hombros y caderas nivelados';
+			case 'capture.alignmentNotFrontal': return 'Ponte de frente a la cámara';
+			case 'capture.alignmentArms': return 'Separa los brazos del torso';
+			case 'capture.alignmentPhotoWarning': return 'La foto se guarda igual; puedes repetirla si quieres.';
 			case 'history.title': return 'Tu progreso';
 			case 'history.empty': return 'Aún no hay mediciones';
 			case 'profile.title': return 'Perfil';
@@ -728,6 +785,25 @@ extension on _StringsEn {
 			case 'capture.localNote': return 'Photos stay on this phone and are not sent to any server.';
 			case 'capture.webUnavailableTitle': return 'Capture not available in this browser';
 			case 'capture.webUnavailable': return 'Image analysis is not available in this browser yet. NutriScan is an educational prototype, not a medical tool.';
+			case 'capture.poseDebugTitle': return 'Pose diagnostics (experimental)';
+			case 'capture.poseDebugHint': return 'Runs the on-device detector over the captured photo. Device testing only.';
+			case 'capture.poseDebugRun': return 'Analyze pose';
+			case 'capture.poseDebugFailed': return 'Analysis error';
+			case 'capture.poseQualityUsable': return 'Pose usable for technical checks';
+			case 'capture.poseQualityNoPerson': return 'No person detected';
+			case 'capture.poseQualityMultiple': return 'Multiple people in the photo';
+			case 'capture.poseQualityLowConfidence': return 'Low pose confidence';
+			case 'capture.poseQualityIncomplete': return 'Body incomplete in frame';
+			case 'capture.alignmentSearching': return 'Looking for your body…';
+			case 'capture.alignmentOk': return 'Position looks good';
+			case 'capture.alignmentIncomplete': return 'Full body: head to feet';
+			case 'capture.alignmentTooFar': return 'Step closer: your body looks small';
+			case 'capture.alignmentTooClose': return 'Step back: your body doesn\'t fit the frame';
+			case 'capture.alignmentNotCentered': return 'Center yourself in the frame';
+			case 'capture.alignmentTilted': return 'Stand straight, level shoulders and hips';
+			case 'capture.alignmentNotFrontal': return 'Face the camera';
+			case 'capture.alignmentArms': return 'Keep your arms away from your torso';
+			case 'capture.alignmentPhotoWarning': return 'The photo is kept anyway; you can retake it if you want.';
 			case 'history.title': return 'Your progress';
 			case 'history.empty': return 'No measurements yet';
 			case 'profile.title': return 'Profile';

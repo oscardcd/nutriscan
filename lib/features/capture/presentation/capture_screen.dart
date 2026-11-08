@@ -8,6 +8,13 @@ import 'package:flutter/services.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/ui/ui.dart';
 import '../../../i18n/strings.g.dart';
+import '../../vision/data/pose_realtime_detector.dart';
+import '../../vision/domain/pose_alignment.dart';
+import '../../vision/domain/pose_analysis.dart';
+import '../../vision/presentation/pose_debug_panel_stub.dart'
+    if (dart.library.io) '../../vision/presentation/pose_debug_panel.dart';
+import '../../vision/presentation/alignment_text.dart';
+import '../../vision/presentation/pose_guide_painter.dart';
 import '../data/capture_camera.dart';
 
 const _captureTimeout = Duration(seconds: 30);
@@ -38,6 +45,27 @@ class _CaptureScreenState extends State<CaptureScreen>
   CaptureCameraFailure? _failure;
   Uint8List? _capturedImage;
 
+  static const PoseAlignmentEvaluator _alignmentEvaluator =
+      PoseAlignmentEvaluator();
+
+  /// Frames alineados seguidos antes de habilitar el disparador.
+  static const int _gateFrames = 3;
+
+  /// Tras este tiempo el disparador se abre aunque la pose no valide.
+  static const Duration _captureGateTimeout = Duration(seconds: 10);
+
+  final ValueNotifier<DetectedPose?> _livePose = ValueNotifier(null);
+  final ValueNotifier<AlignmentHint?> _liveHint = ValueNotifier(null);
+  final AlignmentStabilizer _alignmentStabilizer = AlignmentStabilizer();
+  int _alignedFrames = 0;
+  bool _gateOpen = false;
+  bool _escapeReady = false;
+  Timer? _escapeTimer;
+  StreamSubscription<CameraFrame>? _poseFrames;
+  PoseRealtimeDetector? _poseDetector;
+  Timer? _poseIdleTimer;
+  bool _disposed = false;
+
   @override
   void initState() {
     super.initState();
@@ -57,6 +85,7 @@ class _CaptureScreenState extends State<CaptureScreen>
       if (mounted && widget.visionAvailable && _capturedImage == null) {
         setState(() {});
       }
+      unawaited(_stopPoseStream());
       unawaited(
         _disposeCameraAfterPreviewRemoved(
           _operationId,
@@ -89,6 +118,9 @@ class _CaptureScreenState extends State<CaptureScreen>
         return;
       }
       setState(() => _isCameraReady = true);
+      _startEscapeTimer();
+      // No se espera: el modelo puede tardar y el preview ya es usable.
+      unawaited(_startPoseStream());
     } on CaptureCameraException catch (error) {
       if (operationId == _operationId && mounted && _isAppResumed) {
         setState(() => _failure = error.failure);
@@ -119,6 +151,7 @@ class _CaptureScreenState extends State<CaptureScreen>
     });
 
     try {
+      await _stopPoseStream();
       final image = await _camera.takePicture().timeout(_captureTimeout);
       if (operationId != _operationId || !_isAppResumed) {
         image.fillRange(0, image.length, 0);
@@ -191,6 +224,7 @@ class _CaptureScreenState extends State<CaptureScreen>
   }
 
   Future<void> _disposeCamera() async {
+    await _stopPoseStream();
     try {
       await _camera.dispose();
     } on CameraException catch (error, stackTrace) {
@@ -210,6 +244,99 @@ class _CaptureScreenState extends State<CaptureScreen>
     if (!mounted || operationId != _operationId) return;
     if (onlyWhenPaused && _isAppResumed) return;
     await _disposeCamera();
+  }
+
+  Future<void> _startPoseStream() async {
+    if (!widget.visionAvailable ||
+        _poseFrames != null ||
+        _capturedImage != null) {
+      return;
+    }
+    final detector = _poseDetector ??= PoseRealtimeDetector();
+    try {
+      await detector.initialize();
+      if (!mounted || !_isCameraReady || !_isAppResumed) return;
+      _poseFrames = _camera
+          .startStream()
+          .listen(_onPoseFrame, onError: _reportCameraError);
+    } on PlatformException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+    } on MissingPluginException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+    } on StateError catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+    }
+  }
+
+  /// Sin esto, una pose que nunca se valida deja el disparador bloqueado.
+  void _startEscapeTimer() {
+    _escapeTimer?.cancel();
+    _escapeReady = false;
+    _escapeTimer = Timer(_captureGateTimeout, () {
+      if (!mounted || _disposed) return;
+      setState(() => _escapeReady = true);
+    });
+  }
+
+  bool get _canCapture =>
+      _isCameraReady &&
+      !_isCapturing &&
+      (_gateOpen || _escapeReady || !widget.visionAvailable);
+
+  Future<void> _stopPoseStream() async {
+    _poseIdleTimer?.cancel();
+    final frames = _poseFrames;
+    _poseFrames = null;
+    await frames?.cancel();
+    if (!_disposed) {
+      _livePose.value = null;
+      _liveHint.value = null;
+    }
+    _alignmentStabilizer.reset();
+    _resetGate();
+    try {
+      await _camera.stopStream();
+    } on PlatformException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+    } on MissingPluginException catch (error, stackTrace) {
+      _reportCameraError(error, stackTrace);
+    }
+  }
+
+  Future<void> _onPoseFrame(CameraFrame frame) async {
+    final detector = _poseDetector;
+    if (detector == null) return;
+    final pose = await detector.process(frame);
+    if (!mounted || _disposed || _poseFrames == null) return;
+    if (pose == null) {
+      _livePose.value = null;
+      _liveHint.value = null;
+      _alignmentStabilizer.reset();
+      return;
+    }
+    _livePose.value = pose;
+    final hint = _alignmentStabilizer.update(
+      _alignmentEvaluator.evaluate(pose),
+    );
+    _liveHint.value = hint;
+    _alignedFrames = hint == AlignmentHint.ok ? _alignedFrames + 1 : 0;
+    final open = _alignedFrames >= _gateFrames;
+    if (open != _gateOpen) setState(() => _gateOpen = open);
+    _poseIdleTimer?.cancel();
+    _poseIdleTimer = Timer(const Duration(milliseconds: 800), () {
+      if (!mounted || _disposed) return;
+      _livePose.value = null;
+      _liveHint.value = null;
+      _alignmentStabilizer.reset();
+      _resetGate();
+    });
+  }
+
+  void _resetGate() {
+    _alignedFrames = 0;
+    if (!_gateOpen) return;
+    _gateOpen = false;
+    if (mounted && !_disposed) setState(() {});
   }
 
   void _reportCameraError(Object error, StackTrace stackTrace) {
@@ -239,6 +366,14 @@ class _CaptureScreenState extends State<CaptureScreen>
   @override
   void dispose() {
     _operationId++;
+    _disposed = true;
+    _poseIdleTimer?.cancel();
+    _escapeTimer?.cancel();
+    unawaited(_poseFrames?.cancel());
+    _poseFrames = null;
+    _poseDetector?.dispose();
+    _livePose.dispose();
+    _liveHint.dispose();
     WidgetsBinding.instance.removeObserver(this);
     _capturedImage?.fillRange(0, _capturedImage!.length, 0);
     unawaited(_disposeCamera());
@@ -275,6 +410,13 @@ class _CaptureScreenState extends State<CaptureScreen>
                   ),
                   children: [
                     _ScanPreview(
+                      overlay: _capturedImage == null
+                          ? ValueListenableBuilder<DetectedPose?>(
+                              valueListenable: _livePose,
+                              builder: (context, pose, _) =>
+                                  CustomPaint(painter: PoseGuidePainter(pose: pose)),
+                            )
+                          : null,
                       child: _capturedImage != null
                           ? Image.memory(
                               _capturedImage!,
@@ -327,9 +469,17 @@ class _CaptureScreenState extends State<CaptureScreen>
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
                       ),
+                      if (widget.visionAvailable) ...[
+                        const SizedBox(height: AppSpacing.sm),
+                        PoseDebugPanel(image: _capturedImage!),
+                      ],
                     ],
                     const SizedBox(height: AppSpacing.md),
-                    _AlignmentCard(t: t, theme: theme),
+                    ValueListenableBuilder<AlignmentHint?>(
+                      valueListenable: _liveHint,
+                      builder: (context, hint, _) =>
+                          _AlignmentCard(t: t, theme: theme, hint: hint),
+                    ),
                     const SizedBox(height: AppSpacing.md),
                     _CriteriaCard(t: t),
                     const SizedBox(height: AppSpacing.xs),
@@ -345,7 +495,7 @@ class _CaptureScreenState extends State<CaptureScreen>
               ),
               _CaptureBar(
                 t: t,
-                canCapture: _isCameraReady && !_isCapturing,
+                canCapture: _canCapture,
                 isCapturing: _isCapturing,
                 hasCapturedImage: _capturedImage != null,
                 onCapture: _captureImage,
@@ -479,9 +629,10 @@ class _TopBar extends StatelessWidget {
 }
 
 class _ScanPreview extends StatelessWidget {
-  const _ScanPreview({required this.child});
+  const _ScanPreview({required this.child, this.overlay});
 
   final Widget child;
+  final Widget? overlay;
 
   @override
   Widget build(BuildContext context) {
@@ -502,6 +653,15 @@ class _ScanPreview extends StatelessWidget {
                 child: child,
               ),
             ),
+            if (overlay case final overlay?)
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppRadius.container),
+                    child: overlay,
+                  ),
+                ),
+              ),
             Positioned.fill(
               child: IgnorePointer(
                 child: Padding(
@@ -567,35 +727,33 @@ class _CornersPainter extends CustomPainter {
 }
 
 class _AlignmentCard extends StatelessWidget {
-  const _AlignmentCard({required this.t, required this.theme});
+  const _AlignmentCard({required this.t, required this.theme, this.hint});
 
   final Translations t;
   final ThemeData theme;
 
+  /// `null` mientras no hay pose evaluada.
+  final AlignmentHint? hint;
+
   @override
   Widget build(BuildContext context) {
+    final text = _message(t);
+    final icon = _icon(t);
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SectionLabel(t.capture.alignment),
           const SizedBox(height: AppSpacing.sm),
-          // Guía estática: hasta que exista la pipeline no se muestra ninguna
-          // lectura (ni ángulos ni distancias) que no se haya medido.
-          _AlignmentRow(icon: Icons.verified_outlined, text: t.capture.posture),
-          _AlignmentRow(
-            icon: Icons.screen_rotation_outlined,
-            text: t.capture.tilt,
-          ),
-          _AlignmentRow(
-            icon: Icons.filter_center_focus,
-            text: t.capture.sensor,
-          ),
-          _AlignmentRow(icon: Icons.straighten, text: t.capture.distance),
+          _AlignmentRow(icon: icon, text: text),
         ],
       ),
     );
   }
+
+  String _message(Translations t) => alignmentReadout(t, hint).$1;
+
+  IconData _icon(Translations t) => alignmentReadout(t, hint).$2;
 }
 
 class _AlignmentRow extends StatelessWidget {

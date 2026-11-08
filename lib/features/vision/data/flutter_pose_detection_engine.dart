@@ -4,6 +4,7 @@ import 'package:flutter_pose_detection/flutter_pose_detection.dart' as pose;
 
 import '../domain/pose_analysis.dart';
 import '../domain/pose_detection_engine.dart';
+import 'pose_landmark_mapper.dart';
 
 class FlutterPoseDetectionEngine implements PoseDetectionEngine {
   final pose.NpuPoseDetector _detector = pose.NpuPoseDetector(
@@ -36,43 +37,7 @@ class FlutterPoseDetectionEngine implements PoseDetectionEngine {
           }
           return DetectedPerson(
             score: poseResult.score,
-            landmarks: [
-              _landmark(
-                poseResult,
-                pose.LandmarkType.nose,
-                BodyLandmarkType.nose,
-              ),
-              _landmark(
-                poseResult,
-                pose.LandmarkType.leftShoulder,
-                BodyLandmarkType.leftShoulder,
-              ),
-              _landmark(
-                poseResult,
-                pose.LandmarkType.rightShoulder,
-                BodyLandmarkType.rightShoulder,
-              ),
-              _landmark(
-                poseResult,
-                pose.LandmarkType.leftHip,
-                BodyLandmarkType.leftHip,
-              ),
-              _landmark(
-                poseResult,
-                pose.LandmarkType.rightHip,
-                BodyLandmarkType.rightHip,
-              ),
-              _landmark(
-                poseResult,
-                pose.LandmarkType.leftAnkle,
-                BodyLandmarkType.leftAnkle,
-              ),
-              _landmark(
-                poseResult,
-                pose.LandmarkType.rightAnkle,
-                BodyLandmarkType.rightAnkle,
-              ),
-            ],
+            landmarks: mapBodyLandmarks(poseResult),
           );
         })
         .toList(growable: false);
@@ -82,19 +47,5 @@ class FlutterPoseDetectionEngine implements PoseDetectionEngine {
   Future<void> dispose() async {
     _initialized = false;
     await pose.PoseDetectorPlatform.instance.dispose();
-  }
-
-  NormalizedLandmark _landmark(
-    pose.Pose detectedPose,
-    pose.LandmarkType pluginType,
-    BodyLandmarkType domainType,
-  ) {
-    final landmark = detectedPose.getLandmark(pluginType);
-    return NormalizedLandmark(
-      type: domainType,
-      x: landmark.x,
-      y: landmark.y,
-      visibility: landmark.visibility,
-    );
   }
 }

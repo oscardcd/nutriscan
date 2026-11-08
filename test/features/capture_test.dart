@@ -51,6 +51,12 @@ class _FakeCaptureCamera implements CaptureCamera {
   }
 
   @override
+  Stream<CameraFrame> startStream() => const Stream.empty();
+
+  @override
+  Future<void> stopStream() async {}
+
+  @override
   Future<bool> openSettings() async {
     openSettingsCount++;
     return openSettingsResult;
@@ -133,12 +139,35 @@ void main() {
 
     expect(find.text('Captura biométrica'), findsOneWidget);
     expect(find.text('CRITERIOS DE ESCANEO'), findsOneWidget);
-    expect(find.text('Cuerpo completo, de frente'), findsOneWidget);
+    expect(find.text('Buscando tu cuerpo…'), findsOneWidget);
     expect(camera.initializeCount, 0);
     await startCamera(tester);
     expect(find.byKey(const ValueKey('camera-preview')), findsOneWidget);
     expect(camera.initializeCount, 1);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('el disparador espera a la pose y se abre tras 10 s', (
+    tester,
+  ) async {
+    final camera = _FakeCaptureCamera();
+    await pumpCapture(
+      tester,
+      CaptureScreen(visionAvailable: true, camera: camera),
+    );
+
+    IconButton shutter() => tester.widget<IconButton>(
+      find.ancestor(
+        of: find.byTooltip('Capturar'),
+        matching: find.byType(IconButton),
+      ),
+    );
+
+    await startCamera(tester);
+    expect(shutter().onPressed, isNull);
+
+    await tester.pump(const Duration(seconds: 11));
+    expect(shutter().onPressed, isNotNull);
   });
 
   testWidgets('captura una foto local y permite repetirla', (tester) async {
@@ -149,6 +178,8 @@ void main() {
     );
 
     await startCamera(tester);
+    // Sin pose válida el disparador espera el escape de 10 s.
+    await tester.pump(const Duration(seconds: 11));
     await tester.tap(find.byTooltip('Capturar'));
     await tester.pumpAndSettle();
 
@@ -184,6 +215,7 @@ void main() {
     );
 
     await startCamera(tester);
+    await tester.pump(const Duration(seconds: 11));
     await tester.tap(find.byTooltip('Capturar'));
     await tester.pumpAndSettle();
 
