@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 279 (139 per locale)
+/// Strings: 245 (122 per locale)
 ///
-/// Built on 2026-11-08 at 19:49 UTC
+/// Built on 2026-11-08 at 22:15 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -169,8 +169,6 @@ class _StringsNavEs {
 
 	// Translations
 	String get measure => 'Medir';
-	String get history => 'Historial';
-	String get profile => 'Perfil';
 }
 
 // Path: capture
@@ -182,12 +180,9 @@ class _StringsCaptureEs {
 	// Translations
 	String get title => 'Captura biométrica';
 	String get onDevice => 'En el dispositivo';
-	String get localBadge => 'Cómputo local';
 	String get alignment => 'Alineación corporal';
-	String get posture => 'Cuerpo completo, de frente';
 	String get tilt => 'Teléfono recto y nivelado';
 	String get sensor => 'Enciende la cámara antes de tomar la foto';
-	String get distance => 'A 2 metros del teléfono';
 	String get criteria => 'Criterios de escaneo';
 	String get fullBody => 'Cuerpo completo';
 	String get twoMeters => 'A 2 metros';
@@ -263,14 +258,9 @@ class _StringsProfileEs {
 	// Translations
 	String get title => 'Perfil';
 	String get height => 'Estatura';
-	String get sex => 'Sexo';
 	String get age => 'Edad';
 	String get onDevice => 'Procesamiento on-device';
-	String get onDeviceLocked => 'Activado y bloqueado';
 	String get deleteAll => 'Borrar todos los datos';
-	String get comingSoon => 'Próximamente';
-	String get deleteConfirmTitle => '¿Borrar todos los datos?';
-	String get deleteConfirmBody => 'Se eliminarán las mediciones guardadas y tu consentimiento de este dispositivo. No se puede deshacer.';
 	String get cancel => 'Cancelar';
 	String get delete => 'Borrar todo';
 }
@@ -351,15 +341,10 @@ class _StringsResultEs {
 	String get confidenceMedium => 'Confianza media';
 	String get confidenceHigh => 'Confianza alta';
 	String get scaleTitle => 'Escala OMS';
-	String get indicesTitle => 'Índices antropométricos';
 	String get whtr => 'Cintura-altura (WHtR)';
-	String get whtrNote => 'Proporción entre cintura y estatura';
 	String get whtrExperimental => 'Estimado a partir de las proporciones de tu foto';
 	String get whtrWarning => 'Aproximado (±10 %): se calcula con puntos de la pose, no es una medición clínica.';
 	String get bri => 'Redondez corporal (BRI)';
-	String get briNote => 'Forma del cuerpo derivada de perímetros';
-	String get rfm => 'Masa grasa relativa (RFM)';
-	String get rfmNote => 'Estimación basada en proporciones corporales';
 	String get meaningTitle => '¿Qué significa este resultado?';
 	String get meaningBody => 'Tu silueta se sitúa en una banda de referencia. El IMC y las proyecciones visuales no distinguen masa muscular magra de tejido adiposo: es un punto de partida preventivo para tu seguimiento.';
 	String get cta => 'Volver a medir';
@@ -371,8 +356,6 @@ class _StringsResultEs {
 	String get abstainNoModelTitle => 'Todavía no hay estimación';
 	String get abstainNoModelBody => 'El modelo de estimación no está integrado en esta versión. La captura quedó validada técnicamente, pero no se muestran cifras para no inventar un resultado.';
 	String get bmiComputedCaption => 'Calculado con el peso y la estatura que ingresaste';
-	String get abstainBodyTitle => 'Faltan tus datos';
-	String get abstainBodyBody => 'Necesitamos tu peso y estatura para calcular el IMC. Repite la captura e ingrésalos.';
 }
 
 // Path: settings
@@ -437,8 +420,6 @@ class _StringsNavEn extends _StringsNavEs {
 
 	// Translations
 	@override String get measure => 'Measure';
-	@override String get history => 'History';
-	@override String get profile => 'Profile';
 }
 
 // Path: capture
@@ -450,12 +431,9 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	// Translations
 	@override String get title => 'Biometric capture';
 	@override String get onDevice => 'On device';
-	@override String get localBadge => 'Local compute';
 	@override String get alignment => 'Body alignment';
-	@override String get posture => 'Full body, facing the camera';
 	@override String get tilt => 'Phone upright and level';
 	@override String get sensor => 'Turn on the camera before taking a photo';
-	@override String get distance => '2 meters away from the phone';
 	@override String get criteria => 'Scan criteria';
 	@override String get fullBody => 'Full body';
 	@override String get twoMeters => 'At 2 meters';
@@ -531,14 +509,9 @@ class _StringsProfileEn extends _StringsProfileEs {
 	// Translations
 	@override String get title => 'Profile';
 	@override String get height => 'Height';
-	@override String get sex => 'Sex';
 	@override String get age => 'Age';
 	@override String get onDevice => 'On-device processing';
-	@override String get onDeviceLocked => 'Enabled and locked';
 	@override String get deleteAll => 'Delete all data';
-	@override String get comingSoon => 'Coming soon';
-	@override String get deleteConfirmTitle => 'Delete all data?';
-	@override String get deleteConfirmBody => 'Saved measurements and your consent will be erased from this device. This cannot be undone.';
 	@override String get cancel => 'Cancel';
 	@override String get delete => 'Delete all';
 }
@@ -618,15 +591,10 @@ class _StringsResultEn extends _StringsResultEs {
 	@override String get confidenceMedium => 'Medium confidence';
 	@override String get confidenceHigh => 'High confidence';
 	@override String get scaleTitle => 'WHO scale';
-	@override String get indicesTitle => 'Anthropometric indices';
 	@override String get whtr => 'Waist-to-height (WHtR)';
-	@override String get whtrNote => 'Ratio of waist to height';
 	@override String get whtrExperimental => 'Estimated from the proportions in your photo';
 	@override String get whtrWarning => 'Approximate (±10%): computed from pose landmarks, not a clinical measurement.';
 	@override String get bri => 'Body roundness (BRI)';
-	@override String get briNote => 'Body shape derived from circumferences';
-	@override String get rfm => 'Relative fat mass (RFM)';
-	@override String get rfmNote => 'Estimate based on body proportions';
 	@override String get meaningTitle => 'What does this result mean?';
 	@override String get meaningBody => 'Your silhouette falls in a reference band. BMI and visual projections do not distinguish lean muscle from fat tissue: it is a preventive starting point for your tracking.';
 	@override String get cta => 'Measure again';
@@ -638,8 +606,6 @@ class _StringsResultEn extends _StringsResultEs {
 	@override String get abstainNoModelTitle => 'No estimate yet';
 	@override String get abstainNoModelBody => 'The estimation model is not integrated in this version. The capture passed the technical checks, but no figures are shown so we do not invent a result.';
 	@override String get bmiComputedCaption => 'Calculated from the weight and height you entered';
-	@override String get abstainBodyTitle => 'Your data is missing';
-	@override String get abstainBodyBody => 'We need your weight and height to calculate BMI. Retake the capture and enter them.';
 }
 
 // Path: settings
@@ -665,16 +631,11 @@ extension on Translations {
 		switch (path) {
 			case 'appTitle': return 'NutriScan';
 			case 'nav.measure': return 'Medir';
-			case 'nav.history': return 'Historial';
-			case 'nav.profile': return 'Perfil';
 			case 'capture.title': return 'Captura biométrica';
 			case 'capture.onDevice': return 'En el dispositivo';
-			case 'capture.localBadge': return 'Cómputo local';
 			case 'capture.alignment': return 'Alineación corporal';
-			case 'capture.posture': return 'Cuerpo completo, de frente';
 			case 'capture.tilt': return 'Teléfono recto y nivelado';
 			case 'capture.sensor': return 'Enciende la cámara antes de tomar la foto';
-			case 'capture.distance': return 'A 2 metros del teléfono';
 			case 'capture.criteria': return 'Criterios de escaneo';
 			case 'capture.fullBody': return 'Cuerpo completo';
 			case 'capture.twoMeters': return 'A 2 metros';
@@ -732,14 +693,9 @@ extension on Translations {
 			case 'history.empty': return 'Aún no hay mediciones';
 			case 'profile.title': return 'Perfil';
 			case 'profile.height': return 'Estatura';
-			case 'profile.sex': return 'Sexo';
 			case 'profile.age': return 'Edad';
 			case 'profile.onDevice': return 'Procesamiento on-device';
-			case 'profile.onDeviceLocked': return 'Activado y bloqueado';
 			case 'profile.deleteAll': return 'Borrar todos los datos';
-			case 'profile.comingSoon': return 'Próximamente';
-			case 'profile.deleteConfirmTitle': return '¿Borrar todos los datos?';
-			case 'profile.deleteConfirmBody': return 'Se eliminarán las mediciones guardadas y tu consentimiento de este dispositivo. No se puede deshacer.';
 			case 'profile.cancel': return 'Cancelar';
 			case 'profile.delete': return 'Borrar todo';
 			case 'band.underweight': return 'Bajo peso';
@@ -775,15 +731,10 @@ extension on Translations {
 			case 'result.confidenceMedium': return 'Confianza media';
 			case 'result.confidenceHigh': return 'Confianza alta';
 			case 'result.scaleTitle': return 'Escala OMS';
-			case 'result.indicesTitle': return 'Índices antropométricos';
 			case 'result.whtr': return 'Cintura-altura (WHtR)';
-			case 'result.whtrNote': return 'Proporción entre cintura y estatura';
 			case 'result.whtrExperimental': return 'Estimado a partir de las proporciones de tu foto';
 			case 'result.whtrWarning': return 'Aproximado (±10 %): se calcula con puntos de la pose, no es una medición clínica.';
 			case 'result.bri': return 'Redondez corporal (BRI)';
-			case 'result.briNote': return 'Forma del cuerpo derivada de perímetros';
-			case 'result.rfm': return 'Masa grasa relativa (RFM)';
-			case 'result.rfmNote': return 'Estimación basada en proporciones corporales';
 			case 'result.meaningTitle': return '¿Qué significa este resultado?';
 			case 'result.meaningBody': return 'Tu silueta se sitúa en una banda de referencia. El IMC y las proyecciones visuales no distinguen masa muscular magra de tejido adiposo: es un punto de partida preventivo para tu seguimiento.';
 			case 'result.cta': return 'Volver a medir';
@@ -795,8 +746,6 @@ extension on Translations {
 			case 'result.abstainNoModelTitle': return 'Todavía no hay estimación';
 			case 'result.abstainNoModelBody': return 'El modelo de estimación no está integrado en esta versión. La captura quedó validada técnicamente, pero no se muestran cifras para no inventar un resultado.';
 			case 'result.bmiComputedCaption': return 'Calculado con el peso y la estatura que ingresaste';
-			case 'result.abstainBodyTitle': return 'Faltan tus datos';
-			case 'result.abstainBodyBody': return 'Necesitamos tu peso y estatura para calcular el IMC. Repite la captura e ingrésalos.';
 			case 'settings.title': return 'Idioma y tema';
 			case 'settings.language': return 'IDIOMA';
 			case 'settings.theme': return 'TEMA';
@@ -813,16 +762,11 @@ extension on _StringsEn {
 		switch (path) {
 			case 'appTitle': return 'NutriScan';
 			case 'nav.measure': return 'Measure';
-			case 'nav.history': return 'History';
-			case 'nav.profile': return 'Profile';
 			case 'capture.title': return 'Biometric capture';
 			case 'capture.onDevice': return 'On device';
-			case 'capture.localBadge': return 'Local compute';
 			case 'capture.alignment': return 'Body alignment';
-			case 'capture.posture': return 'Full body, facing the camera';
 			case 'capture.tilt': return 'Phone upright and level';
 			case 'capture.sensor': return 'Turn on the camera before taking a photo';
-			case 'capture.distance': return '2 meters away from the phone';
 			case 'capture.criteria': return 'Scan criteria';
 			case 'capture.fullBody': return 'Full body';
 			case 'capture.twoMeters': return 'At 2 meters';
@@ -880,14 +824,9 @@ extension on _StringsEn {
 			case 'history.empty': return 'No measurements yet';
 			case 'profile.title': return 'Profile';
 			case 'profile.height': return 'Height';
-			case 'profile.sex': return 'Sex';
 			case 'profile.age': return 'Age';
 			case 'profile.onDevice': return 'On-device processing';
-			case 'profile.onDeviceLocked': return 'Enabled and locked';
 			case 'profile.deleteAll': return 'Delete all data';
-			case 'profile.comingSoon': return 'Coming soon';
-			case 'profile.deleteConfirmTitle': return 'Delete all data?';
-			case 'profile.deleteConfirmBody': return 'Saved measurements and your consent will be erased from this device. This cannot be undone.';
 			case 'profile.cancel': return 'Cancel';
 			case 'profile.delete': return 'Delete all';
 			case 'band.underweight': return 'Underweight';
@@ -922,15 +861,10 @@ extension on _StringsEn {
 			case 'result.confidenceMedium': return 'Medium confidence';
 			case 'result.confidenceHigh': return 'High confidence';
 			case 'result.scaleTitle': return 'WHO scale';
-			case 'result.indicesTitle': return 'Anthropometric indices';
 			case 'result.whtr': return 'Waist-to-height (WHtR)';
-			case 'result.whtrNote': return 'Ratio of waist to height';
 			case 'result.whtrExperimental': return 'Estimated from the proportions in your photo';
 			case 'result.whtrWarning': return 'Approximate (±10%): computed from pose landmarks, not a clinical measurement.';
 			case 'result.bri': return 'Body roundness (BRI)';
-			case 'result.briNote': return 'Body shape derived from circumferences';
-			case 'result.rfm': return 'Relative fat mass (RFM)';
-			case 'result.rfmNote': return 'Estimate based on body proportions';
 			case 'result.meaningTitle': return 'What does this result mean?';
 			case 'result.meaningBody': return 'Your silhouette falls in a reference band. BMI and visual projections do not distinguish lean muscle from fat tissue: it is a preventive starting point for your tracking.';
 			case 'result.cta': return 'Measure again';
@@ -942,8 +876,6 @@ extension on _StringsEn {
 			case 'result.abstainNoModelTitle': return 'No estimate yet';
 			case 'result.abstainNoModelBody': return 'The estimation model is not integrated in this version. The capture passed the technical checks, but no figures are shown so we do not invent a result.';
 			case 'result.bmiComputedCaption': return 'Calculated from the weight and height you entered';
-			case 'result.abstainBodyTitle': return 'Your data is missing';
-			case 'result.abstainBodyBody': return 'We need your weight and height to calculate BMI. Retake the capture and enter them.';
 			case 'settings.title': return 'Language and theme';
 			case 'settings.language': return 'LANGUAGE';
 			case 'settings.theme': return 'THEME';
