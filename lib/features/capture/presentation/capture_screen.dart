@@ -4,10 +4,13 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/ui/ui.dart';
 import '../../../i18n/strings.g.dart';
+import '../../classify/application/screening_service.dart';
+import '../../classify/domain/screening_outcome.dart';
 import '../../vision/data/pose_analysis_service.dart';
 import '../../vision/data/pose_realtime_detector.dart';
 import '../../vision/domain/pose_alignment.dart';
@@ -31,6 +34,7 @@ class CaptureScreen extends StatefulWidget {
     this.visionAvailable = !kIsWeb,
     this.camera,
     this.analysisService,
+    this.onUsePhoto,
   });
 
   /// Cámara y modelos de visión (ML Kit, TFLite) solo existen en móvil.
@@ -39,6 +43,10 @@ class CaptureScreen extends StatefulWidget {
 
   /// Inyectable para pruebas; por defecto la pantalla crea la suya.
   final PoseAnalysisService? analysisService;
+
+  /// Qué hacer con la foto aceptada. Por defecto abre `/result`; las pruebas
+  /// lo usan para no depender del router.
+  final void Function(ScreeningOutcome outcome)? onUsePhoto;
 
   @override
   State<CaptureScreen> createState() => _CaptureScreenState();
@@ -657,7 +665,18 @@ class _CaptureScreenState extends State<CaptureScreen>
         ],
       ),
     );
-    if (retake == true && mounted) await _retakeImage();
+    if (retake == true) {
+      if (mounted) await _retakeImage();
+      return;
+    }
+    if (!mounted) return;
+    final outcome = const ScreeningService().evaluate(result);
+    final onUsePhoto = widget.onUsePhoto;
+    if (onUsePhoto != null) {
+      onUsePhoto(outcome);
+      return;
+    }
+    context.push('/result', extra: outcome);
   }
 
   void _openInfoSheet() {

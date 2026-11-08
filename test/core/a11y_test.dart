@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nutriscan/core/theme/app_theme.dart';
+import 'package:nutriscan/features/classify/domain/screening_outcome.dart';
 import 'package:nutriscan/features/classify/domain/screening_result.dart';
 import 'package:nutriscan/features/consent/data/consent_gate.dart';
 import 'package:nutriscan/features/consent/data/consent_store.dart';
@@ -85,7 +86,7 @@ void main() {
     tester,
   ) async {
     final semantics = tester.ensureSemantics();
-    await pump(tester, const ResultScreen(result: result));
+    await pump(tester, const ResultScreen(outcome: ScreeningPrediction(result)));
 
     expect(find.byTooltip('Perfil'), findsOneWidget);
     expect(find.bySemanticsLabel('Escala OMS'), findsOneWidget);

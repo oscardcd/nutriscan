@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nutriscan/core/theme/app_theme.dart';
 import 'package:nutriscan/features/capture/data/capture_camera.dart';
 import 'package:nutriscan/features/capture/presentation/capture_screen.dart';
+import 'package:nutriscan/features/classify/domain/screening_outcome.dart';
 import 'package:nutriscan/features/vision/data/pose_analysis_service.dart';
 import 'package:nutriscan/features/vision/domain/pose_alignment.dart';
 import 'package:nutriscan/features/vision/domain/pose_analysis.dart';
@@ -205,12 +206,14 @@ void main() {
 
   testWidgets('al capturar entrega el resultado en un modal', (tester) async {
     final camera = _FakeCaptureCamera();
+    ScreeningOutcome? outcome;
     await pumpCapture(
       tester,
       CaptureScreen(
         visionAvailable: true,
         camera: camera,
         analysisService: _FakeAnalysisService(AlignmentHint.notCentered),
+        onUsePhoto: (value) => outcome = value,
       ),
     );
 
@@ -231,6 +234,14 @@ void main() {
 
     expect(find.text('Revisión de la foto'), findsNothing);
     expect(camera.captureCount, 1);
+    expect(
+      outcome,
+      isA<ScreeningAbstention>().having(
+        (a) => a.reason,
+        'reason',
+        ScreeningAbstentionReason.alignmentFailed,
+      ),
+    );
     expect(tester.takeException(), isNull);
   });
 

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nutriscan/core/theme/app_theme.dart';
 import 'package:nutriscan/features/classify/domain/bmi_band.dart';
+import 'package:nutriscan/features/classify/domain/screening_outcome.dart';
 import 'package:nutriscan/features/classify/domain/screening_result.dart';
 import 'package:nutriscan/features/result/presentation/result_screen.dart';
 import 'package:nutriscan/i18n/strings.g.dart';
@@ -40,7 +41,7 @@ void main() {
             locale: locale.flutterLocale,
             supportedLocales: AppLocaleUtils.supportedLocales,
             localizationsDelegates: GlobalMaterialLocalizations.delegates,
-            home: const ResultScreen(result: result),
+            home: const ResultScreen(outcome: ScreeningPrediction(result)),
           ),
         ),
       ),

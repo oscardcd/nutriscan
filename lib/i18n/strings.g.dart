@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 241 (120 per locale)
+/// Strings: 255 (127 per locale)
 ///
-/// Built on 2026-11-08 at 16:21 UTC
+/// Built on 2026-11-08 at 19:32 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -354,6 +354,13 @@ class _StringsResultEs {
 	String get meaningTitle => '¿Qué significa este resultado?';
 	String get meaningBody => 'Tu silueta se sitúa en una banda de referencia. El IMC y las proyecciones visuales no distinguen masa muscular magra de tejido adiposo: es un punto de partida preventivo para tu seguimiento.';
 	String get cta => 'Volver a medir';
+	String get noEstimateLabel => 'Resultado experimental';
+	String get abstainPoseTitle => 'No se pudo medir la pose';
+	String get abstainPoseBody => 'La foto no permite medir el cuerpo completo. Repite la captura siguiendo la silueta.';
+	String get abstainAlignmentTitle => 'La foto no cumple la guía';
+	String get abstainAlignmentBody => 'La posición no coincide con la silueta de referencia. Repite la captura con el cuerpo completo, centrado y de frente.';
+	String get abstainNoModelTitle => 'Todavía no hay estimación';
+	String get abstainNoModelBody => 'El modelo de estimación no está integrado en esta versión. La captura quedó validada técnicamente, pero no se muestran cifras para no inventar un resultado.';
 }
 
 // Path: settings
@@ -602,6 +609,13 @@ class _StringsResultEn extends _StringsResultEs {
 	@override String get meaningTitle => 'What does this result mean?';
 	@override String get meaningBody => 'Your silhouette falls in a reference band. BMI and visual projections do not distinguish lean muscle from fat tissue: it is a preventive starting point for your tracking.';
 	@override String get cta => 'Measure again';
+	@override String get noEstimateLabel => 'Experimental result';
+	@override String get abstainPoseTitle => 'The pose could not be measured';
+	@override String get abstainPoseBody => 'This photo does not allow measuring the full body. Retake it following the silhouette.';
+	@override String get abstainAlignmentTitle => 'The photo does not follow the guide';
+	@override String get abstainAlignmentBody => 'Your position does not match the reference silhouette. Retake it with your full body, centered and facing the camera.';
+	@override String get abstainNoModelTitle => 'No estimate yet';
+	@override String get abstainNoModelBody => 'The estimation model is not integrated in this version. The capture passed the technical checks, but no figures are shown so we do not invent a result.';
 }
 
 // Path: settings
@@ -740,6 +754,13 @@ extension on Translations {
 			case 'result.meaningTitle': return '¿Qué significa este resultado?';
 			case 'result.meaningBody': return 'Tu silueta se sitúa en una banda de referencia. El IMC y las proyecciones visuales no distinguen masa muscular magra de tejido adiposo: es un punto de partida preventivo para tu seguimiento.';
 			case 'result.cta': return 'Volver a medir';
+			case 'result.noEstimateLabel': return 'Resultado experimental';
+			case 'result.abstainPoseTitle': return 'No se pudo medir la pose';
+			case 'result.abstainPoseBody': return 'La foto no permite medir el cuerpo completo. Repite la captura siguiendo la silueta.';
+			case 'result.abstainAlignmentTitle': return 'La foto no cumple la guía';
+			case 'result.abstainAlignmentBody': return 'La posición no coincide con la silueta de referencia. Repite la captura con el cuerpo completo, centrado y de frente.';
+			case 'result.abstainNoModelTitle': return 'Todavía no hay estimación';
+			case 'result.abstainNoModelBody': return 'El modelo de estimación no está integrado en esta versión. La captura quedó validada técnicamente, pero no se muestran cifras para no inventar un resultado.';
 			case 'settings.title': return 'Idioma y tema';
 			case 'settings.language': return 'IDIOMA';
 			case 'settings.theme': return 'TEMA';
@@ -868,6 +889,13 @@ extension on _StringsEn {
 			case 'result.meaningTitle': return 'What does this result mean?';
 			case 'result.meaningBody': return 'Your silhouette falls in a reference band. BMI and visual projections do not distinguish lean muscle from fat tissue: it is a preventive starting point for your tracking.';
 			case 'result.cta': return 'Measure again';
+			case 'result.noEstimateLabel': return 'Experimental result';
+			case 'result.abstainPoseTitle': return 'The pose could not be measured';
+			case 'result.abstainPoseBody': return 'This photo does not allow measuring the full body. Retake it following the silhouette.';
+			case 'result.abstainAlignmentTitle': return 'The photo does not follow the guide';
+			case 'result.abstainAlignmentBody': return 'Your position does not match the reference silhouette. Retake it with your full body, centered and facing the camera.';
+			case 'result.abstainNoModelTitle': return 'No estimate yet';
+			case 'result.abstainNoModelBody': return 'The estimation model is not integrated in this version. The capture passed the technical checks, but no figures are shown so we do not invent a result.';
 			case 'settings.title': return 'Language and theme';
 			case 'settings.language': return 'LANGUAGE';
 			case 'settings.theme': return 'THEME';

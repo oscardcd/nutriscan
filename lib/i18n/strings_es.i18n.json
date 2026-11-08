@@ -130,7 +130,14 @@
     "rfmNote": "Estimación basada en proporciones corporales",
     "meaningTitle": "¿Qué significa este resultado?",
     "meaningBody": "Tu silueta se sitúa en una banda de referencia. El IMC y las proyecciones visuales no distinguen masa muscular magra de tejido adiposo: es un punto de partida preventivo para tu seguimiento.",
-    "cta": "Volver a medir"
+    "cta": "Volver a medir",
+    "noEstimateLabel": "Resultado experimental",
+    "abstainPoseTitle": "No se pudo medir la pose",
+    "abstainPoseBody": "La foto no permite medir el cuerpo completo. Repite la captura siguiendo la silueta.",
+    "abstainAlignmentTitle": "La foto no cumple la guía",
+    "abstainAlignmentBody": "La posición no coincide con la silueta de referencia. Repite la captura con el cuerpo completo, centrado y de frente.",
+    "abstainNoModelTitle": "Todavía no hay estimación",
+    "abstainNoModelBody": "El modelo de estimación no está integrado en esta versión. La captura quedó validada técnicamente, pero no se muestran cifras para no inventar un resultado."
   },
   "settings": {
     "title": "Idioma y tema",

@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nutriscan/core/router/app_router.dart';
 import 'package:nutriscan/core/theme/app_theme.dart';
 import 'package:nutriscan/features/capture/presentation/capture_screen.dart';
+import 'package:nutriscan/features/classify/domain/screening_outcome.dart';
 import 'package:nutriscan/features/classify/domain/screening_result.dart';
 import 'package:nutriscan/features/consent/data/consent_gate.dart';
 import 'package:nutriscan/features/consent/data/consent_store.dart';
@@ -54,7 +55,7 @@ void main() {
   final screens = <String, Widget>{
     'consentimiento': const ConsentScreen(),
     'captura': const CaptureScreen(),
-    'resultado': const ResultScreen(result: result),
+    'resultado': const ResultScreen(outcome: ScreeningPrediction(result)),
   };
 
   Widget textX2(BuildContext context, Widget? child) => MediaQuery(

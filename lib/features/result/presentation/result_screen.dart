@@ -9,17 +9,23 @@ import '../../../core/theme/widgets/bmi_range_gauge.dart';
 import '../../../core/theme/widgets/medical_disclaimer.dart';
 import '../../../core/ui/ui.dart';
 import '../../classify/domain/bmi_band.dart';
+import '../../classify/domain/screening_outcome.dart';
 import '../../classify/domain/screening_result.dart';
 import '../../../i18n/strings.g.dart';
 
 /// Resultado de cribado. Nunca se presenta como diagnóstico.
 class ResultScreen extends StatelessWidget {
-  const ResultScreen({super.key, required this.result});
+  const ResultScreen({super.key, required this.outcome});
 
-  final ScreeningResult result;
+  final ScreeningOutcome outcome;
 
   @override
   Widget build(BuildContext context) {
+    // Sin estimación válida no se muestran cifras: solo el motivo y cómo repetir.
+    if (outcome case final ScreeningAbstention abstention) {
+      return _AbstentionScreen(abstention: abstention);
+    }
+    final result = (outcome as ScreeningPrediction).result;
     final theme = Theme.of(context);
     final t = Translations.of(context);
     // Separador decimal según idioma: "27,4" en es, "27.4" en en.
@@ -239,6 +245,101 @@ class _ScaleRow extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Estado sin estimación: explica el motivo y devuelve a la captura.
+class _AbstentionScreen extends StatelessWidget {
+  const _AbstentionScreen({required this.abstention});
+
+  final ScreeningAbstention abstention;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final t = Translations.of(context);
+    final (icon, title, body) = switch (abstention.reason) {
+      ScreeningAbstentionReason.poseNotUsable => (
+        Icons.person_search_outlined,
+        t.result.abstainPoseTitle,
+        t.result.abstainPoseBody,
+      ),
+      ScreeningAbstentionReason.alignmentFailed => (
+        Icons.crop_free,
+        t.result.abstainAlignmentTitle,
+        t.result.abstainAlignmentBody,
+      ),
+      ScreeningAbstentionReason.noModel => (
+        Icons.science_outlined,
+        t.result.abstainNoModelTitle,
+        t.result.abstainNoModelBody,
+      ),
+    };
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            AppHeader(
+              title: t.appTitle,
+              subtitle: t.result.subtitle,
+              pillText: t.onDevice.pill,
+              onProfileTap: () => context.go('/profile'),
+              profileTooltip: t.profile.title,
+              actions: const [SettingsMenu()],
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.marginMobile,
+                  AppSpacing.md,
+                  AppSpacing.marginMobile,
+                  AppSpacing.md,
+                ),
+                children: [
+                  SectionLabel(t.result.noEstimateLabel),
+                  const SizedBox(height: AppSpacing.sm),
+                  AppCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(icon, size: 32, color: theme.colorScheme.primary),
+                        const SizedBox(height: AppSpacing.sm),
+                        Text(title, style: theme.textTheme.headlineSmall),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          body,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  const MedicalDisclaimer(),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.marginMobile,
+                AppSpacing.sm,
+                AppSpacing.marginMobile,
+                AppSpacing.md,
+              ),
+              child: SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () => context.go('/capture'),
+                  child: Text(t.result.cta),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

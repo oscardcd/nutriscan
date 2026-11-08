@@ -129,7 +129,14 @@
     "rfmNote": "Estimate based on body proportions",
     "meaningTitle": "What does this result mean?",
     "meaningBody": "Your silhouette falls in a reference band. BMI and visual projections do not distinguish lean muscle from fat tissue: it is a preventive starting point for your tracking.",
-    "cta": "Measure again"
+    "cta": "Measure again",
+    "noEstimateLabel": "Experimental result",
+    "abstainPoseTitle": "The pose could not be measured",
+    "abstainPoseBody": "This photo does not allow measuring the full body. Retake it following the silhouette.",
+    "abstainAlignmentTitle": "The photo does not follow the guide",
+    "abstainAlignmentBody": "Your position does not match the reference silhouette. Retake it with your full body, centered and facing the camera.",
+    "abstainNoModelTitle": "No estimate yet",
+    "abstainNoModelBody": "The estimation model is not integrated in this version. The capture passed the technical checks, but no figures are shown so we do not invent a result."
   },
   "settings": {
     "title": "Language and theme",

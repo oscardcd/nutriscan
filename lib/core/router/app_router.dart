@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../dev/component_gallery_screen.dart';
 import '../../features/capture/presentation/capture_screen.dart';
-import '../../features/classify/domain/screening_result.dart';
+import '../../features/classify/domain/screening_outcome.dart';
 import '../../features/consent/data/consent_gate.dart';
 import '../../features/consent/presentation/consent_screen.dart';
 import '../../features/history/presentation/history_screen.dart';
@@ -30,14 +30,14 @@ GoRouter buildRouter(ConsentGate gate) => GoRouter(
         builder: (_, _) => const ComponentGalleryScreen(),
       ),
     GoRoute(path: '/welcome', builder: (_, _) => const ConsentScreen()),
-    // Solo se abre con un resultado real en `extra`: nunca se inventa una
-    // medición. Sin pipeline conectada, la ruta cae en /capture.
+    // Solo se abre con un desenlace real en `extra` (predicción o abstención):
+    // nunca se inventa una medición. Sin desenlace, la ruta cae en /capture.
     GoRoute(
       path: '/result',
       redirect: (_, state) =>
-          state.extra is ScreeningResult ? null : '/capture',
+          state.extra is ScreeningOutcome ? null : '/capture',
       builder: (_, state) =>
-          ResultScreen(result: state.extra! as ScreeningResult),
+          ResultScreen(outcome: state.extra! as ScreeningOutcome),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => _ShellScaffold(shell: shell),
