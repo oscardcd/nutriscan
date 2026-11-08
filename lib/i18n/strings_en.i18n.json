@@ -59,7 +59,13 @@
     "alignmentArms": "Keep your arms away from your torso",
     "alignmentPhotoWarning": "The photo is kept anyway; you can retake it if you want.",
     "photoResultTitle": "Photo check",
-    "photoResultKeep": "Use this photo"
+    "photoResultKeep": "Use this photo",
+    "bodyDataTitle": "Your data",
+    "bodyHeight": "Height (cm)",
+    "bodyWeight": "Weight (kg)",
+    "bodyHeightError": "Between 80 and 250 cm",
+    "bodyWeightError": "Between 20 and 400 kg",
+    "bodyContinue": "Calculate BMI"
   },
   "history": {
     "title": "Your progress",
@@ -136,7 +142,10 @@
     "abstainAlignmentTitle": "The photo does not follow the guide",
     "abstainAlignmentBody": "Your position does not match the reference silhouette. Retake it with your full body, centered and facing the camera.",
     "abstainNoModelTitle": "No estimate yet",
-    "abstainNoModelBody": "The estimation model is not integrated in this version. The capture passed the technical checks, but no figures are shown so we do not invent a result."
+    "abstainNoModelBody": "The estimation model is not integrated in this version. The capture passed the technical checks, but no figures are shown so we do not invent a result.",
+    "bmiComputedCaption": "Calculated from the weight and height you entered",
+    "abstainBodyTitle": "Your data is missing",
+    "abstainBodyBody": "We need your weight and height to calculate BMI. Retake the capture and enter them."
   },
   "settings": {
     "title": "Language and theme",

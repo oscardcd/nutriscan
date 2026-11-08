@@ -67,32 +67,31 @@ class ResultScreen extends StatelessWidget {
                           value: n(result.bmi),
                           unit: 'kg/m²',
                           trailing: BmiBandChip(band: result.band),
-                          caption: t.result.rangeCaption(
-                            margin: n(result.margin),
-                            min: n(result.bmiMin),
-                            max: n(result.bmiMax),
-                          ),
+                          caption: _bmiCaption(t, result),
                         ),
                         const SizedBox(height: AppSpacing.md),
                         BmiRangeGauge(
                           bmi: result.bmi,
                           label: t.result.scaleTitle,
                         ),
-                        const SizedBox(height: AppSpacing.md),
-                        ConfidenceMeter(
-                          level: switch (result.confidence) {
-                            ScreeningConfidence.low => ConfidenceLevel.low,
-                            ScreeningConfidence.medium =>
-                              ConfidenceLevel.medium,
-                            ScreeningConfidence.high => ConfidenceLevel.high,
-                          },
-                          label: switch (result.confidence) {
-                            ScreeningConfidence.low => t.result.confidenceLow,
-                            ScreeningConfidence.medium =>
-                              t.result.confidenceMedium,
-                            ScreeningConfidence.high => t.result.confidenceHigh,
-                          },
-                        ),
+                        if (result.confidence case final confidence?) ...[
+                          const SizedBox(height: AppSpacing.md),
+                          ConfidenceMeter(
+                            level: switch (confidence) {
+                              ScreeningConfidence.low => ConfidenceLevel.low,
+                              ScreeningConfidence.medium =>
+                                ConfidenceLevel.medium,
+                              ScreeningConfidence.high => ConfidenceLevel.high,
+                            },
+                            label: switch (confidence) {
+                              ScreeningConfidence.low => t.result.confidenceLow,
+                              ScreeningConfidence.medium =>
+                                t.result.confidenceMedium,
+                              ScreeningConfidence.high =>
+                                t.result.confidenceHigh,
+                            },
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -112,33 +111,38 @@ class ResultScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.md),
-                  AppCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SectionLabel(t.result.indicesTitle),
-                        IndexTile(
-                          icon: Icons.swap_vert_circle_outlined,
-                          label: t.result.whtr,
-                          value: n(result.waistToHeight, 2),
-                          description: t.result.whtrNote,
-                        ),
-                        IndexTile(
-                          icon: Icons.motion_photos_on_outlined,
-                          label: t.result.bri,
-                          value: n(result.bodyRoundness),
-                          description: t.result.briNote,
-                        ),
-                        IndexTile(
-                          icon: Icons.pie_chart_outline,
-                          label: t.result.rfm,
-                          value: '${n(result.relativeFatMass)}%',
-                          description: t.result.rfmNote,
-                        ),
-                      ],
+                  if (result.hasAnthropometrics) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    AppCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SectionLabel(t.result.indicesTitle),
+                          if (result.waistToHeight case final whtr?)
+                            IndexTile(
+                              icon: Icons.swap_vert_circle_outlined,
+                              label: t.result.whtr,
+                              value: n(whtr, 2),
+                              description: t.result.whtrNote,
+                            ),
+                          if (result.bodyRoundness case final bri?)
+                            IndexTile(
+                              icon: Icons.motion_photos_on_outlined,
+                              label: t.result.bri,
+                              value: n(bri),
+                              description: t.result.briNote,
+                            ),
+                          if (result.relativeFatMass case final rfm?)
+                            IndexTile(
+                              icon: Icons.pie_chart_outline,
+                              label: t.result.rfm,
+                              value: '${n(rfm)}%',
+                              description: t.result.rfmNote,
+                            ),
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                   const SizedBox(height: AppSpacing.md),
                   AppCard(
                     color: theme.colorScheme.surfaceContainerLow,
@@ -196,6 +200,24 @@ class ResultScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+/// IMC estimado por el modelo (con margen) o calculado con peso y estatura.
+String _bmiCaption(Translations t, ScreeningResult result) {
+  final margin = result.margin;
+  final min = result.bmiMin;
+  final max = result.bmiMax;
+  if (margin == null || min == null || max == null) {
+    return t.result.bmiComputedCaption;
+  }
+  final n = NumberFormat.decimalPattern(t.$meta.locale.languageCode)
+    ..minimumFractionDigits = 1
+    ..maximumFractionDigits = 1;
+  return t.result.rangeCaption(
+    margin: n.format(margin),
+    min: n.format(min),
+    max: n.format(max),
+  );
 }
 
 /// Cortes OMS para adultos. Los números no se traducen.
@@ -275,6 +297,11 @@ class _AbstentionScreen extends StatelessWidget {
         Icons.science_outlined,
         t.result.abstainNoModelTitle,
         t.result.abstainNoModelBody,
+      ),
+      ScreeningAbstentionReason.noBodyData => (
+        Icons.monitor_weight_outlined,
+        t.result.abstainBodyTitle,
+        t.result.abstainBodyBody,
       ),
     };
 

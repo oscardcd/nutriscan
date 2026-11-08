@@ -59,7 +59,13 @@
     "alignmentArms": "Separa los brazos del torso",
     "alignmentPhotoWarning": "La foto se guarda igual; puedes repetirla si quieres.",
     "photoResultTitle": "Revisión de la foto",
-    "photoResultKeep": "Usar esta foto"
+    "photoResultKeep": "Usar esta foto",
+    "bodyDataTitle": "Tus datos",
+    "bodyHeight": "Estatura (cm)",
+    "bodyWeight": "Peso (kg)",
+    "bodyHeightError": "Entre 80 y 250 cm",
+    "bodyWeightError": "Entre 20 y 400 kg",
+    "bodyContinue": "Calcular IMC"
   },
   "history": {
     "title": "Tu progreso",
@@ -137,7 +143,10 @@
     "abstainAlignmentTitle": "La foto no cumple la guía",
     "abstainAlignmentBody": "La posición no coincide con la silueta de referencia. Repite la captura con el cuerpo completo, centrado y de frente.",
     "abstainNoModelTitle": "Todavía no hay estimación",
-    "abstainNoModelBody": "El modelo de estimación no está integrado en esta versión. La captura quedó validada técnicamente, pero no se muestran cifras para no inventar un resultado."
+    "abstainNoModelBody": "El modelo de estimación no está integrado en esta versión. La captura quedó validada técnicamente, pero no se muestran cifras para no inventar un resultado.",
+    "bmiComputedCaption": "Calculado con el peso y la estatura que ingresaste",
+    "abstainBodyTitle": "Faltan tus datos",
+    "abstainBodyBody": "Necesitamos tu peso y estatura para calcular el IMC. Repite la captura e ingrésalos."
   },
   "settings": {
     "title": "Idioma y tema",

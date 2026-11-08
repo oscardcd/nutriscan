@@ -9,6 +9,8 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/ui/ui.dart';
 import '../../../i18n/strings.g.dart';
+import '../../../data/local/body_metrics.dart';
+import '../../../data/local/body_metrics_store.dart';
 import '../../classify/application/screening_service.dart';
 import '../../classify/domain/screening_outcome.dart';
 import '../../vision/data/pose_analysis_service.dart';
@@ -35,6 +37,7 @@ class CaptureScreen extends StatefulWidget {
     this.camera,
     this.analysisService,
     this.onUsePhoto,
+    this.bodyMetricsStore,
   });
 
   /// Cámara y modelos de visión (ML Kit, TFLite) solo existen en móvil.
@@ -47,6 +50,9 @@ class CaptureScreen extends StatefulWidget {
   /// Qué hacer con la foto aceptada. Por defecto abre `/result`; las pruebas
   /// lo usan para no depender del router.
   final void Function(ScreeningOutcome outcome)? onUsePhoto;
+
+  /// Peso y estatura: keychain en móvil, inyectable en pruebas.
+  final BodyMetricsStore? bodyMetricsStore;
 
   @override
   State<CaptureScreen> createState() => _CaptureScreenState();
@@ -90,6 +96,9 @@ class _CaptureScreenState extends State<CaptureScreen>
   PoseAnalysisService? _analysisService;
   PoseAnalysisService get _analysisServiceOrCreate =>
       _analysisService ??= widget.analysisService ?? PoseAnalysisService();
+  late final BodyMetricsStore _metricsStore =
+      widget.bodyMetricsStore ??
+      (kIsWeb ? MemoryBodyMetricsStore() : SecureBodyMetricsStore());
   Timer? _poseIdleTimer;
   bool _disposed = false;
 
@@ -670,13 +679,33 @@ class _CaptureScreenState extends State<CaptureScreen>
       return;
     }
     if (!mounted) return;
-    final outcome = const ScreeningService().evaluate(result);
+    final metrics = await _askBodyMetrics();
+    if (metrics == null || !mounted) return;
+    final outcome = const ScreeningService().evaluate(
+      result,
+      heightCm: metrics.heightCm,
+      weightKg: metrics.weightKg,
+    );
     final onUsePhoto = widget.onUsePhoto;
     if (onUsePhoto != null) {
       onUsePhoto(outcome);
       return;
     }
     context.push('/result', extra: outcome);
+  }
+
+  /// Peso y estatura sin los cuales no hay IMC posible. Se piden después de
+  /// aceptar la foto y se recuerdan en el dispositivo.
+  Future<BodyMetrics?> _askBodyMetrics() async {
+    final saved = await _metricsStore.read();
+    if (!mounted) return null;
+    final metrics = await showDialog<BodyMetrics>(
+      context: context,
+      builder: (context) =>
+          _BodyMetricsDialog(t: Translations.of(context), initial: saved),
+    );
+    if (metrics != null) await _metricsStore.write(metrics);
+    return metrics;
   }
 
   void _openInfoSheet() {
@@ -1017,6 +1046,102 @@ class _OverlayControls extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Diálogo con peso y estatura. Es un widget con estado para que los
+/// controladores vivan lo mismo que el diálogo y no se liberen mientras la
+/// ruta todavía se está animando.
+class _BodyMetricsDialog extends StatefulWidget {
+  const _BodyMetricsDialog({required this.t, this.initial});
+
+  final Translations t;
+  final BodyMetrics? initial;
+
+  @override
+  State<_BodyMetricsDialog> createState() => _BodyMetricsDialogState();
+}
+
+class _BodyMetricsDialogState extends State<_BodyMetricsDialog> {
+  final _formKey = GlobalKey<FormState>();
+  late final _height = TextEditingController(
+    text: widget.initial == null
+        ? ''
+        : widget.initial!.heightCm.toStringAsFixed(0),
+  );
+  late final _weight = TextEditingController(
+    text: widget.initial == null
+        ? ''
+        : widget.initial!.weightKg.toStringAsFixed(0),
+  );
+
+  @override
+  void dispose() {
+    _height.dispose();
+    _weight.dispose();
+    super.dispose();
+  }
+
+  String? _validate(String? raw, double min, double max, String message) {
+    final value = double.tryParse((raw ?? '').replaceAll(',', '.'));
+    if (value == null || value < min || value > max) return message;
+    return null;
+  }
+
+  void _submit() {
+    if (_formKey.currentState?.validate() != true) return;
+    Navigator.of(context).pop(
+      BodyMetrics(
+        heightCm: double.parse(_height.text.replaceAll(',', '.')),
+        weightKg: double.parse(_weight.text.replaceAll(',', '.')),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = widget.t;
+    return AlertDialog(
+      title: Text(t.capture.bodyDataTitle),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: _height,
+              autofocus: widget.initial == null,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              decoration: InputDecoration(labelText: t.capture.bodyHeight),
+              validator: (value) =>
+                  _validate(value, 80, 250, t.capture.bodyHeightError),
+            ),
+            TextFormField(
+              controller: _weight,
+              autofocus: widget.initial != null,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              decoration: InputDecoration(labelText: t.capture.bodyWeight),
+              validator: (value) =>
+                  _validate(value, 20, 400, t.capture.bodyWeightError),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(t.capture.cameraRetake),
+        ),
+        FilledButton(
+          onPressed: _submit,
+          child: Text(t.capture.bodyContinue),
+        ),
+      ],
     );
   }
 }

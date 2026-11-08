@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nutriscan/features/classify/application/screening_service.dart';
+import 'package:nutriscan/features/classify/domain/bmi_band.dart';
 import 'package:nutriscan/features/classify/domain/screening_outcome.dart';
 import 'package:nutriscan/features/vision/domain/pose_alignment.dart';
 import 'package:nutriscan/features/vision/domain/pose_analysis.dart';
@@ -31,7 +32,23 @@ void main() {
     expect(reasonOf(outcome), ScreeningAbstentionReason.alignmentFailed);
   });
 
-  test('pose válida y alineada se abstiene por falta de modelo', () {
-    expect(reasonOf(sut.evaluate(analysis())), ScreeningAbstentionReason.noModel);
+  test('pose válida sin peso ni estatura se abstiene por falta de datos', () {
+    expect(
+      reasonOf(sut.evaluate(analysis())),
+      ScreeningAbstentionReason.noBodyData,
+    );
+  });
+
+  test('con peso y estatura calcula el IMC y no inventa índices', () {
+    final outcome = sut.evaluate(
+      analysis(),
+      heightCm: 170,
+      weightKg: 70,
+    );
+    final result = (outcome as ScreeningPrediction).result;
+    expect(result.bmi, closeTo(24.22, 0.01));
+    expect(result.band, BmiBand.normal);
+    expect(result.margin, isNull);
+    expect(result.hasAnthropometrics, isFalse);
   });
 }

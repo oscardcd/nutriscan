@@ -29,4 +29,7 @@ enum ScreeningAbstentionReason {
 
   /// No hay modelo de estimación validado en esta versión (F3 pendiente).
   noModel,
+
+  /// Faltan peso y estatura: sin ellos no hay IMC que calcular.
+  noBodyData,
 }

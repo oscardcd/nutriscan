@@ -9,6 +9,7 @@ import 'package:nutriscan/core/theme/app_theme.dart';
 import 'package:nutriscan/features/capture/data/capture_camera.dart';
 import 'package:nutriscan/features/capture/presentation/capture_screen.dart';
 import 'package:nutriscan/features/classify/domain/screening_outcome.dart';
+import 'package:nutriscan/data/local/body_metrics_store.dart';
 import 'package:nutriscan/features/vision/data/pose_analysis_service.dart';
 import 'package:nutriscan/features/vision/domain/pose_alignment.dart';
 import 'package:nutriscan/features/vision/domain/pose_analysis.dart';
@@ -213,6 +214,7 @@ void main() {
         visionAvailable: true,
         camera: camera,
         analysisService: _FakeAnalysisService(AlignmentHint.notCentered),
+        bodyMetricsStore: MemoryBodyMetricsStore(),
         onUsePhoto: (value) => outcome = value,
       ),
     );
@@ -232,6 +234,14 @@ void main() {
     await tester.tap(find.text('Usar esta foto'));
     await tester.pumpAndSettle();
 
+    // Sin peso ni estatura no hay IMC: se piden antes de continuar.
+    expect(find.text('Tus datos'), findsOneWidget);
+    await tester.enterText(find.byType(TextFormField).at(0), '170');
+    await tester.enterText(find.byType(TextFormField).at(1), '70');
+    await tester.tap(find.text('Calcular IMC'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tus datos'), findsNothing);
     expect(find.text('Revisión de la foto'), findsNothing);
     expect(camera.captureCount, 1);
     expect(

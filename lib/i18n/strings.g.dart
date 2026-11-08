@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 255 (127 per locale)
+/// Strings: 273 (136 per locale)
 ///
-/// Built on 2026-11-08 at 19:32 UTC
+/// Built on 2026-11-08 at 19:39 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -234,6 +234,12 @@ class _StringsCaptureEs {
 	String get alignmentPhotoWarning => 'La foto se guarda igual; puedes repetirla si quieres.';
 	String get photoResultTitle => 'Revisión de la foto';
 	String get photoResultKeep => 'Usar esta foto';
+	String get bodyDataTitle => 'Tus datos';
+	String get bodyHeight => 'Estatura (cm)';
+	String get bodyWeight => 'Peso (kg)';
+	String get bodyHeightError => 'Entre 80 y 250 cm';
+	String get bodyWeightError => 'Entre 20 y 400 kg';
+	String get bodyContinue => 'Calcular IMC';
 }
 
 // Path: history
@@ -361,6 +367,9 @@ class _StringsResultEs {
 	String get abstainAlignmentBody => 'La posición no coincide con la silueta de referencia. Repite la captura con el cuerpo completo, centrado y de frente.';
 	String get abstainNoModelTitle => 'Todavía no hay estimación';
 	String get abstainNoModelBody => 'El modelo de estimación no está integrado en esta versión. La captura quedó validada técnicamente, pero no se muestran cifras para no inventar un resultado.';
+	String get bmiComputedCaption => 'Calculado con el peso y la estatura que ingresaste';
+	String get abstainBodyTitle => 'Faltan tus datos';
+	String get abstainBodyBody => 'Necesitamos tu peso y estatura para calcular el IMC. Repite la captura e ingrésalos.';
 }
 
 // Path: settings
@@ -490,6 +499,12 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	@override String get alignmentPhotoWarning => 'The photo is kept anyway; you can retake it if you want.';
 	@override String get photoResultTitle => 'Photo check';
 	@override String get photoResultKeep => 'Use this photo';
+	@override String get bodyDataTitle => 'Your data';
+	@override String get bodyHeight => 'Height (cm)';
+	@override String get bodyWeight => 'Weight (kg)';
+	@override String get bodyHeightError => 'Between 80 and 250 cm';
+	@override String get bodyWeightError => 'Between 20 and 400 kg';
+	@override String get bodyContinue => 'Calculate BMI';
 }
 
 // Path: history
@@ -616,6 +631,9 @@ class _StringsResultEn extends _StringsResultEs {
 	@override String get abstainAlignmentBody => 'Your position does not match the reference silhouette. Retake it with your full body, centered and facing the camera.';
 	@override String get abstainNoModelTitle => 'No estimate yet';
 	@override String get abstainNoModelBody => 'The estimation model is not integrated in this version. The capture passed the technical checks, but no figures are shown so we do not invent a result.';
+	@override String get bmiComputedCaption => 'Calculated from the weight and height you entered';
+	@override String get abstainBodyTitle => 'Your data is missing';
+	@override String get abstainBodyBody => 'We need your weight and height to calculate BMI. Retake the capture and enter them.';
 }
 
 // Path: settings
@@ -697,6 +715,12 @@ extension on Translations {
 			case 'capture.alignmentPhotoWarning': return 'La foto se guarda igual; puedes repetirla si quieres.';
 			case 'capture.photoResultTitle': return 'Revisión de la foto';
 			case 'capture.photoResultKeep': return 'Usar esta foto';
+			case 'capture.bodyDataTitle': return 'Tus datos';
+			case 'capture.bodyHeight': return 'Estatura (cm)';
+			case 'capture.bodyWeight': return 'Peso (kg)';
+			case 'capture.bodyHeightError': return 'Entre 80 y 250 cm';
+			case 'capture.bodyWeightError': return 'Entre 20 y 400 kg';
+			case 'capture.bodyContinue': return 'Calcular IMC';
 			case 'history.title': return 'Tu progreso';
 			case 'history.empty': return 'Aún no hay mediciones';
 			case 'profile.title': return 'Perfil';
@@ -761,6 +785,9 @@ extension on Translations {
 			case 'result.abstainAlignmentBody': return 'La posición no coincide con la silueta de referencia. Repite la captura con el cuerpo completo, centrado y de frente.';
 			case 'result.abstainNoModelTitle': return 'Todavía no hay estimación';
 			case 'result.abstainNoModelBody': return 'El modelo de estimación no está integrado en esta versión. La captura quedó validada técnicamente, pero no se muestran cifras para no inventar un resultado.';
+			case 'result.bmiComputedCaption': return 'Calculado con el peso y la estatura que ingresaste';
+			case 'result.abstainBodyTitle': return 'Faltan tus datos';
+			case 'result.abstainBodyBody': return 'Necesitamos tu peso y estatura para calcular el IMC. Repite la captura e ingrésalos.';
 			case 'settings.title': return 'Idioma y tema';
 			case 'settings.language': return 'IDIOMA';
 			case 'settings.theme': return 'TEMA';
@@ -833,6 +860,12 @@ extension on _StringsEn {
 			case 'capture.alignmentPhotoWarning': return 'The photo is kept anyway; you can retake it if you want.';
 			case 'capture.photoResultTitle': return 'Photo check';
 			case 'capture.photoResultKeep': return 'Use this photo';
+			case 'capture.bodyDataTitle': return 'Your data';
+			case 'capture.bodyHeight': return 'Height (cm)';
+			case 'capture.bodyWeight': return 'Weight (kg)';
+			case 'capture.bodyHeightError': return 'Between 80 and 250 cm';
+			case 'capture.bodyWeightError': return 'Between 20 and 400 kg';
+			case 'capture.bodyContinue': return 'Calculate BMI';
 			case 'history.title': return 'Your progress';
 			case 'history.empty': return 'No measurements yet';
 			case 'profile.title': return 'Profile';
@@ -896,6 +929,9 @@ extension on _StringsEn {
 			case 'result.abstainAlignmentBody': return 'Your position does not match the reference silhouette. Retake it with your full body, centered and facing the camera.';
 			case 'result.abstainNoModelTitle': return 'No estimate yet';
 			case 'result.abstainNoModelBody': return 'The estimation model is not integrated in this version. The capture passed the technical checks, but no figures are shown so we do not invent a result.';
+			case 'result.bmiComputedCaption': return 'Calculated from the weight and height you entered';
+			case 'result.abstainBodyTitle': return 'Your data is missing';
+			case 'result.abstainBodyBody': return 'We need your weight and height to calculate BMI. Retake the capture and enter them.';
 			case 'settings.title': return 'Language and theme';
 			case 'settings.language': return 'LANGUAGE';
 			case 'settings.theme': return 'THEME';
