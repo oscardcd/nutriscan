@@ -18,10 +18,8 @@ import '../../vision/data/pose_realtime_detector.dart';
 import '../../vision/domain/pose_alignment.dart';
 import '../../vision/domain/pose_analysis.dart';
 import '../../vision/presentation/alignment_text.dart';
-import '../../vision/presentation/photo_alignment_watcher_stub.dart'
-    if (dart.library.io) '../../vision/presentation/photo_alignment_watcher.dart';
-import '../../vision/presentation/pose_debug_panel_stub.dart'
-    if (dart.library.io) '../../vision/presentation/pose_debug_panel.dart';
+import '../../vision/presentation/photo_alignment_watcher.dart';
+import '../../vision/presentation/pose_debug_panel.dart';
 import '../../vision/presentation/pose_guide_painter.dart';
 import '../data/capture_camera.dart';
 import 'widgets/body_metrics_dialog.dart';

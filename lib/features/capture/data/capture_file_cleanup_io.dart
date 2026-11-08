@@ -1,3 +1,4 @@
+// Implementación con dart:io (móvil/desktop); en web entra el stub.
 import 'dart:io';
 import 'dart:typed_data';
 
