@@ -38,7 +38,16 @@
     "cameraRetake": "Tomar otra foto",
     "localNote": "Las fotos permanecen en este teléfono y no se envían a ningún servidor.",
     "webUnavailableTitle": "Captura no disponible en este navegador",
-    "webUnavailable": "El análisis de imagen aún no está disponible en este navegador. NutriScan es un prototipo educativo, no una herramienta médica."
+    "webUnavailable": "El análisis de imagen aún no está disponible en este navegador. NutriScan es un prototipo educativo, no una herramienta médica.",
+    "poseDebugTitle": "Diagnóstico de pose (experimental)",
+    "poseDebugHint": "Ejecuta el detector local sobre la foto capturada. Solo para pruebas en dispositivo.",
+    "poseDebugRun": "Analizar pose",
+    "poseDebugFailed": "Error de análisis",
+    "poseQualityUsable": "Pose utilizable para verificación técnica",
+    "poseQualityNoPerson": "No se detectó persona",
+    "poseQualityMultiple": "Varias personas en la foto",
+    "poseQualityLowConfidence": "Confianza baja de pose",
+    "poseQualityIncomplete": "Cuerpo incompleto en el encuadre"
   },
   "history": {
     "title": "Tu progreso",

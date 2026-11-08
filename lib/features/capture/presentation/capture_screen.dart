@@ -8,6 +8,8 @@ import 'package:flutter/services.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/ui/ui.dart';
 import '../../../i18n/strings.g.dart';
+import '../../vision/presentation/pose_debug_panel_stub.dart'
+    if (dart.library.io) '../../vision/presentation/pose_debug_panel.dart';
 import '../data/capture_camera.dart';
 
 const _captureTimeout = Duration(seconds: 30);
@@ -327,6 +329,10 @@ class _CaptureScreenState extends State<CaptureScreen>
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
                       ),
+                      if (widget.visionAvailable) ...[
+                        const SizedBox(height: AppSpacing.sm),
+                        PoseDebugPanel(image: _capturedImage!),
+                      ],
                     ],
                     const SizedBox(height: AppSpacing.md),
                     _AlignmentCard(t: t, theme: theme),

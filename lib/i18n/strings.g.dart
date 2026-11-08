@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 199 (99 per locale)
+/// Strings: 217 (108 per locale)
 ///
-/// Built on 2026-11-03 at 02:42 UTC
+/// Built on 2026-11-05 at 21:49 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -213,6 +213,15 @@ class _StringsCaptureEs {
 	String get localNote => 'Las fotos permanecen en este teléfono y no se envían a ningún servidor.';
 	String get webUnavailableTitle => 'Captura no disponible en este navegador';
 	String get webUnavailable => 'El análisis de imagen aún no está disponible en este navegador. NutriScan es un prototipo educativo, no una herramienta médica.';
+	String get poseDebugTitle => 'Diagnóstico de pose (experimental)';
+	String get poseDebugHint => 'Ejecuta el detector local sobre la foto capturada. Solo para pruebas en dispositivo.';
+	String get poseDebugRun => 'Analizar pose';
+	String get poseDebugFailed => 'Error de análisis';
+	String get poseQualityUsable => 'Pose utilizable para verificación técnica';
+	String get poseQualityNoPerson => 'No se detectó persona';
+	String get poseQualityMultiple => 'Varias personas en la foto';
+	String get poseQualityLowConfidence => 'Confianza baja de pose';
+	String get poseQualityIncomplete => 'Cuerpo incompleto en el encuadre';
 }
 
 // Path: history
@@ -441,6 +450,15 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	@override String get localNote => 'Photos stay on this phone and are not sent to any server.';
 	@override String get webUnavailableTitle => 'Capture not available in this browser';
 	@override String get webUnavailable => 'Image analysis is not available in this browser yet. NutriScan is an educational prototype, not a medical tool.';
+	@override String get poseDebugTitle => 'Pose diagnostics (experimental)';
+	@override String get poseDebugHint => 'Runs the on-device detector over the captured photo. Device testing only.';
+	@override String get poseDebugRun => 'Analyze pose';
+	@override String get poseDebugFailed => 'Analysis error';
+	@override String get poseQualityUsable => 'Pose usable for technical checks';
+	@override String get poseQualityNoPerson => 'No person detected';
+	@override String get poseQualityMultiple => 'Multiple people in the photo';
+	@override String get poseQualityLowConfidence => 'Low pose confidence';
+	@override String get poseQualityIncomplete => 'Body incomplete in frame';
 }
 
 // Path: history
@@ -620,6 +638,15 @@ extension on Translations {
 			case 'capture.localNote': return 'Las fotos permanecen en este teléfono y no se envían a ningún servidor.';
 			case 'capture.webUnavailableTitle': return 'Captura no disponible en este navegador';
 			case 'capture.webUnavailable': return 'El análisis de imagen aún no está disponible en este navegador. NutriScan es un prototipo educativo, no una herramienta médica.';
+			case 'capture.poseDebugTitle': return 'Diagnóstico de pose (experimental)';
+			case 'capture.poseDebugHint': return 'Ejecuta el detector local sobre la foto capturada. Solo para pruebas en dispositivo.';
+			case 'capture.poseDebugRun': return 'Analizar pose';
+			case 'capture.poseDebugFailed': return 'Error de análisis';
+			case 'capture.poseQualityUsable': return 'Pose utilizable para verificación técnica';
+			case 'capture.poseQualityNoPerson': return 'No se detectó persona';
+			case 'capture.poseQualityMultiple': return 'Varias personas en la foto';
+			case 'capture.poseQualityLowConfidence': return 'Confianza baja de pose';
+			case 'capture.poseQualityIncomplete': return 'Cuerpo incompleto en el encuadre';
 			case 'history.title': return 'Tu progreso';
 			case 'history.empty': return 'Aún no hay mediciones';
 			case 'profile.title': return 'Perfil';
@@ -728,6 +755,15 @@ extension on _StringsEn {
 			case 'capture.localNote': return 'Photos stay on this phone and are not sent to any server.';
 			case 'capture.webUnavailableTitle': return 'Capture not available in this browser';
 			case 'capture.webUnavailable': return 'Image analysis is not available in this browser yet. NutriScan is an educational prototype, not a medical tool.';
+			case 'capture.poseDebugTitle': return 'Pose diagnostics (experimental)';
+			case 'capture.poseDebugHint': return 'Runs the on-device detector over the captured photo. Device testing only.';
+			case 'capture.poseDebugRun': return 'Analyze pose';
+			case 'capture.poseDebugFailed': return 'Analysis error';
+			case 'capture.poseQualityUsable': return 'Pose usable for technical checks';
+			case 'capture.poseQualityNoPerson': return 'No person detected';
+			case 'capture.poseQualityMultiple': return 'Multiple people in the photo';
+			case 'capture.poseQualityLowConfidence': return 'Low pose confidence';
+			case 'capture.poseQualityIncomplete': return 'Body incomplete in frame';
 			case 'history.title': return 'Your progress';
 			case 'history.empty': return 'No measurements yet';
 			case 'profile.title': return 'Profile';
