@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nutriscan/core/router/app_router.dart';
 import 'package:nutriscan/core/theme/app_theme.dart';
+import 'package:nutriscan/features/classify/domain/screening_outcome.dart';
 import 'package:nutriscan/features/classify/domain/screening_result.dart';
 import 'package:nutriscan/features/consent/data/consent_gate.dart';
 import 'package:nutriscan/features/consent/data/consent_store.dart';
@@ -51,7 +52,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('/result sin resultado real redirige a captura', (tester) async {
+  testWidgets('/result sin desenlace redirige a captura', (tester) async {
     await pumpApp(tester);
 
     router!.go('/result');
@@ -66,13 +67,15 @@ void main() {
 
     router!.go(
       '/result',
-      extra: const ScreeningResult(
-        bmi: 27.4,
-        margin: 1.8,
-        confidence: ScreeningConfidence.high,
-        waistToHeight: 0.53,
-        bodyRoundness: 3.8,
-        relativeFatMass: 26.4,
+      extra: const ScreeningPrediction(
+        ScreeningResult(
+          bmi: 27.4,
+          margin: 1.8,
+          confidence: ScreeningConfidence.high,
+          waistToHeight: 0.53,
+          bodyRoundness: 3.8,
+          relativeFatMass: 26.4,
+        ),
       ),
     );
     await tester.pumpAndSettle();

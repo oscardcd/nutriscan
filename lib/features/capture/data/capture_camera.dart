@@ -62,6 +62,9 @@ abstract interface class CaptureCamera {
 
   Widget buildPreview();
 
+  /// Ancho/alto del preview tal como se ve en pantalla (vertical en iOS).
+  double get previewAspectRatio;
+
   /// Frames del image stream. Se detiene con [stopStream] o al capturar.
   Stream<CameraFrame> startStream();
 
@@ -167,12 +170,66 @@ class DeviceCaptureCamera implements CaptureCamera {
   }
 
   @override
+  double get previewAspectRatio {
+    final value = _controller?.value;
+    if (value == null || !value.isInitialized) return 3 / 4;
+    // En iOS el sensor reporta apaisado (16:9); en pantalla se ve vertical.
+    return value.aspectRatio > 1 ? 1 / value.aspectRatio : value.aspectRatio;
+  }
+
+  @override
   Widget buildPreview() {
     final controller = _controller;
     if (controller == null || !controller.value.isInitialized) {
       throw StateError('La cámara debe estar inicializada para mostrarla.');
     }
     return CameraPreview(controller);
+  }
+
+  /// El plugin de pose arma el NV21 con ancho*alto y asume filas sin padding.
+  /// Android entrega bytesPerRow > ancho (720 → 768), así que se recortan las
+  /// filas antes de enviarlas: sin esto la conversión nativa revienta.
+  List<CameraFramePlane> _planesFor(CameraImage image) {
+    if (image.format.group != ImageFormatGroup.yuv420) {
+      return [
+        for (final plane in image.planes)
+          CameraFramePlane(
+            bytes: plane.bytes,
+            bytesPerRow: plane.bytesPerRow,
+            bytesPerPixel: plane.bytesPerPixel ?? 1,
+          ),
+      ];
+    }
+    return [
+      for (var i = 0; i < image.planes.length; i++) _trimPlane(image, i),
+    ];
+  }
+
+  CameraFramePlane _trimPlane(CameraImage image, int index) {
+    final plane = image.planes[index];
+    final pixelBytes = plane.bytesPerPixel ?? 1;
+    final rowBytes = (index == 0 ? image.width : image.width ~/ 2) * pixelBytes;
+    final rows = index == 0 ? image.height : image.height ~/ 2;
+    if (plane.bytesPerRow == rowBytes) {
+      return CameraFramePlane(
+        bytes: plane.bytes,
+        bytesPerRow: plane.bytesPerRow,
+        bytesPerPixel: pixelBytes,
+      );
+    }
+    final trimmed = Uint8List(rowBytes * rows);
+    for (var row = 0; row < rows; row++) {
+      final start = row * plane.bytesPerRow;
+      final available = plane.bytes.length - start;
+      if (available <= 0) break;
+      final take = rowBytes < available ? rowBytes : available;
+      trimmed.setRange(row * rowBytes, row * rowBytes + take, plane.bytes, start);
+    }
+    return CameraFramePlane(
+      bytes: trimmed,
+      bytesPerRow: rowBytes,
+      bytesPerPixel: pixelBytes,
+    );
   }
 
   @override
@@ -193,14 +250,7 @@ class DeviceCaptureCamera implements CaptureCamera {
             if (frames.isClosed) return;
             frames.add(
               CameraFrame(
-                planes: [
-                  for (final plane in image.planes)
-                    CameraFramePlane(
-                      bytes: plane.bytes,
-                      bytesPerRow: plane.bytesPerRow,
-                      bytesPerPixel: plane.bytesPerPixel ?? 1,
-                    ),
-                ],
+                planes: _planesFor(image),
                 width: image.width,
                 height: image.height,
                 rotationDegrees: rotation,

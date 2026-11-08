@@ -3,26 +3,20 @@ import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 import 'status_pill.dart';
 
-/// Header de sección: marca, subtítulo de pantalla, pill on-device y avatar.
+/// Header de sección: marca, subtítulo de pantalla, pill on-device y acciones.
 class AppHeader extends StatelessWidget {
   const AppHeader({
     super.key,
     required this.title,
     required this.subtitle,
     this.pillText,
-    this.onProfileTap,
-    this.profileTooltip,
     this.actions = const [],
   });
 
   final String title;
   final String subtitle;
   final String? pillText;
-  final VoidCallback? onProfileTap;
   final List<Widget> actions;
-
-  /// Etiqueta del avatar. Obligatoria cuando [onProfileTap] existe.
-  final String? profileTooltip;
 
   @override
   Widget build(BuildContext context) {
@@ -75,21 +69,6 @@ class AppHeader extends StatelessWidget {
             const SizedBox(width: AppSpacing.sm),
           ],
           ...actions,
-          // Sin acción no se muestra: un avatar muerto es ruido y un target falso.
-          if (onProfileTap != null)
-            IconButton(
-              onPressed: onProfileTap,
-              tooltip: profileTooltip,
-              icon: CircleAvatar(
-                radius: 16,
-                backgroundColor: theme.colorScheme.surfaceContainerHigh,
-                child: Icon(
-                  Icons.person_outline,
-                  size: 18,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ),
         ],
       ),
     );

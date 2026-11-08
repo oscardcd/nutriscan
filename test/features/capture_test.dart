@@ -8,6 +8,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nutriscan/core/theme/app_theme.dart';
 import 'package:nutriscan/features/capture/data/capture_camera.dart';
 import 'package:nutriscan/features/capture/presentation/capture_screen.dart';
+import 'package:nutriscan/features/classify/domain/screening_outcome.dart';
+import 'package:nutriscan/data/local/body_metrics_store.dart';
+import 'package:nutriscan/features/vision/data/pose_analysis_service.dart';
+import 'package:nutriscan/features/vision/domain/pose_alignment.dart';
+import 'package:nutriscan/features/vision/domain/pose_analysis.dart';
 import 'package:nutriscan/i18n/strings.g.dart';
 
 class _FakeCaptureCamera implements CaptureCamera {
@@ -30,6 +35,9 @@ class _FakeCaptureCamera implements CaptureCamera {
       throw failure;
     }
   }
+
+  @override
+  double get previewAspectRatio => 3 / 4;
 
   @override
   Widget buildPreview() => _FakeCameraPreview(
@@ -67,6 +75,27 @@ class _FakeCaptureCamera implements CaptureCamera {
     if (previewIsMounted) disposedWhilePreviewMounted = true;
     disposeCount++;
   }
+}
+
+class _FakeAnalysisService extends PoseAnalysisService {
+  _FakeAnalysisService(this.hint);
+
+  final AlignmentHint hint;
+
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  Future<PoseAnalysis> analyze(Uint8List image) async => PoseAnalysis(
+    quality: PoseQuality.usableForTechnicalChecks,
+    imageWidth: 1,
+    imageHeight: 1,
+    processingTime: Duration.zero,
+    alignment: hint,
+  );
+
+  @override
+  Future<void> dispose() async {}
 }
 
 class _FakeCameraPreview extends StatefulWidget {
@@ -130,7 +159,9 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('captura muestra criterios y preview de cámara', (tester) async {
+  testWidgets('preview a pantalla completa y criterios en la hoja', (
+    tester,
+  ) async {
     final camera = _FakeCaptureCamera();
     await pumpCapture(
       tester,
@@ -138,12 +169,16 @@ void main() {
     );
 
     expect(find.text('Captura biométrica'), findsOneWidget);
-    expect(find.text('CRITERIOS DE ESCANEO'), findsOneWidget);
-    expect(find.text('Buscando tu cuerpo…'), findsOneWidget);
+    expect(find.byTooltip('Capturar'), findsOneWidget);
     expect(camera.initializeCount, 0);
     await startCamera(tester);
     expect(find.byKey(const ValueKey('camera-preview')), findsOneWidget);
     expect(camera.initializeCount, 1);
+
+    await tester.tap(find.byTooltip('Criterios de escaneo'));
+    await tester.pumpAndSettle();
+    expect(find.text('CRITERIOS DE ESCANEO'), findsOneWidget);
+    expect(find.text('Cuerpo completo'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 
@@ -156,18 +191,68 @@ void main() {
       CaptureScreen(visionAvailable: true, camera: camera),
     );
 
-    IconButton shutter() => tester.widget<IconButton>(
-      find.ancestor(
-        of: find.byTooltip('Capturar'),
-        matching: find.byType(IconButton),
+    await startCamera(tester);
+
+    // Sin pose válida el disparador está cerrado: tocar no captura nada.
+    await tester.tap(find.byTooltip('Capturar'));
+    await tester.pumpAndSettle();
+    expect(camera.captureCount, 0);
+
+    // A los 10 s se abre igual para no dejar a nadie atrapado.
+    await tester.pump(const Duration(seconds: 11));
+    await tester.tap(find.byTooltip('Capturar'));
+    await tester.pumpAndSettle();
+    expect(camera.captureCount, 1);
+  });
+
+  testWidgets('al capturar entrega el resultado en un modal', (tester) async {
+    final camera = _FakeCaptureCamera();
+    ScreeningOutcome? outcome;
+    await pumpCapture(
+      tester,
+      CaptureScreen(
+        visionAvailable: true,
+        camera: camera,
+        analysisService: _FakeAnalysisService(AlignmentHint.notCentered),
+        bodyMetricsStore: MemoryBodyMetricsStore(),
+        onUsePhoto: (value) => outcome = value,
       ),
     );
 
     await startCamera(tester);
-    expect(shutter().onPressed, isNull);
-
     await tester.pump(const Duration(seconds: 11));
-    expect(shutter().onPressed, isNotNull);
+    await tester.tap(find.byTooltip('Capturar'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Revisión de la foto'), findsOneWidget);
+    expect(find.text('Céntrate en el encuadre'), findsOneWidget);
+    expect(
+      find.text('La foto se guarda igual; puedes repetirla si quieres.'),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.text('Usar esta foto'));
+    await tester.pumpAndSettle();
+
+    // Sin peso ni estatura no hay IMC: se piden antes de continuar.
+    expect(find.text('Tus datos'), findsOneWidget);
+    await tester.enterText(find.byType(TextFormField).at(0), '170');
+    await tester.enterText(find.byType(TextFormField).at(1), '70');
+    await tester.tap(find.text('Calcular IMC'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tus datos'), findsNothing);
+    expect(find.text('Revisión de la foto'), findsNothing);
+    expect(camera.captureCount, 1);
+    expect(
+      outcome,
+      isA<ScreeningAbstention>().having(
+        (a) => a.reason,
+        'reason',
+        ScreeningAbstentionReason.alignmentFailed,
+      ),
+    );
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('captura una foto local y permite repetirla', (tester) async {

@@ -14,7 +14,7 @@ class MeasurementStore {
     return db.insert('measurements', {
       'bmi': result.bmi,
       'margin': result.margin,
-      'confidence': result.confidence.name,
+      'confidence': result.confidence!.name,
       'waist_to_height': result.waistToHeight,
       'body_roundness': result.bodyRoundness,
       'relative_fat_mass': result.relativeFatMass,
