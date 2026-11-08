@@ -139,7 +139,7 @@ void main() {
 
     expect(find.text('Captura biométrica'), findsOneWidget);
     expect(find.text('CRITERIOS DE ESCANEO'), findsOneWidget);
-    expect(find.text('Cuerpo completo, de frente'), findsOneWidget);
+    expect(find.text('Buscando tu cuerpo…'), findsOneWidget);
     expect(camera.initializeCount, 0);
     await startCamera(tester);
     expect(find.byKey(const ValueKey('camera-preview')), findsOneWidget);

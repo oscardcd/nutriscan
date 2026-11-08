@@ -47,7 +47,16 @@
     "poseQualityNoPerson": "No person detected",
     "poseQualityMultiple": "Multiple people in the photo",
     "poseQualityLowConfidence": "Low pose confidence",
-    "poseQualityIncomplete": "Body incomplete in frame"
+    "poseQualityIncomplete": "Body incomplete in frame",
+    "alignmentSearching": "Looking for your body…",
+    "alignmentOk": "Position looks good",
+    "alignmentIncomplete": "Full body: head to feet",
+    "alignmentTooFar": "Step closer: your body looks small",
+    "alignmentTooClose": "Step back: your body doesn't fit the frame",
+    "alignmentNotCentered": "Center yourself in the frame",
+    "alignmentTilted": "Stand straight, level shoulders and hips",
+    "alignmentNotFrontal": "Face the camera",
+    "alignmentArms": "Keep your arms away from your torso"
   },
   "history": {
     "title": "Your progress",

@@ -47,7 +47,16 @@
     "poseQualityNoPerson": "No se detectó persona",
     "poseQualityMultiple": "Varias personas en la foto",
     "poseQualityLowConfidence": "Confianza baja de pose",
-    "poseQualityIncomplete": "Cuerpo incompleto en el encuadre"
+    "poseQualityIncomplete": "Cuerpo incompleto en el encuadre",
+    "alignmentSearching": "Buscando tu cuerpo…",
+    "alignmentOk": "Posición correcta",
+    "alignmentIncomplete": "Cuerpo completo: de la cabeza a los pies",
+    "alignmentTooFar": "Acércate: el cuerpo se ve pequeño",
+    "alignmentTooClose": "Aléjate: el cuerpo no cabe en el encuadre",
+    "alignmentNotCentered": "Céntrate en el encuadre",
+    "alignmentTilted": "Ponte recto, hombros y caderas nivelados",
+    "alignmentNotFrontal": "Ponte de frente a la cámara",
+    "alignmentArms": "Separa los brazos del torso"
   },
   "history": {
     "title": "Tu progreso",

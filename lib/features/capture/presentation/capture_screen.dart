@@ -9,6 +9,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/ui/ui.dart';
 import '../../../i18n/strings.g.dart';
 import '../../vision/data/pose_realtime_detector.dart';
+import '../../vision/domain/pose_alignment.dart';
 import '../../vision/domain/pose_analysis.dart';
 import '../../vision/presentation/pose_debug_panel_stub.dart'
     if (dart.library.io) '../../vision/presentation/pose_debug_panel.dart';
@@ -43,7 +44,12 @@ class _CaptureScreenState extends State<CaptureScreen>
   CaptureCameraFailure? _failure;
   Uint8List? _capturedImage;
 
+  static const PoseAlignmentEvaluator _alignmentEvaluator =
+      PoseAlignmentEvaluator();
+
   final ValueNotifier<DetectedPose?> _livePose = ValueNotifier(null);
+  final ValueNotifier<AlignmentHint?> _liveHint = ValueNotifier(null);
+  final AlignmentStabilizer _alignmentStabilizer = AlignmentStabilizer();
   StreamSubscription<CameraFrame>? _poseFrames;
   PoseRealtimeDetector? _poseDetector;
   Timer? _poseIdleTimer;
@@ -255,7 +261,11 @@ class _CaptureScreenState extends State<CaptureScreen>
     final frames = _poseFrames;
     _poseFrames = null;
     await frames?.cancel();
-    if (!_disposed) _livePose.value = null;
+    if (!_disposed) {
+      _livePose.value = null;
+      _liveHint.value = null;
+    }
+    _alignmentStabilizer.reset();
     try {
       await _camera.stopStream();
     } on PlatformException catch (error, stackTrace) {
@@ -269,11 +279,23 @@ class _CaptureScreenState extends State<CaptureScreen>
     final detector = _poseDetector;
     if (detector == null) return;
     final pose = await detector.process(frame);
-    if (!mounted || _disposed || _poseFrames == null || pose == null) return;
+    if (!mounted || _disposed || _poseFrames == null) return;
+    if (pose == null) {
+      _livePose.value = null;
+      _liveHint.value = null;
+      _alignmentStabilizer.reset();
+      return;
+    }
     _livePose.value = pose;
+    _liveHint.value = _alignmentStabilizer.update(
+      _alignmentEvaluator.evaluate(pose),
+    );
     _poseIdleTimer?.cancel();
     _poseIdleTimer = Timer(const Duration(milliseconds: 800), () {
-      if (mounted && !_disposed) _livePose.value = null;
+      if (!mounted || _disposed) return;
+      _livePose.value = null;
+      _liveHint.value = null;
+      _alignmentStabilizer.reset();
     });
   }
 
@@ -310,6 +332,7 @@ class _CaptureScreenState extends State<CaptureScreen>
     _poseFrames = null;
     _poseDetector?.dispose();
     _livePose.dispose();
+    _liveHint.dispose();
     WidgetsBinding.instance.removeObserver(this);
     _capturedImage?.fillRange(0, _capturedImage!.length, 0);
     unawaited(_disposeCamera());
@@ -411,7 +434,11 @@ class _CaptureScreenState extends State<CaptureScreen>
                       ],
                     ],
                     const SizedBox(height: AppSpacing.md),
-                    _AlignmentCard(t: t, theme: theme),
+                    ValueListenableBuilder<AlignmentHint?>(
+                      valueListenable: _liveHint,
+                      builder: (context, hint, _) =>
+                          _AlignmentCard(t: t, theme: theme, hint: hint),
+                    ),
                     const SizedBox(height: AppSpacing.md),
                     _CriteriaCard(t: t),
                     const SizedBox(height: AppSpacing.xs),
@@ -659,35 +686,52 @@ class _CornersPainter extends CustomPainter {
 }
 
 class _AlignmentCard extends StatelessWidget {
-  const _AlignmentCard({required this.t, required this.theme});
+  const _AlignmentCard({required this.t, required this.theme, this.hint});
 
   final Translations t;
   final ThemeData theme;
 
+  /// `null` mientras no hay pose evaluada.
+  final AlignmentHint? hint;
+
   @override
   Widget build(BuildContext context) {
+    final (icon, text) = _readout(t);
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SectionLabel(t.capture.alignment),
           const SizedBox(height: AppSpacing.sm),
-          // Guía estática: hasta que exista la pipeline no se muestra ninguna
-          // lectura (ni ángulos ni distancias) que no se haya medido.
-          _AlignmentRow(icon: Icons.verified_outlined, text: t.capture.posture),
-          _AlignmentRow(
-            icon: Icons.screen_rotation_outlined,
-            text: t.capture.tilt,
-          ),
-          _AlignmentRow(
-            icon: Icons.filter_center_focus,
-            text: t.capture.sensor,
-          ),
-          _AlignmentRow(icon: Icons.straighten, text: t.capture.distance),
+          _AlignmentRow(icon: icon, text: text),
         ],
       ),
     );
   }
+
+  (IconData, String) _readout(Translations t) => switch (hint) {
+    null => (Icons.person_search_outlined, t.capture.alignmentSearching),
+    AlignmentHint.incompleteBody => (
+      Icons.accessibility_new,
+      t.capture.alignmentIncomplete,
+    ),
+    AlignmentHint.tooFar => (Icons.zoom_in, t.capture.alignmentTooFar),
+    AlignmentHint.tooClose => (Icons.zoom_out, t.capture.alignmentTooClose),
+    AlignmentHint.notCentered => (
+      Icons.filter_center_focus,
+      t.capture.alignmentNotCentered,
+    ),
+    AlignmentHint.tilted => (Icons.straighten, t.capture.alignmentTilted),
+    AlignmentHint.notFrontal => (
+      Icons.screen_rotation_outlined,
+      t.capture.alignmentNotFrontal,
+    ),
+    AlignmentHint.armsCoveringTorso => (
+      Icons.accessibility,
+      t.capture.alignmentArms,
+    ),
+    AlignmentHint.ok => (Icons.verified_outlined, t.capture.alignmentOk),
+  };
 }
 
 class _AlignmentRow extends StatelessWidget {
