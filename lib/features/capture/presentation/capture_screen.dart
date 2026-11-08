@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/settings/settings_menu.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/ui/ui.dart';
 import '../../../data/local/body_metrics.dart';
@@ -958,6 +959,7 @@ class _OverlayHeader extends StatelessWidget {
               ],
             ),
           ),
+          const SettingsMenu(),
           if (onInfo != null)
             IconButton(
               onPressed: onInfo,

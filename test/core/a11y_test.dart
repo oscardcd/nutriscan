@@ -82,13 +82,13 @@ void main() {
     expect(find.byIcon(Icons.person_outline), findsNothing);
   });
 
-  testWidgets('el resultado muestra avatar con etiqueta y gauge accesible', (
+  testWidgets('el resultado no ofrece perfil y sí un gauge accesible', (
     tester,
   ) async {
     final semantics = tester.ensureSemantics();
     await pump(tester, const ResultScreen(outcome: ScreeningPrediction(result)));
 
-    expect(find.byTooltip('Perfil'), findsOneWidget);
+    expect(find.byTooltip('Perfil'), findsNothing);
     expect(find.bySemanticsLabel('Escala OMS'), findsOneWidget);
     semantics.dispose();
   });

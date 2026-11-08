@@ -43,8 +43,6 @@ class ResultScreen extends StatelessWidget {
               title: t.appTitle,
               subtitle: t.result.subtitle,
               pillText: t.onDevice.pill,
-              onProfileTap: () => context.go('/profile'),
-              profileTooltip: t.profile.title,
               actions: const [SettingsMenu()],
             ),
             Expanded(
@@ -314,8 +312,6 @@ class _AbstentionScreen extends StatelessWidget {
               title: t.appTitle,
               subtitle: t.result.subtitle,
               pillText: t.onDevice.pill,
-              onProfileTap: () => context.go('/profile'),
-              profileTooltip: t.profile.title,
               actions: const [SettingsMenu()],
             ),
             Expanded(
