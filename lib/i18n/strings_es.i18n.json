@@ -56,7 +56,8 @@
     "alignmentNotCentered": "Céntrate en el encuadre",
     "alignmentTilted": "Ponte recto, hombros y caderas nivelados",
     "alignmentNotFrontal": "Ponte de frente a la cámara",
-    "alignmentArms": "Separa los brazos del torso"
+    "alignmentArms": "Separa los brazos del torso",
+    "alignmentPhotoWarning": "La foto se guarda igual; puedes repetirla si quieres."
   },
   "history": {
     "title": "Tu progreso",

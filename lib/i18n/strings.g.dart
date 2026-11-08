@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 235 (117 per locale)
+/// Strings: 237 (118 per locale)
 ///
-/// Built on 2026-11-08 at 14:53 UTC
+/// Built on 2026-11-08 at 15:15 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -231,6 +231,7 @@ class _StringsCaptureEs {
 	String get alignmentTilted => 'Ponte recto, hombros y caderas nivelados';
 	String get alignmentNotFrontal => 'Ponte de frente a la cámara';
 	String get alignmentArms => 'Separa los brazos del torso';
+	String get alignmentPhotoWarning => 'La foto se guarda igual; puedes repetirla si quieres.';
 }
 
 // Path: history
@@ -477,6 +478,7 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	@override String get alignmentTilted => 'Stand straight, level shoulders and hips';
 	@override String get alignmentNotFrontal => 'Face the camera';
 	@override String get alignmentArms => 'Keep your arms away from your torso';
+	@override String get alignmentPhotoWarning => 'The photo is kept anyway; you can retake it if you want.';
 }
 
 // Path: history
@@ -674,6 +676,7 @@ extension on Translations {
 			case 'capture.alignmentTilted': return 'Ponte recto, hombros y caderas nivelados';
 			case 'capture.alignmentNotFrontal': return 'Ponte de frente a la cámara';
 			case 'capture.alignmentArms': return 'Separa los brazos del torso';
+			case 'capture.alignmentPhotoWarning': return 'La foto se guarda igual; puedes repetirla si quieres.';
 			case 'history.title': return 'Tu progreso';
 			case 'history.empty': return 'Aún no hay mediciones';
 			case 'profile.title': return 'Perfil';
@@ -800,6 +803,7 @@ extension on _StringsEn {
 			case 'capture.alignmentTilted': return 'Stand straight, level shoulders and hips';
 			case 'capture.alignmentNotFrontal': return 'Face the camera';
 			case 'capture.alignmentArms': return 'Keep your arms away from your torso';
+			case 'capture.alignmentPhotoWarning': return 'The photo is kept anyway; you can retake it if you want.';
 			case 'history.title': return 'Your progress';
 			case 'history.empty': return 'No measurements yet';
 			case 'profile.title': return 'Profile';

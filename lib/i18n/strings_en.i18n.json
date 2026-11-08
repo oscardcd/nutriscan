@@ -56,7 +56,8 @@
     "alignmentNotCentered": "Center yourself in the frame",
     "alignmentTilted": "Stand straight, level shoulders and hips",
     "alignmentNotFrontal": "Face the camera",
-    "alignmentArms": "Keep your arms away from your torso"
+    "alignmentArms": "Keep your arms away from your torso",
+    "alignmentPhotoWarning": "The photo is kept anyway; you can retake it if you want."
   },
   "history": {
     "title": "Your progress",

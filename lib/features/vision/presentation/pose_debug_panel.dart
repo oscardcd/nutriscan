@@ -29,6 +29,19 @@ class _PoseDebugPanelState extends State<PoseDebugPanel> {
   VisionFailure? _failure;
   bool _running = false;
 
+  @override
+  void initState() {
+    super.initState();
+    // Avisar sin bloquear: la foto ya está tomada, así que se analiza sola.
+    unawaited(_run());
+  }
+
+  @override
+  void didUpdateWidget(PoseDebugPanel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!identical(oldWidget.image, widget.image)) unawaited(_run());
+  }
+
   Future<void> _run() async {
     if (_running) return;
     setState(() {
@@ -97,7 +110,7 @@ class _PoseDebugPanelState extends State<PoseDebugPanel> {
               _qualityLabel(t, result.quality),
               style: theme.textTheme.bodyMedium,
             ),
-            if (result.alignment case final alignment?)
+            if (result.alignment case final alignment?) ...[
               Text(
                 alignmentReadout(t, alignment).$1,
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -106,6 +119,14 @@ class _PoseDebugPanelState extends State<PoseDebugPanel> {
                       : theme.colorScheme.error,
                 ),
               ),
+              if (alignment != AlignmentHint.ok)
+                Text(
+                  t.capture.alignmentPhotoWarning,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+            ],
             Text(
               '${result.processingTime.inMilliseconds} ms · '
               '${result.imageWidth}×${result.imageHeight} · '
