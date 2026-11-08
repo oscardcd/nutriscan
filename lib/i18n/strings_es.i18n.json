@@ -1,19 +1,14 @@
 {
   "appTitle": "NutriScan",
   "nav": {
-    "measure": "Medir",
-    "history": "Historial",
-    "profile": "Perfil"
+    "measure": "Medir"
   },
   "capture": {
     "title": "Captura biométrica",
     "onDevice": "En el dispositivo",
-    "localBadge": "Cómputo local",
     "alignment": "Alineación corporal",
-    "posture": "Cuerpo completo, de frente",
     "tilt": "Teléfono recto y nivelado",
     "sensor": "Enciende la cámara antes de tomar la foto",
-    "distance": "A 2 metros del teléfono",
     "criteria": "Criterios de escaneo",
     "fullBody": "Cuerpo completo",
     "twoMeters": "A 2 metros",
@@ -75,14 +70,9 @@
   "profile": {
     "title": "Perfil",
     "height": "Estatura",
-    "sex": "Sexo",
     "age": "Edad",
     "onDevice": "Procesamiento on-device",
-    "onDeviceLocked": "Activado y bloqueado",
     "deleteAll": "Borrar todos los datos",
-    "comingSoon": "Próximamente",
-    "deleteConfirmTitle": "¿Borrar todos los datos?",
-    "deleteConfirmBody": "Se eliminarán las mediciones guardadas y tu consentimiento de este dispositivo. No se puede deshacer.",
     "cancel": "Cancelar",
     "delete": "Borrar todo"
   },
@@ -128,15 +118,10 @@
     "confidenceMedium": "Confianza media",
     "confidenceHigh": "Confianza alta",
     "scaleTitle": "Escala OMS",
-    "indicesTitle": "Índices antropométricos",
     "whtr": "Cintura-altura (WHtR)",
-    "whtrNote": "Proporción entre cintura y estatura",
     "whtrExperimental": "Estimado a partir de las proporciones de tu foto",
     "whtrWarning": "Aproximado (±10 %): se calcula con puntos de la pose, no es una medición clínica.",
     "bri": "Redondez corporal (BRI)",
-    "briNote": "Forma del cuerpo derivada de perímetros",
-    "rfm": "Masa grasa relativa (RFM)",
-    "rfmNote": "Estimación basada en proporciones corporales",
     "meaningTitle": "¿Qué significa este resultado?",
     "meaningBody": "Tu silueta se sitúa en una banda de referencia. El IMC y las proyecciones visuales no distinguen masa muscular magra de tejido adiposo: es un punto de partida preventivo para tu seguimiento.",
     "cta": "Volver a medir",
@@ -147,9 +132,7 @@
     "abstainAlignmentBody": "La posición no coincide con la silueta de referencia. Repite la captura con el cuerpo completo, centrado y de frente.",
     "abstainNoModelTitle": "Todavía no hay estimación",
     "abstainNoModelBody": "El modelo de estimación no está integrado en esta versión. La captura quedó validada técnicamente, pero no se muestran cifras para no inventar un resultado.",
-    "bmiComputedCaption": "Calculado con el peso y la estatura que ingresaste",
-    "abstainBodyTitle": "Faltan tus datos",
-    "abstainBodyBody": "Necesitamos tu peso y estatura para calcular el IMC. Repite la captura e ingrésalos."
+    "bmiComputedCaption": "Calculado con el peso y la estatura que ingresaste"
   },
   "settings": {
     "title": "Idioma y tema",

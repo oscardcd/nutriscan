@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../dev/component_gallery_screen.dart';
 import '../../features/capture/presentation/capture_screen.dart';
 import '../../features/classify/domain/screening_outcome.dart';
 import '../../features/consent/data/consent_gate.dart';
@@ -14,17 +12,10 @@ GoRouter buildRouter(ConsentGate gate) => GoRouter(
   refreshListenable: gate,
   redirect: (context, state) {
     final path = state.matchedLocation;
-    if (kDebugMode && path == '/gallery') return null;
     if (!gate.granted) return path == '/welcome' ? null : '/welcome';
     return path == '/welcome' ? '/capture' : null;
   },
   routes: [
-    // Solo desarrollo: galería del design system.
-    if (kDebugMode)
-      GoRoute(
-        path: '/gallery',
-        builder: (_, _) => const ComponentGalleryScreen(),
-      ),
     GoRoute(path: '/welcome', builder: (_, _) => const ConsentScreen()),
     // Solo se abre con un desenlace real en `extra` (predicción o abstención):
     // nunca se inventa una medición. Sin desenlace, la ruta cae en /capture.
