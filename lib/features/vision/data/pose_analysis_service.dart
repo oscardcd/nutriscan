@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pose_detection/flutter_pose_detection.dart' as pose;
 
+import '../domain/pose_alignment.dart';
 import '../domain/pose_analysis.dart';
 import '../domain/pose_detection_engine.dart';
 import 'flutter_pose_detection_engine.dart';
@@ -12,6 +13,7 @@ import 'pose_image_preprocessor.dart';
 class PoseAnalysisService {
   PoseAnalysisService({
     PoseDetectionEngine? engine,
+    this.evaluator = const PoseAlignmentEvaluator(),
     this.timeout = const Duration(seconds: 20),
   }) : _engine = engine ?? FlutterPoseDetectionEngine();
 
@@ -28,6 +30,7 @@ class PoseAnalysisService {
   };
 
   final PoseDetectionEngine _engine;
+  final PoseAlignmentEvaluator evaluator;
   final Duration timeout;
   // shortcut: el plugin no cancela inferencias; tras un timeout el servicio
   // sigue ocupado hasta que el futuro nativo complete.
@@ -123,6 +126,9 @@ class PoseAnalysisService {
         imageHeight: prepared.height,
         processingTime: elapsed,
         pose: detectedPose,
+        alignment: detectedPose == null
+            ? null
+            : evaluator.evaluate(detectedPose),
       );
     } on VisionException {
       rethrow;

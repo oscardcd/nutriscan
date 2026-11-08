@@ -7,6 +7,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/ui/ui.dart';
 import '../../../i18n/strings.g.dart';
 import '../data/pose_analysis_service.dart';
+import 'alignment_text.dart';
+import '../domain/pose_alignment.dart';
 import '../domain/pose_analysis.dart';
 
 /// Diagnóstico temporal para probar el detector de pose en dispositivo real.
@@ -95,6 +97,15 @@ class _PoseDebugPanelState extends State<PoseDebugPanel> {
               _qualityLabel(t, result.quality),
               style: theme.textTheme.bodyMedium,
             ),
+            if (result.alignment case final alignment?)
+              Text(
+                alignmentReadout(t, alignment).$1,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: alignment == AlignmentHint.ok
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.error,
+                ),
+              ),
             Text(
               '${result.processingTime.inMilliseconds} ms · '
               '${result.imageWidth}×${result.imageHeight} · '

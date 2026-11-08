@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as img;
 import 'package:nutriscan/features/vision/data/pose_image_preprocessor.dart';
 import 'package:nutriscan/features/vision/data/pose_analysis_service.dart';
+import 'package:nutriscan/features/vision/domain/pose_alignment.dart';
 import 'package:nutriscan/features/vision/domain/pose_analysis.dart';
 import 'package:nutriscan/features/vision/domain/pose_detection_engine.dart';
 
@@ -42,6 +43,7 @@ DetectedPerson _person({
   double score = 0.9,
   double ankleVisibility = 0.9,
   double shoulderX = 0.35,
+  double hipShift = 0,
 }) => DetectedPerson(
   score: score,
   landmarks: [
@@ -63,15 +65,15 @@ DetectedPerson _person({
       y: 0.25,
       visibility: 0.9,
     ),
-    const NormalizedLandmark(
+    NormalizedLandmark(
       type: BodyLandmarkType.leftHip,
-      x: 0.4,
+      x: 0.4 + hipShift,
       y: 0.5,
       visibility: 0.9,
     ),
-    const NormalizedLandmark(
+    NormalizedLandmark(
       type: BodyLandmarkType.rightHip,
-      x: 0.6,
+      x: 0.6 + hipShift,
       y: 0.5,
       visibility: 0.9,
     ),
@@ -96,6 +98,26 @@ final _imageBytes = Uint8List.fromList(
 
 void main() {
   group('PoseAnalysisService', () {
+    test('evalúa la foto con los mismos checks que la guía en vivo', () async {
+      final engine = _FakePoseDetectionEngine();
+      final service = PoseAnalysisService(engine: engine);
+      await service.initialize();
+
+      expect((await service.analyze(_imageBytes)).alignment, AlignmentHint.ok);
+
+      engine.people = [_person(hipShift: 0.2)];
+      final offCenter = await service.analyze(_imageBytes);
+      expect(offCenter.quality, PoseQuality.usableForTechnicalChecks);
+      expect(offCenter.alignment, AlignmentHint.notCentered);
+
+      engine.people = [];
+      final empty = await service.analyze(_imageBytes);
+      expect(empty.quality, PoseQuality.noPersonDetected);
+      expect(empty.alignment, isNull);
+
+      await service.dispose();
+    });
+
     test('normaliza PNG a JPEG fuera del hilo UI y devuelve pose', () async {
       final engine = _FakePoseDetectionEngine();
       final service = PoseAnalysisService(engine: engine);

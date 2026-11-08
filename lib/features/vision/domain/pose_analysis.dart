@@ -1,3 +1,5 @@
+import 'pose_alignment.dart';
+
 enum PoseQuality {
   usableForTechnicalChecks,
   noPersonDetected,
@@ -54,6 +56,7 @@ class PoseAnalysis {
     required this.imageHeight,
     required this.processingTime,
     this.pose,
+    this.alignment,
   });
 
   final PoseQuality quality;
@@ -61,6 +64,10 @@ class PoseAnalysis {
   final int imageHeight;
   final Duration processingTime;
   final DetectedPose? pose;
+
+  /// Los mismos checks de la guía en vivo, aplicados a la foto ya tomada.
+  /// `null` cuando no hay pose que evaluar.
+  final AlignmentHint? alignment;
 }
 
 enum VisionFailure {

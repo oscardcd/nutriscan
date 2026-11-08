@@ -13,6 +13,7 @@ import '../../vision/domain/pose_alignment.dart';
 import '../../vision/domain/pose_analysis.dart';
 import '../../vision/presentation/pose_debug_panel_stub.dart'
     if (dart.library.io) '../../vision/presentation/pose_debug_panel.dart';
+import '../../vision/presentation/alignment_text.dart';
 import '../../vision/presentation/pose_guide_painter.dart';
 import '../data/capture_camera.dart';
 
@@ -736,7 +737,8 @@ class _AlignmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (icon, text) = _readout(t);
+    final text = _message(t);
+    final icon = _icon(t);
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -749,29 +751,9 @@ class _AlignmentCard extends StatelessWidget {
     );
   }
 
-  (IconData, String) _readout(Translations t) => switch (hint) {
-    null => (Icons.person_search_outlined, t.capture.alignmentSearching),
-    AlignmentHint.incompleteBody => (
-      Icons.accessibility_new,
-      t.capture.alignmentIncomplete,
-    ),
-    AlignmentHint.tooFar => (Icons.zoom_in, t.capture.alignmentTooFar),
-    AlignmentHint.tooClose => (Icons.zoom_out, t.capture.alignmentTooClose),
-    AlignmentHint.notCentered => (
-      Icons.filter_center_focus,
-      t.capture.alignmentNotCentered,
-    ),
-    AlignmentHint.tilted => (Icons.straighten, t.capture.alignmentTilted),
-    AlignmentHint.notFrontal => (
-      Icons.screen_rotation_outlined,
-      t.capture.alignmentNotFrontal,
-    ),
-    AlignmentHint.armsCoveringTorso => (
-      Icons.accessibility,
-      t.capture.alignmentArms,
-    ),
-    AlignmentHint.ok => (Icons.verified_outlined, t.capture.alignmentOk),
-  };
+  String _message(Translations t) => alignmentReadout(t, hint).$1;
+
+  IconData _icon(Translations t) => alignmentReadout(t, hint).$2;
 }
 
 class _AlignmentRow extends StatelessWidget {
