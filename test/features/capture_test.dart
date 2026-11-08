@@ -147,6 +147,29 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('el disparador espera a la pose y se abre tras 10 s', (
+    tester,
+  ) async {
+    final camera = _FakeCaptureCamera();
+    await pumpCapture(
+      tester,
+      CaptureScreen(visionAvailable: true, camera: camera),
+    );
+
+    IconButton shutter() => tester.widget<IconButton>(
+      find.ancestor(
+        of: find.byTooltip('Capturar'),
+        matching: find.byType(IconButton),
+      ),
+    );
+
+    await startCamera(tester);
+    expect(shutter().onPressed, isNull);
+
+    await tester.pump(const Duration(seconds: 11));
+    expect(shutter().onPressed, isNotNull);
+  });
+
   testWidgets('captura una foto local y permite repetirla', (tester) async {
     final camera = _FakeCaptureCamera();
     await pumpCapture(
@@ -155,6 +178,8 @@ void main() {
     );
 
     await startCamera(tester);
+    // Sin pose válida el disparador espera el escape de 10 s.
+    await tester.pump(const Duration(seconds: 11));
     await tester.tap(find.byTooltip('Capturar'));
     await tester.pumpAndSettle();
 
@@ -190,6 +215,7 @@ void main() {
     );
 
     await startCamera(tester);
+    await tester.pump(const Duration(seconds: 11));
     await tester.tap(find.byTooltip('Capturar'));
     await tester.pumpAndSettle();
 

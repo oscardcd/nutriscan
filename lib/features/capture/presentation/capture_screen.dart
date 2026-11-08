@@ -47,9 +47,19 @@ class _CaptureScreenState extends State<CaptureScreen>
   static const PoseAlignmentEvaluator _alignmentEvaluator =
       PoseAlignmentEvaluator();
 
+  /// Frames alineados seguidos antes de habilitar el disparador.
+  static const int _gateFrames = 3;
+
+  /// Tras este tiempo el disparador se abre aunque la pose no valide.
+  static const Duration _captureGateTimeout = Duration(seconds: 10);
+
   final ValueNotifier<DetectedPose?> _livePose = ValueNotifier(null);
   final ValueNotifier<AlignmentHint?> _liveHint = ValueNotifier(null);
   final AlignmentStabilizer _alignmentStabilizer = AlignmentStabilizer();
+  int _alignedFrames = 0;
+  bool _gateOpen = false;
+  bool _escapeReady = false;
+  Timer? _escapeTimer;
   StreamSubscription<CameraFrame>? _poseFrames;
   PoseRealtimeDetector? _poseDetector;
   Timer? _poseIdleTimer;
@@ -107,6 +117,7 @@ class _CaptureScreenState extends State<CaptureScreen>
         return;
       }
       setState(() => _isCameraReady = true);
+      _startEscapeTimer();
       // No se espera: el modelo puede tardar y el preview ya es usable.
       unawaited(_startPoseStream());
     } on CaptureCameraException catch (error) {
@@ -256,6 +267,21 @@ class _CaptureScreenState extends State<CaptureScreen>
     }
   }
 
+  /// Sin esto, una pose que nunca se valida deja el disparador bloqueado.
+  void _startEscapeTimer() {
+    _escapeTimer?.cancel();
+    _escapeReady = false;
+    _escapeTimer = Timer(_captureGateTimeout, () {
+      if (!mounted || _disposed) return;
+      setState(() => _escapeReady = true);
+    });
+  }
+
+  bool get _canCapture =>
+      _isCameraReady &&
+      !_isCapturing &&
+      (_gateOpen || _escapeReady || !widget.visionAvailable);
+
   Future<void> _stopPoseStream() async {
     _poseIdleTimer?.cancel();
     final frames = _poseFrames;
@@ -266,6 +292,7 @@ class _CaptureScreenState extends State<CaptureScreen>
       _liveHint.value = null;
     }
     _alignmentStabilizer.reset();
+    _resetGate();
     try {
       await _camera.stopStream();
     } on PlatformException catch (error, stackTrace) {
@@ -287,16 +314,28 @@ class _CaptureScreenState extends State<CaptureScreen>
       return;
     }
     _livePose.value = pose;
-    _liveHint.value = _alignmentStabilizer.update(
+    final hint = _alignmentStabilizer.update(
       _alignmentEvaluator.evaluate(pose),
     );
+    _liveHint.value = hint;
+    _alignedFrames = hint == AlignmentHint.ok ? _alignedFrames + 1 : 0;
+    final open = _alignedFrames >= _gateFrames;
+    if (open != _gateOpen) setState(() => _gateOpen = open);
     _poseIdleTimer?.cancel();
     _poseIdleTimer = Timer(const Duration(milliseconds: 800), () {
       if (!mounted || _disposed) return;
       _livePose.value = null;
       _liveHint.value = null;
       _alignmentStabilizer.reset();
+      _resetGate();
     });
+  }
+
+  void _resetGate() {
+    _alignedFrames = 0;
+    if (!_gateOpen) return;
+    _gateOpen = false;
+    if (mounted && !_disposed) setState(() {});
   }
 
   void _reportCameraError(Object error, StackTrace stackTrace) {
@@ -328,6 +367,7 @@ class _CaptureScreenState extends State<CaptureScreen>
     _operationId++;
     _disposed = true;
     _poseIdleTimer?.cancel();
+    _escapeTimer?.cancel();
     unawaited(_poseFrames?.cancel());
     _poseFrames = null;
     _poseDetector?.dispose();
@@ -454,7 +494,7 @@ class _CaptureScreenState extends State<CaptureScreen>
               ),
               _CaptureBar(
                 t: t,
-                canCapture: _isCameraReady && !_isCapturing,
+                canCapture: _canCapture,
                 isCapturing: _isCapturing,
                 hasCapturedImage: _capturedImage != null,
                 onCapture: _captureImage,
