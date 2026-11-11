@@ -14,10 +14,18 @@ import '../domain/pose_analysis.dart';
 /// Diagnóstico temporal para probar el detector de pose en dispositivo real.
 /// No alimenta el resultado de cribado; solo muestra calidad y tiempo.
 class PoseDebugPanel extends StatefulWidget {
-  const PoseDebugPanel({super.key, required this.image, this.service});
+  const PoseDebugPanel({
+    super.key,
+    required this.image,
+    this.service,
+    this.onCalculateBmi,
+  });
 
   final Uint8List image;
   final PoseAnalysisService? service;
+
+  /// Si la pose es correcta se ofrece seguir al cálculo del IMC con ella.
+  final ValueChanged<PoseAnalysis>? onCalculateBmi;
 
   @override
   State<PoseDebugPanel> createState() => _PoseDebugPanelState();
@@ -120,6 +128,15 @@ class _PoseDebugPanelState extends State<PoseDebugPanel> {
                       : theme.colorScheme.error,
                 ),
               ),
+              if (alignment == AlignmentHint.ok &&
+                  widget.onCalculateBmi != null) ...[
+                const SizedBox(height: AppSpacing.sm),
+                FilledButton.icon(
+                  onPressed: () => widget.onCalculateBmi!(result),
+                  icon: const Icon(Icons.monitor_weight_outlined),
+                  label: Text(t.capture.bodyContinue),
+                ),
+              ],
               if (alignment != AlignmentHint.ok)
                 Text(
                   t.capture.alignmentPhotoWarning,

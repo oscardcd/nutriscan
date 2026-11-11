@@ -23,18 +23,18 @@ class PoseAlignmentEvaluator {
   /// Alto del cuerpo (nariz → tobillos) en fracción del alto del frame.
   /// A 2 m con la cámara trasera el cuerpo mide ~0,60-0,70: pedir 0,75
   /// marcaba "acércate" incluso bien encuadrado.
-  static const double minBodyHeight = 0.55;
+  static const double minBodyHeight = 0.45;
   static const double maxBodyHeight = 0.95;
 
   /// Distancia máxima de la cadera al centro horizontal.
-  static const double maxCenterOffset = 0.05;
+  static const double maxCenterOffset = 0.08;
 
-  static const double maxTiltDegrees = 5;
+  static const double maxTiltDegrees = 8;
 
   /// Hombros / caderas por debajo de esto indica cuerpo de perfil.
-  static const double minShoulderHipRatio = 1.15;
+  static const double minShoulderHipRatio = 1.05;
 
-  static const double minVisibility = 0.5;
+  static const double minVisibility = 0.35;
 
   /// Los siete puntos que deben verse para poder validar la pose.
   static const List<BodyLandmarkType> required = [

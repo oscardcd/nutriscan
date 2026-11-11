@@ -122,10 +122,8 @@ class _FakeCameraPreviewState extends State<_FakeCameraPreview> {
   }
 
   @override
-  Widget build(BuildContext context) => const ColoredBox(
-    key: ValueKey('camera-preview'),
-    color: Colors.black,
-  );
+  Widget build(BuildContext context) =>
+      const ColoredBox(key: ValueKey('camera-preview'), color: Colors.black);
 }
 
 void main() {
@@ -252,6 +250,44 @@ void main() {
         ScreeningAbstentionReason.alignmentFailed,
       ),
     );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('con la foto alineada muestra el botón Analizar imagen', (
+    tester,
+  ) async {
+    final camera = _FakeCaptureCamera();
+    ScreeningOutcome? outcome;
+    await pumpCapture(
+      tester,
+      CaptureScreen(
+        visionAvailable: true,
+        camera: camera,
+        analysisService: _FakeAnalysisService(AlignmentHint.ok),
+        bodyMetricsStore: MemoryBodyMetricsStore(),
+        onUsePhoto: (value) => outcome = value,
+      ),
+    );
+
+    await startCamera(tester);
+    await tester.pump(const Duration(seconds: 11));
+    await tester.tap(find.byTooltip('Capturar'));
+    await tester.pumpAndSettle();
+
+    // La foto cumple: sin modal, con CTA para analizarla.
+    expect(find.text('Revisión de la foto'), findsNothing);
+    expect(find.text('Analizar imagen'), findsOneWidget);
+
+    await tester.tap(find.text('Analizar imagen'));
+    await tester.pumpAndSettle();
+    expect(find.text('Tus datos'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextFormField).at(0), '170');
+    await tester.enterText(find.byType(TextFormField).at(1), '70');
+    await tester.tap(find.text('Calcular IMC'));
+    await tester.pumpAndSettle();
+
+    expect(outcome, isA<ScreeningPrediction>());
     expect(tester.takeException(), isNull);
   });
 

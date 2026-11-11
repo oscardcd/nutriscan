@@ -17,8 +17,8 @@ class PoseAnalysisService {
     this.timeout = const Duration(seconds: 20),
   }) : _engine = engine ?? FlutterPoseDetectionEngine();
 
-  static const _minimumPoseConfidence = 0.5;
-  static const _minimumLandmarkVisibility = 0.5;
+  static const _minimumPoseConfidence = 0.35;
+  static const _minimumLandmarkVisibility = 0.35;
   static const _landmarkCoordinateTolerance = 0.05;
   static const _requiredBodyLandmarks = {
     BodyLandmarkType.leftShoulder,
