@@ -36,28 +36,48 @@ PoseAnalysis _analysis(AlignmentHint alignment) => PoseAnalysis(
   alignment: alignment,
 );
 
-Future<void> _pump(WidgetTester tester, PoseAnalysisService service) =>
-    tester.pumpWidget(
-      TranslationProvider(
-        child: MaterialApp(
-          locale: const Locale('es'),
-          supportedLocales: AppLocaleUtils.supportedLocales,
-          localizationsDelegates: GlobalMaterialLocalizations.delegates,
-          home: Scaffold(
-            body: PoseDebugPanel(
-              image: Uint8List.fromList([1, 2, 3]),
-              service: service,
-            ),
-          ),
+Future<void> _pump(
+  WidgetTester tester,
+  PoseAnalysisService service, {
+  ValueChanged<PoseAnalysis>? onCalculateBmi,
+}) => tester.pumpWidget(
+  TranslationProvider(
+    child: MaterialApp(
+      locale: const Locale('es'),
+      supportedLocales: AppLocaleUtils.supportedLocales,
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      home: Scaffold(
+        body: PoseDebugPanel(
+          image: Uint8List.fromList([1, 2, 3]),
+          service: service,
+          onCalculateBmi: onCalculateBmi,
         ),
       ),
-    );
+    ),
+  ),
+);
 
 void main() {
+  testWidgets('con pose correcta ofrece calcular el IMC', (tester) async {
+    PoseAnalysis? sent;
+    final service = _FakeAnalysisService(_analysis(AlignmentHint.ok));
+    await _pump(tester, service, onCalculateBmi: (r) => sent = r);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Calcular IMC'));
+    expect(sent?.alignment, AlignmentHint.ok);
+  });
+
+  testWidgets('sin pose correcta no ofrece calcular el IMC', (tester) async {
+    final service = _FakeAnalysisService(_analysis(AlignmentHint.notCentered));
+    await _pump(tester, service, onCalculateBmi: (_) {});
+    await tester.pumpAndSettle();
+
+    expect(find.text('Calcular IMC'), findsNothing);
+  });
+
   testWidgets('analiza la foto sola y avisa sin bloquear', (tester) async {
-    final service = _FakeAnalysisService(
-      _analysis(AlignmentHint.notCentered),
-    );
+    final service = _FakeAnalysisService(_analysis(AlignmentHint.notCentered));
     await _pump(tester, service);
     await tester.pumpAndSettle();
 

@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 245 (122 per locale)
+/// Strings: 247 (123 per locale)
 ///
-/// Built on 2026-11-08 at 22:15 UTC
+/// Built on 2026-11-11 at 01:34 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -229,6 +229,7 @@ class _StringsCaptureEs {
 	String get alignmentPhotoWarning => 'La foto se guarda igual; puedes repetirla si quieres.';
 	String get photoResultTitle => 'Revisión de la foto';
 	String get photoResultKeep => 'Usar esta foto';
+	String get photoAnalyze => 'Analizar imagen';
 	String get bodyDataTitle => 'Tus datos';
 	String get bodyHeight => 'Estatura (cm)';
 	String get bodyWeight => 'Peso (kg)';
@@ -480,6 +481,7 @@ class _StringsCaptureEn extends _StringsCaptureEs {
 	@override String get alignmentPhotoWarning => 'The photo is kept anyway; you can retake it if you want.';
 	@override String get photoResultTitle => 'Photo check';
 	@override String get photoResultKeep => 'Use this photo';
+	@override String get photoAnalyze => 'Analyze image';
 	@override String get bodyDataTitle => 'Your data';
 	@override String get bodyHeight => 'Height (cm)';
 	@override String get bodyWeight => 'Weight (kg)';
@@ -682,6 +684,7 @@ extension on Translations {
 			case 'capture.alignmentPhotoWarning': return 'La foto se guarda igual; puedes repetirla si quieres.';
 			case 'capture.photoResultTitle': return 'Revisión de la foto';
 			case 'capture.photoResultKeep': return 'Usar esta foto';
+			case 'capture.photoAnalyze': return 'Analizar imagen';
 			case 'capture.bodyDataTitle': return 'Tus datos';
 			case 'capture.bodyHeight': return 'Estatura (cm)';
 			case 'capture.bodyWeight': return 'Peso (kg)';
@@ -813,6 +816,7 @@ extension on _StringsEn {
 			case 'capture.alignmentPhotoWarning': return 'The photo is kept anyway; you can retake it if you want.';
 			case 'capture.photoResultTitle': return 'Photo check';
 			case 'capture.photoResultKeep': return 'Use this photo';
+			case 'capture.photoAnalyze': return 'Analyze image';
 			case 'capture.bodyDataTitle': return 'Your data';
 			case 'capture.bodyHeight': return 'Height (cm)';
 			case 'capture.bodyWeight': return 'Weight (kg)';

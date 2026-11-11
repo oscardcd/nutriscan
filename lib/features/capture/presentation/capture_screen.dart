@@ -78,15 +78,19 @@ class _CaptureScreenState extends State<CaptureScreen>
       PoseAlignmentEvaluator();
 
   /// Frames alineados seguidos antes de habilitar el disparador.
-  static const int _gateFrames = 3;
+  static const int _gateFrames = 2;
 
   /// Tras este tiempo el disparador se abre aunque la pose no valide.
-  static const Duration _captureGateTimeout = Duration(seconds: 10);
+  static const Duration _captureGateTimeout = Duration(seconds: 6);
 
   final ValueNotifier<DetectedPose?> _livePose = ValueNotifier(null);
   final ValueNotifier<AlignmentHint?> _liveHint = ValueNotifier(null);
   AlignmentHint? _lastAnnouncedHint;
   Uint8List? _analyzedImage;
+
+  /// Foto que pasó la alineación: muestra el botón para analizarla.
+  bool _photoReady = false;
+  PoseAnalysis? _acceptedAnalysis;
   final AlignmentStabilizer _alignmentStabilizer = AlignmentStabilizer();
   int _alignedFrames = 0;
   bool _gateOpen = false;
@@ -188,6 +192,9 @@ class _CaptureScreenState extends State<CaptureScreen>
     setState(() {
       _isCapturing = true;
       _failure = null;
+      _photoReady = false;
+      _acceptedAnalysis = null;
+      _analyzedImage = null;
     });
 
     try {
@@ -251,7 +258,12 @@ class _CaptureScreenState extends State<CaptureScreen>
   Future<void> _retakeImage() async {
     final image = _capturedImage;
     if (image != null) image.fillRange(0, image.length, 0);
-    setState(() => _capturedImage = null);
+    setState(() {
+      _capturedImage = null;
+      _photoReady = false;
+      _acceptedAnalysis = null;
+      _analyzedImage = null;
+    });
     await _initializeCamera();
   }
 
@@ -359,12 +371,10 @@ class _CaptureScreenState extends State<CaptureScreen>
     if (detector == null) return;
     final pose = await detector.process(frame);
     if (!mounted || _disposed || _poseFrames == null) return;
-    if (pose == null) {
-      _livePose.value = null;
-      _liveHint.value = null;
-      _alignmentStabilizer.reset();
-      return;
-    }
+    // null también es un frame descartado por throttle/busy (la mayoría a
+    // 30 fps): resetear aquí apagaba la guía y el gate nunca abría. Si de
+    // verdad no hay persona, el idle timer de abajo limpia a los 800 ms.
+    if (pose == null) return;
     _livePose.value = pose;
     final hint = _alignmentStabilizer.update(
       _alignmentEvaluator.evaluate(pose),
@@ -515,6 +525,8 @@ class _CaptureScreenState extends State<CaptureScreen>
                   canCapture: _canCapture,
                   onCapture: _captureImage,
                   onRetake: _retakeImage,
+                  showAnalyze: _photoReady,
+                  onAnalyze: _analyzePhoto,
                 ),
               ],
             ),
@@ -623,40 +635,49 @@ class _CaptureScreenState extends State<CaptureScreen>
   }
 
   Future<void> _onPhotoAnalyzed(PoseAnalysis result) async {
-    final hint = result.alignment;
     final image = _capturedImage;
-    if (hint == null || image == null) return;
+    if (image == null) return;
     // Una revisión por foto: el panel puede reejecutar el análisis.
     if (identical(_analyzedImage, image)) return;
     _analyzedImage = image;
 
+    // Sin pose detectada la captura no se bloquea: se sigue sin el aviso.
+    final hint = result.alignment;
+    if (hint == null) {
+      await _finishCapture(result);
+      return;
+    }
+    // La foto cumple: en vez del modal, se ofrece el botón de analizar.
+    if (hint == AlignmentHint.ok) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      setState(() {
+        _photoReady = true;
+        _acceptedAnalysis = result;
+      });
+      return;
+    }
+
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final (text, icon) = alignmentReadout(t, hint);
-    final ok = hint == AlignmentHint.ok;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final retake = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        icon: Icon(
-          icon,
-          color: ok ? theme.colorScheme.primary : theme.colorScheme.error,
-        ),
+        icon: Icon(icon, color: theme.colorScheme.error),
         title: Text(t.capture.photoResultTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(text, textAlign: TextAlign.center),
-            if (!ok) ...[
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                t.capture.alignmentPhotoWarning,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              t.capture.alignmentPhotoWarning,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
               ),
-            ],
+            ),
           ],
         ),
         actions: [
@@ -676,6 +697,12 @@ class _CaptureScreenState extends State<CaptureScreen>
       return;
     }
     if (!mounted) return;
+    await _finishCapture(result);
+  }
+
+  /// Pide los datos corporales y entrega el cribado. Lo usan el botón
+  /// "Analizar imagen" y las fotos que no pasaron la alineación.
+  Future<void> _finishCapture(PoseAnalysis result) async {
     final choice = await _askBodyMetrics();
     if (choice == null || !mounted) return;
     final metrics = choice.metrics;
@@ -692,7 +719,14 @@ class _CaptureScreenState extends State<CaptureScreen>
     context.push('/result', extra: outcome);
   }
 
-  /// Peso y estatura sin los cuales no hay IMC posible. Se piden después de
+  Future<void> _analyzePhoto() async {
+    final result = _acceptedAnalysis;
+    if (result == null) return;
+    setState(() => _photoReady = false);
+    await _finishCapture(result);
+  }
+
+  /// Peso y estatura sin los cuales no hay IMC posible. Se pid0ren después de
   /// aceptar la foto y se recuerdan en el dispositivo.
   Future<({BodyMetrics? metrics})?> _askBodyMetrics() async {
     final saved = await _metricsStore.read();
@@ -739,6 +773,11 @@ class _CaptureScreenState extends State<CaptureScreen>
                 PoseDebugPanel(
                   image: _capturedImage!,
                   service: _analysisServiceOrCreate,
+                  onCalculateBmi: (result) {
+                    Navigator.of(context).pop();
+                    setState(() => _photoReady = false);
+                    unawaited(_finishCapture(result));
+                  },
                 ),
               ],
             ],
